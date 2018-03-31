@@ -1,10 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
     <title>Title</title>
+    <!--<script type="text/javascript" src="/js/lib/vue/vue.js"></script>-->
+    <!--<script type="text/javascript" src="js/lib/vue/vue-router.js"></script>-->
+    <!--<script src="/js/lib/require/require.js" data-main="/js/main.js"></script>-->
 </head>
 <body>
-
+<div id="pjax-header">
+ <div th:replace="common::common"></div>
+</div>
+<div id="container">
+    <!--<p><router-link to="/monitorConfig">监控配置</router-link></p>-->
+    <!--<p><router-link to="">另一个</router-link></p>-->
+    <!--<router-view></router-view>-->
+    <!--<button type="button" id="btIndex">监控配置</button>-->
+    <a href="/monitorConfig/addMonitorConfig">监控配置</a>
+</div>
 </body>
 </html>
