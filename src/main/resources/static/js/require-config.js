@@ -11,13 +11,17 @@ require.config({
         'vueRouter': './lib/vue/vue-router',
         'pjax':'./lib/jquery/jquery.pjax',
         'bootstrap':'./lib/bootstrap/bootstrap.min',
+        'jqueryi18n': './lib/jquery/jquery.i18n.properties',
 
 
         /**自定义js**/
         'addMonitorConfig':'./monitorConfig/add-monitor-config',
-        'pjaxConfig':'./pjax-config'
+        'monitorConfig':'./monitorConfig/monitor-config',
+        'pjaxConfig':'./pjax-config',
+        'commonModule':'./common-module'
     },
     shim:{
+        'jqueryi18n':['jquery'],
         'vueRouter':['jquery','vue'],
         'pjax':['jquery'],
         'bootstrap':['jquery']
