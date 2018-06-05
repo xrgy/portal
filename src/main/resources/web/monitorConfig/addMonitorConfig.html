@@ -6,26 +6,162 @@
 </head>
 <body th:fragment="monitorConfig">
 <!--<div id="container">-->
-<div id="monitorConfig" class="modal fade" tabindex="-1" role="dialog"  aria-hidden="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
+<div id="monitorConfig" class="modal fade" tabindex="-1" role="dialog" aria-hidden="false">
+    <div class="modal-dialog def-dialog">
+        <div class="modal-content def-modal-content">
+            <div class="modal-header def-modal-header">
+                <i class="fa fa-plus skin-color"></i>
+                <span data-i18n="monitorConfig.title.addTemplateName"></span>
+                <!--<i class="fa fa-close skin-color"></i>-->
+                <button type="button" class="close skin-color close-style" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-body">
+            <hr class="skin-color border-color"/>
             <form role="form">
-                <div id="monitorBasicInfo" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="form-group">
-                        <label for="tempName" data-i18n="monitorConfig.templateName"></label>
-                        <input class="form-control input-sm def-input-sm" type="text" id="tempName"
-                               v-model="templateName"/>
+                <div class="modal-body def-modal-body">
+                    <div id="monitorBasicInfo" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="form-group">
+                            <label for="tempName" data-i18n="monitorConfig.templateName"></label>
+                            <input class="form-control input-sm def-input-sm" type="text" id="tempName"
+                                   v-model="templateName" data-i18n-placeholder="monitorConfig.placeInput"/>
+                        </div>
+                        <div class="form-group radio-group">
+                            <label data-i18n="monitorConfig.snmpVerion"></label>
+                            <!--<div class="radio-one radio-left">-->
+                            <input type="radio" id="snmpv1" class="snmp-magic-radio radio-left hidden "
+                                   v-model="snmpVersion"
+                                   value="snmpv1"/>
+                            <label class="chose-label radio-left" for="snmpv1" data-i18n="monitorConfig.snmpv1"></label>
+                            <!--</div>-->
+                            <!--<div class="radio-one">-->
+                            <input type="radio" id="snmpv2" class="snmp-magic-radio hidden" v-model="snmpVersion"
+                                   value="snmpv2"/>
+                            <label class="chose-label chose-label2" for="snmpv2"
+                                   data-i18n="monitorConfig.snmpv2c"></label>
+                            <!--</div>-->
+                        </div>
+                    </div>
+                    <div id="" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div id="avaliableContainer">
+                            <span class="span-title" data-i18n="monitorConfig.availConfig"></span>
+                            <div id="avaliable">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <td data-i18n="monitorConfig.metricName"></td>
+                                        <td><span class="span-line"></span><span
+                                                data-i18n="monitorConfig.alertLevel"></span></td>
+                                        <td><span class="span-line"></span><span
+                                                data-i18n="monitorConfig.metricDescription"></span></td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-for="(item,index) in dataObj">
+                                        <td>{{item.quotaName|filterName}}</td>
+                                        <td>
+                                            <select>
+                                                <option v-for=""></option>
+                                            </select>
+                                        </td>
+                                        <td>{{item.quotaDesc|filterDesc}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="performanceContainer">
+                            <span class="span-title" data-i18n="monitorConfig.perfConfig"></span>
+                            <div id="performance">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <td data-i18n="monitorConfig.metricName"></td>
+                                        <td><span class="span-line"></span><span
+                                                data-i18n="monitorConfig.thresholdDefine"></span></td>
+                                        <td><span class="span-line"></span><span
+                                                data-i18n="monitorConfig.metricDescription"></span></td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-for="(item,index) in dataObj">
+                                        <td>{{item.quotaName|filterName}}</td>
+                                        <td>
+                                            <div>
+                                                <div class="display-inline">
+                                                    <select>
+                                                        <option v-for=""></option>
+                                                    </select>
+                                                    <select>
+                                                        <option v-for=""></option>
+                                                    </select>
+                                                    <select>
+                                                        <option v-for=""></option>
+                                                    </select>
+                                                    <span id="firstFirstUnit">ddd</span>
+                                                    <span class="span-more-condition"
+                                                          data-i18n="monitorConfig.moreCondition" v-on:click="showMoreCondition($event)"></span>
+                                                </div>
+                                                <div class="display-inline hidden">
+                                                    <select>
+                                                        <option v-for=""></option>
+                                                    </select>
+                                                    <select>
+                                                        <option v-for=""></option>
+                                                    </select>
+                                                    <select>
+                                                        <option v-for=""></option>
+                                                    </select>
+                                                    <span id="firstSecondUnit">ddd</span>
+                                                    <i class="fa fa-close skin-color def-close"></i>
+                                                </div>
+                                                <span class="span-more-line" v-on:click="showMoreLine($event)"><i
+                                                        class="fa fa-plus def-i skin-color"></i></span>
+                                            </div>
+                                            <div id="second-line-thresh" class="hidden">
+                                                <div class="display-inline">
+                                                    <select>
+                                                        <option v-for=""></option>
+                                                    </select>
+                                                    <select>
+                                                        <option v-for=""></option>
+                                                    </select>
+                                                    <select>
+                                                        <option v-for=""></option>
+                                                    </select>
+                                                    <span id="secondFirstUnit">ddd</span>
+                                                    <i class="fa fa-close skin-color def-close"></i>
+                                                    <span class="span-more-condition"
+                                                          data-i18n="monitorConfig.moreCondition"
+                                                          v-on:click="showMoreCondition($event)"></span>
+                                                </div>
+                                                <div class="display-inline hidden">
+                                                    <select>
+                                                        <option v-for=""></option>
+                                                    </select>
+                                                    <select>
+                                                        <option v-for=""></option>
+                                                    </select>
+                                                    <select>
+                                                        <option v-for=""></option>
+                                                    </select>
+                                                    <span id="secondSecondUnit">ddd</span>
+                                                    <i class="fa fa-close skin-color def-close"></i>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{{item.quotaDesc|filterDesc}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div id="" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="modal-footer def-modal-footer">
+                    <input type="submit" class="btn def-btn def-btn-primary" data-i18n="modal.footer.submit"/>
+                    <button type="button" class="btn def-btn def-btn-default" data-dismiss="modal"
+                            data-i18n="modal.footer.cancel"></button>
                 </div>
             </form>
-            </div>
-            <div class="modal-footer">
-            </div>
         </div>
     </div>
 </div>

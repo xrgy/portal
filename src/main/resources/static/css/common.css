@@ -1,6 +1,11 @@
+input[type=text]{
+    border: 1px solid #999;
+    border-radius: 2px;
+}
 .def-input-sm{
     display: inline-block;
-    width: 200px
+    width: 200px;
+    margin-left: 20px;
 }
 .form-group{
     margin-bottom: 15px;
@@ -8,4 +13,108 @@
 }
 .hidden{
     display: none;
+}
+.skin-color{
+    color: #ec670b !important;
+}
+.modal-header .close-style{
+    opacity: 1;
+    outline: none;
+}
+.modal-dialog .def-modal-header{
+    border: none;
+    padding: 10px 10px 0;
+}
+.modal-dialog hr{
+    margin: 0 10px;
+}
+.modal-dialog .border-color{
+    border-top: 2px solid #ec670b
+}
+.modal .def-dialog{
+    width: 78%;
+}
+.magic-radio +label::before{
+    border-radius: 50%;
+    position: absolute;
+    top:0;
+    left:0;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    content: '';
+    border: 1px solid #c0c0c0;
+}
+.magic-radio +label::after{
+    top: 5px;
+    left: 5px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ec670b;
+}
+.magic-radio:checked +label::before{
+    border: 1px solid #ec670b;
+}
+.magic-radio:checked +label::after{
+    display: block;
+}
+label{
+    font: normal 12px arial;
+}
+#monitorBasicInfo .radio-float{
+    float: left;
+    margin-left: 30px;
+}
+.active{
+    background: #ec670b;
+}
+.snmp-magic-radio +label{
+    background: #ffffff;
+}
+.snmp-magic-radio:checked +label{
+    color: #ffffff;
+    background: #ec670b;
+}
+.def-modal-body{
+    height: 420px;
+    margin: 0 10px 0 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.def-modal-footer{
+    text-align: center;
+    border-top: none;
+}
+.def-btn{
+    font-size: 12px;
+    width: 100px;
+    border: none;
+    border-radius: 2px;
+}
+.def-btn-primary{
+    color: #ffffff;
+    background: #777777;
+    box-shadow: 2px 2px 2px 2px #555;
+}
+.def-btn-default{
+    color: #555;
+    background: #ffffff;
+    box-shadow: 2px 2px 2px 2px #737373;
+}
+.def-modal-content{
+    border-radius: 4px;
+}
+.modal-backdrop.in{
+ opacity: 0.2;
+}
+table select{
+    width: 60px;
+    height: 24px;
+    border: 0.2px solid #ec670b;
+    outline: none;
+}
+.def-i,
+.def-close{
+    cursor: pointer;
 }

@@ -1,0 +1,51 @@
+
+#monitorBasicInfo .radio-left{
+    margin-left: 34px;
+}
+.radio-group .chose-label{
+    width: 88px;
+    height: 28px;
+    border: 1px solid #ec670b;
+    text-align: center;
+    padding-top: 6px;
+    cursor: pointer;
+}
+.radio-group .chose-label2{
+    margin-left: -5px
+}
+#performanceContainer .span-title,
+#avaliableContainer .span-title{
+    color: #ec670b;
+    font-size: 14px;
+    margin-left: -10px;
+}
+#avaliableContainer table{
+
+}
+#performanceContainer table .span-line,
+#avaliableContainer table .span-line{
+    border-left: 1px solid #cccccc;
+    margin-right: 6px;
+}
+#performanceContainer table tbody tr td,
+#avaliableContainer table tbody tr td{
+    padding-left: 18px;
+}
+#performanceContainer table .display-inline{
+    display: inline-block;
+}
+#performanceContainer table .span-more-condition{
+    cursor: pointer;
+    padding: 4px;
+    border: 0.2px solid #ec670b;
+    margin-right: 4px;
+}
+#performanceContainer table .span-more-line{
+    cursor: pointer;
+    padding: 4px 12px 4px;
+    border: 0.2px solid #ec670b;
+    margin-right: 4px;
+}
+#performanceContainer table #second-line-thresh{
+    margin-top: 2px;
+}
