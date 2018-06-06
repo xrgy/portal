@@ -82,74 +82,87 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr v-for="(item,index) in dataObj">
-                                        <td>{{item.quotaName|filterName}}</td>
-                                        <td>
-                                            <div>
-                                                <div class="display-inline">
-                                                    <select>
-                                                        <option v-for=""></option>
-                                                    </select>
-                                                    <select>
-                                                        <option v-for=""></option>
-                                                    </select>
-                                                    <select>
-                                                        <option v-for=""></option>
-                                                    </select>
-                                                    <span id="firstFirstUnit">ddd</span>
-                                                    <span class="span-more-condition"
-                                                          data-i18n="monitorConfig.moreCondition" v-on:click="showMoreCondition($event)"></span>
-                                                </div>
-                                                <div class="display-inline hidden">
-                                                    <select>
-                                                        <option v-for=""></option>
-                                                    </select>
-                                                    <select>
-                                                        <option v-for=""></option>
-                                                    </select>
-                                                    <select>
-                                                        <option v-for=""></option>
-                                                    </select>
-                                                    <span id="firstSecondUnit">ddd</span>
-                                                    <i class="fa fa-close skin-color def-close"></i>
-                                                </div>
-                                                <span class="span-more-line" v-on:click="showMoreLine($event)"><i
-                                                        class="fa fa-plus def-i skin-color"></i></span>
-                                            </div>
-                                            <div id="second-line-thresh" class="hidden">
-                                                <div class="display-inline">
-                                                    <select>
-                                                        <option v-for=""></option>
-                                                    </select>
-                                                    <select>
-                                                        <option v-for=""></option>
-                                                    </select>
-                                                    <select>
-                                                        <option v-for=""></option>
-                                                    </select>
-                                                    <span id="secondFirstUnit">ddd</span>
-                                                    <i class="fa fa-close skin-color def-close"></i>
-                                                    <span class="span-more-condition"
-                                                          data-i18n="monitorConfig.moreCondition"
-                                                          v-on:click="showMoreCondition($event)"></span>
-                                                </div>
-                                                <div class="display-inline hidden">
-                                                    <select>
-                                                        <option v-for=""></option>
-                                                    </select>
-                                                    <select>
-                                                        <option v-for=""></option>
-                                                    </select>
-                                                    <select>
-                                                        <option v-for=""></option>
-                                                    </select>
-                                                    <span id="secondSecondUnit">ddd</span>
-                                                    <i class="fa fa-close skin-color def-close"></i>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>{{item.quotaDesc|filterDesc}}</td>
-                                    </tr>
+                                    <template v-for="(i,j) in typeName">
+                                        <tr>
+                                            <td colspan="3">{{i.name}}<i
+                                                    class="fa fa-angle-down skin-color toggle-font"></i></td>
+                                        </tr>
+                                        <template v-for="(item,index) in dataObj">
+                                            <tr>
+                                                <td>{{item.quotaName|filterName}}</td>
+                                                <td>
+                                                    <div>
+                                                        <div class="display-inline">
+                                                            <select>
+                                                                <option v-for=""></option>
+                                                            </select>
+                                                            <select>
+                                                                <option v-for=""></option>
+                                                            </select>
+                                                            <select>
+                                                                <option v-for=""></option>
+                                                            </select>
+                                                            <span id="firstFirstUnit">ddd</span>
+                                                            <span class="span-more-condition"
+                                                                  data-i18n="monitorConfig.moreCondition"
+                                                                  v-on:click="showMoreCondition($event)"></span>
+                                                        </div>
+                                                        <div class="display-inline hidden">
+                                                            <select>
+                                                                <option v-for=""></option>
+                                                            </select>
+                                                            <select>
+                                                                <option v-for=""></option>
+                                                            </select>
+                                                            <select>
+                                                                <option v-for=""></option>
+                                                            </select>
+                                                            <span id="firstSecondUnit">ddd</span>
+                                                            <i class="fa fa-close skin-color def-close"
+                                                               v-on:click="closeCondition($event)"></i>
+                                                        </div>
+                                                        <span class="span-more-line"
+                                                              v-on:click="showMoreLine($event)"><i
+                                                                class="fa fa-plus def-i skin-color"></i></span>
+                                                    </div>
+                                                    <div id="second-line-thresh" class="hidden">
+                                                        <div class="display-inline">
+                                                            <select>
+                                                                <option v-for=""></option>
+                                                            </select>
+                                                            <select>
+                                                                <option v-for=""></option>
+                                                            </select>
+                                                            <select>
+                                                                <option v-for=""></option>
+                                                            </select>
+                                                            <span id="secondFirstUnit">ddd</span>
+                                                            <i class="fa fa-close skin-color def-close"
+                                                               v-on:click="closeCondition($event)"></i>
+                                                            <span class="span-more-condition"
+                                                                  data-i18n="monitorConfig.moreCondition"
+                                                                  v-on:click="showMoreCondition($event)"></span>
+                                                        </div>
+                                                        <div class="display-inline hidden">
+                                                            <select>
+                                                                <option v-for=""></option>
+                                                            </select>
+                                                            <select>
+                                                                <option v-for=""></option>
+                                                            </select>
+                                                            <select>
+                                                                <option v-for=""></option>
+                                                            </select>
+                                                            <span id="secondSecondUnit">ddd</span>
+                                                            <i class="fa fa-close skin-color def-close"
+                                                               v-on:click="closeCondition($event)"></i>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>{{item.quotaDesc|filterDesc}}</td>
+                                            </tr>
+                                        </template>
+                                    </template>
                                     </tbody>
                                 </table>
                             </div>

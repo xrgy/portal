@@ -27,8 +27,8 @@
     border-left: 1px solid #cccccc;
     margin-right: 6px;
 }
-#performanceContainer table tbody tr td,
-#avaliableContainer table tbody tr td{
+#performanceContainer table tbody tr td:not(:nth-child(1)),
+#avaliableContainer table tbody tr td:not(:nth-child(1)){
     padding-left: 18px;
 }
 #performanceContainer table .display-inline{
@@ -48,4 +48,12 @@
 }
 #performanceContainer table #second-line-thresh{
     margin-top: 2px;
+}
+#performanceContainer table .toggle-font{
+    margin-left: 6px;
+    font-weight: bold;
+    font-size: 16px;
+    position: relative;
+    top: 4px;
+    cursor: pointer;
 }
