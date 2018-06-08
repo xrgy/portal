@@ -27,9 +27,14 @@
     border-left: 1px solid #cccccc;
     margin-right: 6px;
 }
-#performanceContainer table tbody tr td:not(:nth-child(1)),
-#avaliableContainer table tbody tr td:not(:nth-child(1)){
+/*#performanceContainer table tbody tr td:not(:nth-child(1)),*/
+/*#avaliableContainer table tbody tr td:not(:nth-child(1)){*/
+#performanceContainer table tbody tr td,
+#avaliableContainer table tbody tr td{
     padding-left: 18px;
+}
+#performanceContainer table tr .td-group {
+    padding-left: 0 !important;
 }
 #performanceContainer table .display-inline{
     display: inline-block;

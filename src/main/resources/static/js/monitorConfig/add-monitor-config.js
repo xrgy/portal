@@ -87,6 +87,14 @@ define(['jquery', 'vue', 'commonModule'], function ($, Vue, commonModule) {
                             $(e).parent().parent().prev('div').children('.span-more-line').removeClass('hidden');
                             $(e).parent().parent().addClass('hidden');
                         }
+                    },
+                    toggleType:function (event) {
+                        var e = event.target;
+                        $(e).toggleClass('fa-angle-down fa-angle-up');
+                        var start = $(e).parent().parent().attr('id');
+                        $(e).parent().parent().siblings("tr[id^="+start+"]").toggleClass('hidden')
+                        // $($(e).parent().parent().siblings("tr[id^="+start+"]")).slideToggle();
+
                     }
                 }
 

@@ -74,7 +74,7 @@
                                 <table class="table table-hover">
                                     <thead>
                                     <tr>
-                                        <td data-i18n="monitorConfig.metricName"></td>
+                                        <td data-i18n="monitorConfig.metricName" class="td-group"></td>
                                         <td><span class="span-line"></span><span
                                                 data-i18n="monitorConfig.thresholdDefine"></span></td>
                                         <td><span class="span-line"></span><span
@@ -83,12 +83,12 @@
                                     </thead>
                                     <tbody>
                                     <template v-for="(i,j) in typeName">
-                                        <tr>
-                                            <td colspan="3">{{i.name}}<i
-                                                    class="fa fa-angle-down skin-color toggle-font"></i></td>
+                                        <tr :id="i.name">
+                                            <td colspan="3" class="td-group">{{i.name}}<i
+                                                    class="fa fa-angle-down skin-color toggle-font" v-on:click="toggleType($event)"></i></td>
                                         </tr>
                                         <template v-for="(item,index) in dataObj">
-                                            <tr>
+                                            <tr :id="i.name+index">
                                                 <td>{{item.quotaName|filterName}}</td>
                                                 <td>
                                                     <div>
