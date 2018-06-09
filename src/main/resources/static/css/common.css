@@ -107,11 +107,13 @@ label{
 .modal-backdrop.in{
  opacity: 0.2;
 }
+table input[type=text],
 table select{
     width: 60px;
     height: 24px;
     border: 0.2px solid #ec670b;
     outline: none;
+    border-radius: 0;
 }
 .def-i,
 .def-close{

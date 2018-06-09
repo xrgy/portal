@@ -2,7 +2,7 @@
  * Created by gy on 2018/3/26.
  */
 'use strict'
-define(['jquery','vue','pjax','commonModule','addMonitorConfig','monitorConfig'], function ($, Vue, pjax,commonModule,monitorConfig,configlist) {
+define(['jquery','vue','pjax','commonModule'], function ($, Vue, pjax,commonModule) {
     $(document).ready(function () {
         // monitorConfig.monitorConf();
         // configlist.confList();

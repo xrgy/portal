@@ -43,7 +43,7 @@
                     <div id="" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div id="avaliableContainer">
                             <span class="span-title" data-i18n="monitorConfig.availConfig"></span>
-                            <div id="avaliable">
+                            <div id="available">
                                 <table class="table table-hover">
                                     <thead>
                                     <tr>
@@ -55,15 +55,24 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr v-for="(item,index) in dataObj">
-                                        <td>{{item.quotaName|filterName}}</td>
-                                        <td>
-                                            <select>
-                                                <option v-for=""></option>
-                                            </select>
-                                        </td>
-                                        <td>{{item.quotaDesc|filterDesc}}</td>
-                                    </tr>
+                                    <template v-for="(i,j) in availDataObj">
+                                        <tr :id="'avail_'+i.type">
+                                            <td colspan="3" class="td-group">{{i.type|convertType}}<i
+                                                    class="fa fa-angle-down skin-color toggle-font"
+                                                    v-on:click="toggleType($event)"></i></td>
+                                        </tr>
+                                        <template v-for="(item,index) in i.data">
+                                            <tr :id="'avail_'+i.type+index">
+                                                <td>{{item.name|convertName}}</td>
+                                                <td>
+                                                    <select v-model="item.severity">
+                                                        <option v-for="(alert,alertin) in alertLevel" :value="alert.value">{{alert.text}}</option>
+                                                    </select>
+                                                </td>
+                                                <td>{{item.description|convertDesc}}</td>
+                                            </tr>
+                                        </template>
+                                    </template>
                                     </tbody>
                                 </table>
                             </div>
@@ -82,42 +91,40 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <template v-for="(i,j) in typeName">
-                                        <tr :id="i.name">
-                                            <td colspan="3" class="td-group">{{i.name}}<i
-                                                    class="fa fa-angle-down skin-color toggle-font" v-on:click="toggleType($event)"></i></td>
+                                    <template v-for="(i,j) in perfDataObj">
+                                        <tr :id="'perf_'+i.type">
+                                            <td colspan="3" class="td-group">{{i.type|convertType}}<i
+                                                    class="fa fa-angle-down skin-color toggle-font"
+                                                    v-on:click="toggleType($event)"></i></td>
                                         </tr>
-                                        <template v-for="(item,index) in dataObj">
-                                            <tr :id="i.name+index">
-                                                <td>{{item.quotaName|filterName}}</td>
+                                        <template v-for="(item,index) in i.data">
+                                            <tr :id="'perf_'+i.type+index">
+                                                <td>{{item.name|convertName}}</td>
                                                 <td>
                                                     <div>
                                                         <div class="display-inline">
-                                                            <select>
-                                                                <option v-for=""></option>
+                                                            <select v-model="item.level_one_severity">
+                                                                <option v-for="(alert,alertin) in alertLevel" :value="alert.value">{{alert.text}}</option>
                                                             </select>
-                                                            <select>
-                                                                <option v-for=""></option>
+                                                            <select v-model="item.level_one_alert_first_condition">
+                                                                <option v-for="(condition,conditionin) in alertCondition" :value="condition.value">{{condition.text}}</option>
                                                             </select>
-                                                            <select>
-                                                                <option v-for=""></option>
-                                                            </select>
-                                                            <span id="firstFirstUnit">ddd</span>
+                                                            <input type="text" id="'perf_'+oneoneshresh"
+                                                                   v-model="item.level_one_first_threshold"/>
+                                                            <span id="firstFirstUnit">{{item.metric_display_unit}}</span>
                                                             <span class="span-more-condition"
-                                                                  data-i18n="monitorConfig.moreCondition"
-                                                                  v-on:click="showMoreCondition($event)"></span>
+                                                                  v-on:click="showMoreCondition($event)">{{moreCondition}}</span>
                                                         </div>
                                                         <div class="display-inline hidden">
-                                                            <select>
-                                                                <option v-for=""></option>
+                                                            <select v-model="item.level_one_expression_more">
+                                                                <option v-for="(more,morein) in expressionMore" :value="more.value">{{more.text}}</option>
                                                             </select>
-                                                            <select>
-                                                                <option v-for=""></option>
+                                                            <select v-model="item.level_one_alert_second_condition">
+                                                                <option v-for="(condition,conditionin) in alertCondition" :value="condition.value">{{condition.text}}</option>
                                                             </select>
-                                                            <select>
-                                                                <option v-for=""></option>
-                                                            </select>
-                                                            <span id="firstSecondUnit">ddd</span>
+                                                            <input type="text" id="'perf_'+onetwoshresh"
+                                                                   v-model="item.level_one_second_threshold"/>
+                                                            <span id="firstSecondUnit">{{item.metric_display_unit}}</span>
                                                             <i class="fa fa-close skin-color def-close"
                                                                v-on:click="closeCondition($event)"></i>
                                                         </div>
@@ -127,39 +134,36 @@
                                                     </div>
                                                     <div id="second-line-thresh" class="hidden">
                                                         <div class="display-inline">
-                                                            <select>
-                                                                <option v-for=""></option>
+                                                            <select  v-model="item.level_two_severity">
+                                                                <option v-for="(alert,alertin) in alertLevel" :value="alert.value">{{alert.text}}</option>
                                                             </select>
-                                                            <select>
-                                                                <option v-for=""></option>
+                                                            <select v-model="item.level_two_alert_first_condition">
+                                                                <option v-for="(condition,conditionin) in alertCondition" :value="condition.value">{{condition.text}}</option>
                                                             </select>
-                                                            <select>
-                                                                <option v-for=""></option>
-                                                            </select>
-                                                            <span id="secondFirstUnit">ddd</span>
+                                                            <input type="text" id="'perf_'+twooneshresh"
+                                                                   v-model="item.level_two_first_threshold"/>
+                                                            <span id="secondFirstUnit">{{item.metric_display_unit}}</span>
                                                             <i class="fa fa-close skin-color def-close"
                                                                v-on:click="closeCondition($event)"></i>
                                                             <span class="span-more-condition"
-                                                                  data-i18n="monitorConfig.moreCondition"
-                                                                  v-on:click="showMoreCondition($event)"></span>
+                                                                  v-on:click="showMoreCondition($event)">{{moreCondition}}</span>
                                                         </div>
                                                         <div class="display-inline hidden">
-                                                            <select>
-                                                                <option v-for=""></option>
+                                                            <select v-model="item.level_two_expression_more">
+                                                                <option v-for="(more,morein) in expressionMore" :value="more.value">{{more.text}}</option>
                                                             </select>
-                                                            <select>
-                                                                <option v-for=""></option>
+                                                            <select v-model="item.level_two_alert_second_condition">
+                                                                <option v-for="(condition,conditionin) in alertCondition" :value="condition.value">{{condition.text}}</option>
                                                             </select>
-                                                            <select>
-                                                                <option v-for=""></option>
-                                                            </select>
-                                                            <span id="secondSecondUnit">ddd</span>
+                                                            <input type="text" id="'perf_'+twotwoshresh"
+                                                                   v-model="item.level_two_second_threshold"/>
+                                                            <span id="secondSecondUnit">{{item.metric_display_unit}}</span>
                                                             <i class="fa fa-close skin-color def-close"
                                                                v-on:click="closeCondition($event)"></i>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td>{{item.quotaDesc|filterDesc}}</td>
+                                                <td>{{item.description|convertDesc}}</td>
                                             </tr>
                                         </template>
                                     </template>

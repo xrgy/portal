@@ -33,6 +33,7 @@
 #avaliableContainer table tbody tr td{
     padding-left: 18px;
 }
+#avaliableContainer table tr .td-group ,
 #performanceContainer table tr .td-group {
     padding-left: 0 !important;
 }
@@ -54,6 +55,7 @@
 #performanceContainer table #second-line-thresh{
     margin-top: 2px;
 }
+#avaliableContainer table .toggle-font,
 #performanceContainer table .toggle-font{
     margin-left: 6px;
     font-weight: bold;

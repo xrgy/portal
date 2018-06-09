@@ -12,6 +12,7 @@ require.config({
         'pjax':'./lib/jquery/jquery.pjax',
         'bootstrap':'./lib/bootstrap/bootstrap.min',
         'jqueryi18n': './lib/jquery/jquery.i18n.properties',
+        'jquery-validate':'./lib/jquery/jquery-validate',
 
 
         /**自定义js**/
@@ -22,6 +23,7 @@ require.config({
     },
     shim:{
         'jqueryi18n':['jquery'],
+        'jquery-validate':['jquery'],
         'vueRouter':['jquery','vue'],
         'pjax':['jquery'],
         'bootstrap':['jquery']
