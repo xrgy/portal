@@ -5,7 +5,7 @@ input[type=text]{
 .def-input-sm{
     display: inline-block;
     width: 200px;
-    margin-left: 20px;
+    margin-left: 8px;
 }
 .form-group{
     margin-bottom: 15px;
@@ -118,4 +118,15 @@ table select{
 .def-i,
 .def-close{
     cursor: pointer;
+}
+form .error{
+    font-size: 12px;
+    margin-left: 4px;
+}
+form span[id$="error"]{
+    color: #a94442
+}
+.required{
+    font-size: 20px;
+    color: #a94442;
 }

@@ -35,4 +35,10 @@ public class MonitorConfigController {
     public ResultMsg getMetricInfo(String lightType,String monitorMode){
         return service.getMetricInfo(lightType,monitorMode);
     }
+    @RequestMapping("/isTemplateNameDup")
+    @ResponseBody
+    public boolean isTemplateNameDup(String name){
+        //返回true 未重复
+        return true;
+    }
 }

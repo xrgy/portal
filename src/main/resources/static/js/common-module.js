@@ -2,13 +2,13 @@
  * Created by gy on 2018/6/4.
  */
 'use strict';
-define(['jquery', 'jqueryi18n'], function ($, jqueryi18n) {
+define(['jquery', 'jquery-i18n'], function ($, jqueryi18n) {
     var i18n = function (key,param0,param1,param2,param3,param4,param5,param6,param7,param8,param9) {
         return $.i18n.prop(key,param0,param1,param2,param3,param4,param5,param6,param7,param8,param9);
     };
     $(document).ready(function () {
         loadProperties("message", "././i18n/", sessionStorage.language);
-        require(['addMonitorConfig','monitorConfig']);
+        require(['validate-extend','addMonitorConfig','monitorConfig']);
     });
     function loadProperties(name, path, lang) {
         //中文

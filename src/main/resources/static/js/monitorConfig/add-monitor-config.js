@@ -2,7 +2,7 @@
  * Created by gy on 2018/3/24.
  */
 'use strict'
-define(['jquery', 'vue', 'commonModule'], function ($, Vue, commonModule) {
+define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, commonModule,validateExtend) {
     var monitorConf = function () {
         if ($('#monitorConfig')[0]) {
             var monitorConfig = new Vue({
@@ -191,15 +191,74 @@ define(['jquery', 'vue', 'commonModule'], function ($, Vue, commonModule) {
                         $(e).parent().parent().siblings("tr[id^=" + start + "]").toggleClass('hidden')
                         // $($(e).parent().parent().siblings("tr[id^="+start+"]")).slideToggle();
 
+                    },
+                    //新建模板提交
+                    submitForm:function () {
+
+
                     }
                 }
+            });
+            $("#add-template").validate({
+                submitHandler: function () {
+                    monitorConfig.submitForm();
+                },
+                //失去焦点
+                onfocusout: function (element,event) {
+                    $(element).valid();
+                },
+                ignore:".ignore",
+                //在 keyup 时验证,默认为true
+                onkeyup:function (element,event) {
+                    // $(element).valid();
+                    return false;
+                },
+                rules:{
+                    tempName:{
+                        required:true,
+                        //remote接受的返回值只要true和false即可
+                        remote:{
+                            //验证名称是否重复
+                            type:"post",
+                            url:"/monitorConfig/isTemplateNameDup",
+                            timeout:6000,
+                            data:{
+                                name:function () {
+                                    return $('#tempName').val();
+                            }}
+                        }
+                    }
+                },
+                messages:{
+                    tempName: {
+                        required: commonModule.i18n("validate.inputNotEmpty"),
+                        remote: commonModule.i18n("validate.templateNameDuplicate")
+                    }
+                },
+                errorElement:"span",
+                errorPlacement:function (error,element) {
+                    element.parent("div").addClass('has_feedback');
+                    if (element.prop("type") === "checkbox"){
+                        error.insertAfter(element.parent("label"));
+                    }else {
+                        error.insertAfter(element);
+                    }
+                },
+                success: function (label,element) {
+                    //要验证的元素通过验证后的动作
+                },
+                highlight: function (element,erroClass,validClass) {
+                    $(element).parent("div").addClass("has-error").removeClass("has-success");
+                },
+                unhighlight: function (element,erroClass,validClass) {
+                    $(element).parent("div").addClass("has-success").removeClass("has-error");
+                }
+            });
 
-            })
-            $("#monitorConfig").on('show.bs.modal', function () {
-                monitorConfig.initData();
-            })
         }
-
+        $("#monitorConfig").on('show.bs.modal', function () {
+            monitorConfig.initData();
+        })
     }
     monitorConf();
     return {monitorConf: monitorConf}
