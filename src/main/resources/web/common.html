@@ -1,15 +1,28 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:fragment="common">
+<head>
     <meta charset="UTF-8"/>
     <title>Title</title>
-    <script type="text/javascript" src="/js/lib/jquery/jquery-3.3.1.min.js"></script>
-    <script type="text/javascript" src="/js/lib/jquery/jquery.i18n.properties.js"></script>
-    <script type="text/javascript" src="/js/lib/bootstrap/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/js/lib/bootstrap/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="/js/lib/fontawesome/font-awesome.min.css"/>
-    <link rel="stylesheet" type="text/css" href="/css/common.css"/>
-    <link rel="stylesheet" type="text/css" href="/css/monitorConfig.css"/>
-    <script src="/js/lib/require/require.js" data-main="/js/main.js"></script>
 </head>
+<body th:fragment="common">
+<script type="text/javascript" src="/js/lib/jquery/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/js/lib/jquery/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="/js/lib/bootstrap/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/js/lib/bootstrap/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/js/lib/fontawesome/font-awesome.min.css"/>
+<link rel="stylesheet" type="text/css" href="/css/common.css"/>
+<link rel="stylesheet" type="text/css" href="/css/monitorConfig.css"/>
+<script src="/js/lib/require/require.js" data-main="/js/main.js"></script>
+<div id="prompt-modal" class="prompt prompt-modal hidden">
+    <span class="fa-stack def-ident">
+        <i class="fa fa fa-circle fa-stack-2x"></i>
+        <i class="fa fa-check fa-stack-1x" id="info-ident"></i>
+    </span>
+    <div class="prompt-label">
+        <p id="prompt-title" class="prompt-title"></p>
+        <p id="prompt-info" class="prompt-info"></p>
+    </div>
+    <i id="prompt-close" class="fa fa-close skin-color def-close prompt-close"></i>
+</div>
+</body>
 </html>

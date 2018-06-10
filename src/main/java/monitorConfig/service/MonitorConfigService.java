@@ -1,7 +1,7 @@
 package monitorConfig.service;
 
 import monitorConfig.common.ResultMsg;
-import org.springframework.stereotype.Service;
+import monitorConfig.entity.metric.NewTemplateView;
 
 /**
  * Created by gy on 2018/3/31.
@@ -16,4 +16,18 @@ public interface MonitorConfigService {
      * @return
      */
     public ResultMsg getMetricInfo(String lightType,String monitorMode);
+
+    /**
+     * 判断模板名字是否被使用
+     * @param name
+     * @return
+     */
+    public boolean isTemplateNameDup(String name);
+
+    /**
+     * 新建模板
+     * @param view
+     * @return
+     */
+    public ResultMsg addTemplate(NewTemplateView view);
 }

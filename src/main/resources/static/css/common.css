@@ -90,6 +90,7 @@ label{
     width: 100px;
     border: none;
     border-radius: 2px;
+    outline: none
 }
 .def-btn-primary{
     color: #ffffff;
@@ -124,9 +125,72 @@ form .error{
     margin-left: 4px;
 }
 form span[id$="error"]{
-    color: #a94442
+    color: #c11212
 }
 .required{
     font-size: 20px;
-    color: #a94442;
+    color: #c11212;
+}
+.prompt-modal{
+    position: absolute;
+    /*top: 10px;*/
+    /*right: 10px;*/
+    width: 260px;
+    height: 90px;
+    border-radius: 2px;
+    border: 1px solid #ec670b;
+    /*text-align: center;*/
+    overflow: hidden;
+    color: #2BDE3F;
+    background: #fff;
+    box-shadow: 1px 7px 14px -5px rgba(0,0,0,0.2);
+    animation: mymove 500ms linear forwards;
+}
+@-webkit-keyframes mymove {
+    0% { top: 200px; right: 10px;}
+    25% { top: 150px; right: 10px;}
+    50% { top: 100px; right: 10px;}
+    75% { top: 50px; right: 10px;}
+    100% { top: 10px; right: 10px;}
+
+}
+.prompt-alert{
+    color: #FFC007;
+}
+.prompt-close{
+    float: right;
+    margin: 4px;
+}
+.prompt-label{
+    font-size: 14px;
+    display: inline-block;
+    margin-left: 54px;
+    margin-top: 20px;
+}
+.prompt-title{
+    color: #3e3e3e;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+.prompt-info{
+    color: #878787;
+    margin-bottom: 0;
+}
+/*.prompt:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}*/
+#prompt-modal #info-ident{
+    color: #fff;
+}
+.def-ident{
+    position: absolute;
+    top: 30%;
+    left: 12px;
 }

@@ -3,12 +3,15 @@
  */
 'use strict';
 define(['jquery', 'jquery-i18n'], function ($, jqueryi18n) {
-    var i18n = function (key,param0,param1,param2,param3,param4,param5,param6,param7,param8,param9) {
-        return $.i18n.prop(key,param0,param1,param2,param3,param4,param5,param6,param7,param8,param9);
+    var i18n = function (key, param0, param1, param2, param3, param4, param5, param6, param7, param8, param9) {
+        return $.i18n.prop(key, param0, param1, param2, param3, param4, param5, param6, param7, param8, param9);
     };
     $(document).ready(function () {
         loadProperties("message", "././i18n/", sessionStorage.language);
-        require(['validate-extend','addMonitorConfig','monitorConfig']);
+        require(['validate-extend', 'addMonitorConfig', 'monitorConfig']);
+        $("#prompt-close").click(function () {
+            $(this).parent().addClass("hidden");
+        })
     });
     function loadProperties(name, path, lang) {
         //中文
@@ -39,11 +42,30 @@ define(['jquery', 'jquery-i18n'], function ($, jqueryi18n) {
                 });
             }
         })
-    }
+    };
+
+    var prompt = function (info, level) {
+        $('#prompt-modal #prompt-info').text(i18n(info));
+        if (level === "SUCCESS") {
+            $('#prompt-modal #prompt-title').text(i18n("prompt.titleSuccess"));
+            $('#prompt-modal').removeClass("prompt-alert");
+            $('#info-ident').removeClass("fa-close").addClass("fa-check");
+        } else if (level === "alert") {
+            $('#prompt-modal #prompt-title').text(i18n("prompt.titleAlert"));
+            $('#prompt-modal').addClass("prompt-alert");
+            $('#info-ident').removeClass("fa-check").addClass("fa-close");
+        }
+        $('#prompt-modal').removeClass('hidden');
+        setTimeout(function () {
+            $('#prompt-modal').addClass('hidden');
+        }, 4000);
+
+    };
 
     // commonModule.i18n=i18n;
     return {
         i18n: i18n,
+        prompt:prompt
 
     };
 

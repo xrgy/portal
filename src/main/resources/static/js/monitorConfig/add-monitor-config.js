@@ -10,7 +10,6 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                 data: {
                     moreCondition: commonModule.i18n("monitorConfig.moreCondition"),
                     templateName: "cc",
-                    snmpVersion: "snmpv2",
                     dataObj: [{
                         quotaName: 'm',
                         quotaDesc: ''
@@ -44,12 +43,14 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                         {text: "and", value: 'and'},
                         {text: "or", value: 'or'}],
                     path: {
-                        getMetricInfo: "/monitorConfig/getMetricInfo"
+                        getMetricInfo: "/monitorConfig/getMetricInfo",
+                        addTemplate: "/monitorConfig/addTemplate",
                     },
                     monitorMode: "snmp_v1",
                     lightType: "switch",
                     availDataObj: null,
-                    perfDataObj: null
+                    perfDataObj: null,
+                    resourceUuid:"",
                 },
                 filters: {
                     convertType: function (type) {
@@ -95,6 +96,9 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                                         avail.type = available[availdata].type_name;
                                         avail.data = available[availdata];
                                         availArray.push(avail);
+                                        if (_self.resourceUuid === ""){
+                                            _self.resourceUuid = available[availdata].metric_light_type_id;
+                                        }
                                     }
                                     _self.availDataObj = _self.groupByType(availArray);
                                     for (var perfdata in performance) {
@@ -194,10 +198,41 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                     },
                     //新建模板提交
                     submitForm:function () {
+                        var _self = this;
+                        var data ={};
+                        data.template_name=_self.templateName;
+                        data.monitor_mode= _self.monitorMode;
+                        data.template_type= 1;
+                        data.resource_uuid=_self.resourceUuid;
+                        data.available = _self.availDataObj;
+                        data.performance = _self.perfDataObj;
 
+                        $.ajax({
+                            type:"post",
+                            data:{templateData:JSON.stringify(data)},
+                            url:_self.path.addTemplate,
+                            success:function (data) {
+                                if (data.msg === "SUCCESS") {
+                                    //弹出框 新建成功
+                                    commonModule.prompt("prompt.insertSuccess",data.msg);
+                                }else {
+                                    //弹出框 新建失败
+                                    commonModule.prompt("prompt.insertError","alert");
+                                }
+                                $("#monitorConfig").modal('hide');
+                                
+                            },
+                            error:function () {
+                                //处理异常，请重试
+                                $("#monitorConfig").modal('hide');
+                                commonModule.prompt("prompt.exceptionPleaseTryAgain","alert");
+                            }
+
+                        })
 
                     }
                 }
+
             });
             $("#add-template").validate({
                 submitHandler: function () {
