@@ -194,3 +194,32 @@ form span[id$="error"]{
     top: 30%;
     left: 12px;
 }
+.model-tab{
+    width:25%;
+    height: 100%;
+    float: left;
+    box-shadow: 1px 2px 20px 2px #eee;
+}
+ul {
+    list-style: none;
+    padding:0;
+}
+li {
+    height: 50px;
+    text-align: left;
+    padding: 12px;
+    cursor: pointer;
+}
+li:hover,
+li.active {
+    border-left: 10px solid #ec670b;
+    color: #ec670b;
+    background: -webkit-linear-gradient(left, rgb(249, 203, 164), rgb(245, 237, 229));
+    background: -ms-linear-gradient(left, rgb(249, 203, 164), rgb(245, 237, 229));
+    background: -moz-linear-gradient(left, rgb(249, 203, 164), rgb(245, 237, 229));
+    background: -o-linear-gradient(left, rgb(249, 203, 164), rgb(245, 237, 229));
+    background: linear-gradient(left, rgb(249, 203, 164), rgb(245, 237, 229));
+}
+.middle-dialog{
+    width: 50% !important;
+}

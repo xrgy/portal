@@ -19,7 +19,8 @@ require.config({
         'monitorConfig':'./monitorConfig/monitor-config',
         'pjaxConfig':'./pjax-config',
         'commonModule':'./common-module',
-        'validate-extend':'./validate-extend'
+        'validate-extend':'./validate-extend',
+        'addNetwork':'./monitor/add-network',
     },
     shim:{
         'jquery-i18n':['jquery'],
