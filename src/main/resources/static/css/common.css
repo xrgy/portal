@@ -76,6 +76,17 @@ label{
     color: #ffffff;
     background: #ec670b;
 }
+.radio-group .chose-label{
+    width: 88px;
+    height: 28px;
+    border: 1px solid #ec670b;
+    text-align: center;
+    padding-top: 6px;
+    cursor: pointer;
+}
+.radio-group .chose-label2{
+    margin-left: -5px
+}
 .def-modal-body{
     height: 420px;
     overflow-x: hidden;
@@ -195,9 +206,9 @@ form span[id$="error"]{
     left: 12px;
 }
 .model-tab{
-    width:25%;
+    /*width:25%;*/
     height: 100%;
-    float: left;
+    /*float: left;*/
     box-shadow: 1px 2px 20px 2px #eee;
 }
 ul {
@@ -222,4 +233,13 @@ li.active {
 }
 .middle-dialog{
     width: 50% !important;
+}
+.form-group label{
+    padding: 3px 6px;
+    text-align: right;
+    width: 100px;
+    vertical-align: top;
+}
+.form-group .input-no-required{
+    margin-left: 18px;
 }

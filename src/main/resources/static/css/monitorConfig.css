@@ -2,17 +2,7 @@
 #monitorBasicInfo .radio-left{
     margin-left: 34px;
 }
-.radio-group .chose-label{
-    width: 88px;
-    height: 28px;
-    border: 1px solid #ec670b;
-    text-align: center;
-    padding-top: 6px;
-    cursor: pointer;
-}
-.radio-group .chose-label2{
-    margin-left: -5px
-}
+
 #performanceContainer .span-title,
 #avaliableContainer .span-title{
     color: #ec670b;

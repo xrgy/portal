@@ -16,15 +16,15 @@
             <hr class="skin-color border-color"/>
             <form role="form" id="add-network">
                 <div class="modal-body def-modal-body">
-                    <div id="leftMenu" class="model-tab">
+                    <div id="leftMenu" class="model-tab col-xs-3 col-sm-3 col-md-3 col-lg-3">
                         <ul>
-                            <li data-i18n="monitor.networkdevice.switch" v-on:click="clickResource($event,'switch')"></li>
-                            <li data-i18n="monitor.networkdevice.router" v-on:click="clickResource($event,'router')"></li>
-                            <li data-i18n="monitor.networkdevice.firewall" v-on:click="clickResource($event,'firewall')"></li>
-                            <li data-i18n="monitor.networkdevice.LB" v-on:click="clickResource($event,'LB')"></li>
+                            <li data-i18n="monitor.networkdevice.switch" v-on:click="clickResource($event,'switch')" :class="{active:tabSelected=='switch'}"></li>
+                            <li data-i18n="monitor.networkdevice.router" v-on:click="clickResource($event,'router')" :class="{active:tabSelected=='router'}"></li>
+                            <li data-i18n="monitor.networkdevice.firewall" v-on:click="clickResource($event,'firewall')" :class="{active:tabSelected=='firewall'}"></li>
+                            <li data-i18n="monitor.networkdevice.LB" v-on:click="clickResource($event,'LB')" :class="{active:tabSelected=='LB'}"></li>
                         </ul>
                     </div>
-                    <div>
+                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
                         <div class="form-group">
                             <label for="ip" data-i18n="monitor.baseinfo.ip"></label>
                             <i class="required">*</i>
@@ -35,7 +35,59 @@
                             <label for="name" data-i18n="monitor.baseinfo.name"></label>
                             <i class="required">*</i>
                             <input class="form-control input-sm def-input-sm" type="text" name="name" id="name"
-                                   v-model="infoIp" data-i18n-placeholder="monitorConfig.placeInput"/>
+                                   v-model="infoName" data-i18n-placeholder="monitorConfig.placeInput"/>
+                        </div>
+                        <div class="form-group radio-group">
+                            <label data-i18n="monitor.baseinfo.snmpversion"></label>
+                            <!--<div class="radio-one radio-left">-->
+                            <input type="radio" id="addsnmpv1" class="snmp-magic-radio hidden "
+                                   v-model="monitorMode" name="monitorMode"
+                                   value="snmp_v1" v-on:click="getTemplateByMode('snmp_v1')"/>
+                            <label class="chose-label snmp-left" for="addsnmpv1" data-i18n="monitorConfig.snmpv1"></label>
+                            <!--</div>-->
+                            <!--<div class="radio-one">-->
+                            <input type="radio" id="addsnmpv2" class="snmp-magic-radio hidden" v-model="monitorMode" name="monitorMode"
+                                   value="snmp_v2c" v-on:click="getTemplateByMode('snmp_v2c')"/>
+                            <label class="chose-label chose-label2" for="addsnmpv2"
+                                   data-i18n="monitorConfig.snmpv2c"></label>
+                            <!--</div>-->
+                        </div>
+                        <div class="form-group">
+                            <label for="name" data-i18n="monitor.baseinfo.readcommunity"></label>
+                            <i class="required">*</i>
+                            <input class="form-control input-sm def-input-sm" type="text" name="readcommunity" id="readcommunity"
+                                   v-model="infoReadcommunity" data-i18n-placeholder="monitorConfig.placeInput"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" data-i18n="monitor.baseinfo.writecommunity"></label>
+                            <input class="form-control input-sm def-input-sm input-no-required" type="text" name="writecommunity" id="writecommunity"
+                                   v-model="infoWritecommunity" data-i18n-placeholder="monitorConfig.placeInput"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" data-i18n="monitor.baseinfo.port"></label>
+                            <i class="required">*</i>
+                            <input class="form-control input-sm def-input-sm" type="number" name="port" id="port"
+                                   v-model="infoPort" />
+                        </div>
+                        <div class="form-group">
+                            <label for="name" data-i18n="monitor.baseinfo.timeinterval"></label>
+                            <i class="required">*</i>
+                            <input class="form-control input-sm def-input-sm" type="number" name="timeinterval" id="timeinterval"
+                                   v-model="infoTimeinterval" />
+                        </div>
+                        <div class="form-group">
+                            <label for="name" data-i18n="monitor.baseinfo.timeout"></label>
+                            <i class="required">*</i>
+                            <input class="form-control input-sm def-input-sm" type="number" name="timeout" id="timeout"
+                                   v-model="infoTimeout" />
+                        </div>
+                        <div class="form-group">
+                            <label for="name" data-i18n="monitor.baseinfo.monitortemplate"></label>
+                            <i class="required">*</i>
+                            <select class="form-control input-sm def-input-sm"  name="monitortemplate" id="monitortemplate"
+                                    v-model="infoMonitortemplate" >
+                                <option v-for="template in templateList" :value="template.uuid">{{template.templateName}}</option>
+                            </select>
                         </div>
                     </div>
                 </div>

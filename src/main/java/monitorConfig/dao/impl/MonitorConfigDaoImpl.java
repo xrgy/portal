@@ -1,16 +1,22 @@
 package monitorConfig.dao.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import monitorConfig.dao.MonitorConfigDao;
 import monitorConfig.entity.metric.NewTemplateView;
 import monitorConfig.entity.TestEntity;
 import monitorConfig.entity.metric.ResMetricInfo;
+import monitorConfig.entity.template.*;
+import org.apache.tomcat.util.digester.Rule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -25,6 +31,12 @@ public class MonitorConfigDaoImpl implements MonitorConfigDao {
     private static final String PATH_METRIC_INFO = "getMetricInfo";
     private static final String PATH_NAME_DUP="isTemplateNameDup";
     private static final String PATH_ADD_TEMPLATE="addTemplate";
+    private static final String PATH_GET_TEMPLATE="getTemplate";
+    private static final String PATH_GET_AVL_RULE="getAvlRule";
+    private static final String PATH_GET_PERF_RULE="getPerfRule";
+    private static final String PATH_ADD_AVL_MONITOR = "addAvlRuleMonitorList";
+    private static final String PATH_ADD_PERF_MONITOR = "addPerfRuleMonitorList";
+    private static final String PATH_ADD_TEMPLATE_MONITOR = "addTemplateMonitor";
 
     private String monitorConfigPrefix() {
         return IP + ":" + CONFIG_PORT + "/" + MONITOR_PREFIX + "/";
@@ -68,6 +80,73 @@ public class MonitorConfigDaoImpl implements MonitorConfigDao {
         boolean t = false;
         try {
             t = rest().postForObject(monitorConfigPrefix()+PATH_ADD_TEMPLATE,objectMapper.writeValueAsString(view),boolean.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return t;
+    }
+
+    @Override
+    public List<RuleTemplate> getTemplateByLightType(String lightType,String monitorMode) {
+        ResponseEntity<String> response =  rest().getForEntity(monitorConfigPrefix()+PATH_GET_TEMPLATE+"?lightType={1}&monitorMode={2}", String.class,lightType,monitorMode);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<RuleTemplate>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<AlertAvlRuleEntity> getAvlRuleByTemplateId(String templateId) {
+        ResponseEntity<String> response = rest().getForEntity(monitorConfigPrefix()+PATH_GET_AVL_RULE+"?templateId={1}",String.class,templateId);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<AlertAvlRuleEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<AlertPerfRuleEntity> getPerfRuleByTemplate(String templateId) {
+        ResponseEntity<String> response = rest().getForEntity(monitorConfigPrefix()+PATH_GET_PERF_RULE+"?templateId={1}",String.class,templateId);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<AlertPerfRuleEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean addAvlRuleMonitorList(List<AlertAvlRuleMonitorEntity> avlRuleMonitorList) {
+
+        boolean t = false;
+        try {
+            t = rest().postForObject(monitorConfigPrefix()+PATH_ADD_AVL_MONITOR,objectMapper.writeValueAsString(avlRuleMonitorList),boolean.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return t;
+    }
+
+    @Override
+    public boolean addPerfRuleMonitorList(List<AlertPerfRuleMonitorEntity> perfRuleMonitorList) {
+        boolean t = false;
+        try {
+            t = rest().postForObject(monitorConfigPrefix()+PATH_ADD_PERF_MONITOR,objectMapper.writeValueAsString(perfRuleMonitorList),boolean.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return t;
+    }
+
+    @Override
+    public boolean addTemplateMonitorEntity(AlertRuleTemplateMonitorEntity templateMonitorEntity) {
+        boolean t = false;
+        try {
+            t = rest().postForObject(monitorConfigPrefix()+PATH_ADD_TEMPLATE_MONITOR,objectMapper.writeValueAsString(templateMonitorEntity),boolean.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

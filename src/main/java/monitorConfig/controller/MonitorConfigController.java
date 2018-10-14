@@ -51,4 +51,9 @@ public class MonitorConfigController {
         NewTemplateView view = mapper.readValue(data, NewTemplateView.class);
         return service.addTemplate(view);
     }
+    @RequestMapping("/getTemplateByLightType")
+    @ResponseBody
+    public ResultMsg getTemplateByLightType(String lightType,String monitorMode){
+        return service.getTemplateByLightType(lightType,monitorMode);
+    }
 }

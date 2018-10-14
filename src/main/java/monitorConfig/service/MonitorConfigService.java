@@ -1,7 +1,9 @@
 package monitorConfig.service;
 
+import monitor.entity.OperationMonitorEntity;
 import monitorConfig.common.ResultMsg;
 import monitorConfig.entity.metric.NewTemplateView;
+import monitorConfig.entity.template.RuleMonitorEntity;
 
 /**
  * Created by gy on 2018/3/31.
@@ -30,4 +32,17 @@ public interface MonitorConfigService {
      * @return
      */
     public ResultMsg addTemplate(NewTemplateView view);
+
+    /**
+     * 根据三级规格获取
+     * @param lightType
+     * @return
+     */
+    public ResultMsg getTemplateByLightType(String lightType,String monitorMode);
+
+    /**
+     * 根据监控记录id和模板id生成监控实体规则
+     * @param operationMonitorEntity
+     */
+    RuleMonitorEntity addMonitorRecordAlertRule(OperationMonitorEntity operationMonitorEntity);
 }
