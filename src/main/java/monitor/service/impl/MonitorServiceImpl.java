@@ -3,11 +3,10 @@ package monitor.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.common.MonitorEnum;
+import monitor.common.ResCommon;
 import monitor.common.ResultMsg;
 import monitor.dao.MonitorDao;
-import monitor.entity.LightTypeEntity;
-import monitor.entity.MonitorInfo;
-import monitor.entity.OperationMonitorEntity;
+import monitor.entity.*;
 import monitor.entity.view.OperationMonitorView;
 import monitor.service.MonitorService;
 import monitorConfig.common.CommonEnum;
@@ -50,20 +49,9 @@ public class MonitorServiceImpl implements MonitorService {
 
     @Override
     public ResultMsg addNetworkMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
-        ResultMsg msg = new ResultMsg();
-        OperationMonitorEntity operationMonitorEntity = new OperationMonitorEntity();
-        operationMonitorEntity.setUuid(UUID.randomUUID().toString());
-        operationMonitorEntity.setName(view.getName());
-        operationMonitorEntity.setIp(view.getIp());
-        List<LightTypeEntity> lightTypeEntityList = dao.getLightTypeEntity();
-        Optional<LightTypeEntity> lightTypeEntity = lightTypeEntityList.stream().filter(x->x.getName().equals(view.getLightType())).findFirst();
-        lightTypeEntity.ifPresent(lightTypeEntity1 -> operationMonitorEntity.setLightTypeId(lightTypeEntity1.getUuid()));
-        operationMonitorEntity.setMonitorType(MonitorEnum.MonitorRecordEnum.SNMP.value());
+        OperationMonitorEntity operationMonitorEntity = setCommonMonitorFiled(view);
+        operationMonitorEntity.setMonitorType(MonitorEnum.MonitorTypeEnum.SNMP.value());
         operationMonitorEntity.setTemplateId(view.getMonitortemplate());
-        operationMonitorEntity.setScrapeInterval(view.getTimeinterval());
-        operationMonitorEntity.setScrapeTimeout(view.getTimeout());
-        operationMonitorEntity.setCreateTime(new Date());
-        operationMonitorEntity.setDeleted(0);
         //monitorinfo
         MonitorInfo monitorInfo = new MonitorInfo();
         if (view.getMonitorMode().equals(MonitorEnum.MonitorRecordEnum.SNMP_VERSION_V1.value())){
@@ -76,22 +64,99 @@ public class MonitorServiceImpl implements MonitorService {
         monitorInfo.setPort(view.getPort());
         operationMonitorEntity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
         boolean insert = dao.insertMonitorRecord(operationMonitorEntity);
-        // TODO: 2018/10/14 添加到etcd
+        // TODO: 2018/10/14 添加监控实体到etcd
 
         if(insert){
             //添加监控对象的告警规则
            RuleMonitorEntity ruleMonitorEntity = configService.addMonitorRecordAlertRule(operationMonitorEntity);
            //生成并下发etcd中的告警模板
+            configService.addAlertTemplateToEtcd(operationMonitorEntity.getLightTypeId(),operationMonitorEntity.getTemplateId(),ruleMonitorEntity);
 
 
         }
-        if (insert) {
-            msg.setCode(HttpStatus.OK.value());
-            msg.setMsg(CommonEnum.MSG_SUCCESS.value());
-        }else {
-            msg.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            msg.setMsg(CommonEnum.MSG_ERROR.value());
-        }
-        return msg;
+
+        return ResCommon.genSimpleResByBool(insert);
     }
+
+    @Override
+    public ResultMsg addMiddleWareMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
+        OperationMonitorEntity operationMonitorEntity = setCommonMonitorFiled(view);
+        operationMonitorEntity.setTemplateId(view.getMonitortemplate());
+        operationMonitorEntity.setMonitorType(MonitorEnum.MonitorTypeEnum.TOMCAT.value());
+        MiddleMonitorInfo monitorInfo = new MiddleMonitorInfo();
+        monitorInfo.setPort(view.getPort());
+        monitorInfo.setAuthentication(view.isAuthentication());
+        if (view.isAuthentication()){
+            monitorInfo.setUserName(view.getUserName());
+            monitorInfo.setPassWord(view.getPassword());
+        }
+        operationMonitorEntity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
+        boolean insert = dao.insertMonitorRecord(operationMonitorEntity);
+        // TODO: 2018/10/14 添加监控实体到etcd
+
+        if(insert){
+            //添加监控对象的告警规则
+            RuleMonitorEntity ruleMonitorEntity = configService.addMonitorRecordAlertRule(operationMonitorEntity);
+            //生成并下发etcd中的告警模板
+            configService.addAlertTemplateToEtcd(operationMonitorEntity.getLightTypeId(),operationMonitorEntity.getTemplateId(),ruleMonitorEntity);
+        }
+
+        return ResCommon.genSimpleResByBool(insert);
+    }
+
+    @Override
+    public ResultMsg addDataBaseMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
+        OperationMonitorEntity operationMonitorEntity = setCommonMonitorFiled(view);
+        operationMonitorEntity.setTemplateId(view.getMonitortemplate());
+        operationMonitorEntity.setMonitorType(MonitorEnum.MonitorTypeEnum.MYSQL.value());
+        DBMonitorInfo monitorInfo = new DBMonitorInfo();
+        monitorInfo.setDatabaseName(view.getDatabaseName());
+        monitorInfo.setPort(view.getPort());
+        monitorInfo.setUserName(view.getUserName());
+        monitorInfo.setPassWord(view.getPassword());
+        operationMonitorEntity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
+        boolean insert = dao.insertMonitorRecord(operationMonitorEntity);
+        // TODO: 2018/10/14 添加监控实体到etcd
+
+        if(insert){
+            //添加监控对象的告警规则
+            RuleMonitorEntity ruleMonitorEntity = configService.addMonitorRecordAlertRule(operationMonitorEntity);
+            //生成并下发etcd中的告警模板
+            configService.addAlertTemplateToEtcd(operationMonitorEntity.getLightTypeId(),operationMonitorEntity.getTemplateId(),ruleMonitorEntity);
+
+
+        }
+        return ResCommon.genSimpleResByBool(insert);
+    }
+
+    @Override
+    public ResultMsg addVirtualMonitorRecord(OperationMonitorView view) {
+        OperationMonitorEntity operationMonitorEntity = setCommonMonitorFiled(view);
+        return null;
+    }
+
+    @Override
+    public ResultMsg addContainerMonitorRecord(OperationMonitorView view) {
+        OperationMonitorEntity operationMonitorEntity = setCommonMonitorFiled(view);
+        return null;
+    }
+
+
+    private OperationMonitorEntity setCommonMonitorFiled(OperationMonitorView view){
+        OperationMonitorEntity operationMonitorEntity = new OperationMonitorEntity();
+        operationMonitorEntity.setUuid(UUID.randomUUID().toString());
+        operationMonitorEntity.setName(view.getName());
+        operationMonitorEntity.setIp(view.getIp());
+        List<LightTypeEntity> lightTypeEntityList = dao.getLightTypeEntity();
+        Optional<LightTypeEntity> lightTypeEntity = lightTypeEntityList.stream().filter(x->x.getName().equals(view.getLightType())).findFirst();
+        lightTypeEntity.ifPresent(lightTypeEntity1 -> operationMonitorEntity.setLightTypeId(lightTypeEntity1.getUuid()));
+        operationMonitorEntity.setScrapeInterval(view.getTimeinterval());
+        operationMonitorEntity.setScrapeTimeout(view.getTimeout());
+        operationMonitorEntity.setCreateTime(new Date());
+        operationMonitorEntity.setDeleted(0);
+        return operationMonitorEntity;
+    }
+
+
+
 }

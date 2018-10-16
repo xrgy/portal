@@ -1,5 +1,7 @@
 package monitorConfig.dao;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import monitorConfig.entity.metric.Metrics;
 import monitorConfig.entity.metric.NewTemplateView;
 import monitorConfig.entity.metric.ResMetricInfo;
 import monitorConfig.entity.template.*;
@@ -72,4 +74,19 @@ public interface MonitorConfigDao {
      * @return
      */
     boolean addTemplateMonitorEntity(AlertRuleTemplateMonitorEntity templateMonitorEntity);
+
+    /**
+     * 获取三级规格资源的指标列表
+     * @param lightTypeId
+     * @return
+     */
+    List<Metrics> getMetricsByLightType(String lightTypeId);
+
+    /**
+     * 添加告警模板到etcd
+     * @param lightTypeId
+     * @param templateId
+     * @param ruleMonitorEntity
+     */
+    void addAlertTemplateToEtcd(String lightTypeId, String templateId, RuleMonitorEntity ruleMonitorEntity) throws JsonProcessingException;
 }

@@ -1,5 +1,6 @@
 package monitorConfig.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import monitor.entity.OperationMonitorEntity;
 import monitorConfig.common.ResultMsg;
 import monitorConfig.entity.metric.NewTemplateView;
@@ -45,4 +46,12 @@ public interface MonitorConfigService {
      * @param operationMonitorEntity
      */
     RuleMonitorEntity addMonitorRecordAlertRule(OperationMonitorEntity operationMonitorEntity);
+
+    /**
+     * 生成添加etcd监控模板
+     * @param lightTypeId
+     * @param templateId
+     * @param ruleMonitorEntity
+     */
+    void addAlertTemplateToEtcd(String lightTypeId, String templateId, RuleMonitorEntity ruleMonitorEntity) throws JsonProcessingException;
 }

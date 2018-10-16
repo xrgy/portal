@@ -7,8 +7,8 @@ public interface MonitorEnum {
 
     enum MonitorRecordEnum {
         SNMP_VERSION_V1("snmp_v1"),
-        SNMP_VERSION_V2("snmp_v2c"),
-        SNMP("snmp");
+        SNMP_VERSION_V2("snmp_v2c");
+
 
         private String value;
 
@@ -20,4 +20,36 @@ public interface MonitorEnum {
             return this.value;
         }
     }
+    enum MonitorTypeEnum{
+        SNMP("snmp"),
+
+        MYSQL("mysql"),
+
+        TOMCAT("tomcat"),
+
+        CAS("cas"),
+
+        CASCLUSTER("cascluster"),
+
+        CVK("cvk"),
+
+        VIRTUALMACHINE("virtualmachine"),
+
+        K8S("k8s"),
+
+        K8SNODE("k8sn"),
+
+        K8SCONTAINER("k8sc");
+
+        private String value;
+
+        MonitorTypeEnum(String msg) {
+            this.value = msg;
+        }
+
+        public String value() {
+            return this.value;
+        }
+    }
+
 }

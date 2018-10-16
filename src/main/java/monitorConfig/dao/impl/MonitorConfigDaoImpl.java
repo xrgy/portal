@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import monitorConfig.dao.MonitorConfigDao;
+import monitorConfig.entity.metric.Metrics;
 import monitorConfig.entity.metric.NewTemplateView;
 import monitorConfig.entity.TestEntity;
 import monitorConfig.entity.metric.ResMetricInfo;
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -37,6 +40,9 @@ public class MonitorConfigDaoImpl implements MonitorConfigDao {
     private static final String PATH_ADD_AVL_MONITOR = "addAvlRuleMonitorList";
     private static final String PATH_ADD_PERF_MONITOR = "addPerfRuleMonitorList";
     private static final String PATH_ADD_TEMPLATE_MONITOR = "addTemplateMonitor";
+    private static final String PATH_GET_METRICS_BY_LIGHT="getMetricsUseLight";
+    private static final String PATH_ADD_TEMPLATE_ETCD="addAlertTemplateToEtcd";
+
 
     private String monitorConfigPrefix() {
         return IP + ":" + CONFIG_PORT + "/" + MONITOR_PREFIX + "/";
@@ -151,5 +157,25 @@ public class MonitorConfigDaoImpl implements MonitorConfigDao {
             e.printStackTrace();
         }
         return t;
+    }
+
+    @Override
+    public List<Metrics> getMetricsByLightType(String lightTypeId) {
+        ResponseEntity<String> response = rest().getForEntity(monitorConfigPrefix()+PATH_GET_METRICS_BY_LIGHT+"?lightTypeId={1}",String.class,lightTypeId);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<Metrics>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public void addAlertTemplateToEtcd(String lightTypeId, String templateId, RuleMonitorEntity ruleMonitorEntity) throws JsonProcessingException {
+        Map<String,Object> map = new HashMap<>();
+        map.put("lightTypeId",lightTypeId);
+        map.put("templateId",templateId);
+        map.put("ruleMonitorEntity",objectMapper.writeValueAsString(ruleMonitorEntity));
+        rest().postForObject(monitorConfigPrefix()+PATH_ADD_TEMPLATE_ETCD,map,String.class);
     }
 }

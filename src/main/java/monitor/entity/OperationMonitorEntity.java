@@ -19,9 +19,9 @@ public class OperationMonitorEntity {
 
     private String ip;
 
-    private String highTypeId;
+//    private String highTypeId;
 
-    private String middleTypeId;
+//    private String middleTypeId;
 
     private String lightTypeId;
 

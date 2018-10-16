@@ -1,10 +1,12 @@
 package monitorConfig.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.entity.OperationMonitorEntity;
 import monitorConfig.common.CommonEnum;
 import monitorConfig.common.ResultMsg;
 import monitorConfig.dao.MonitorConfigDao;
+import monitorConfig.entity.metric.Metrics;
 import monitorConfig.entity.metric.NewTemplateView;
 import monitorConfig.entity.TestEntity;
 import monitorConfig.entity.metric.ResMetricInfo;
@@ -18,9 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by gy on 2018/3/31.
@@ -148,6 +148,12 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
         ruleMonitorEntity.setTemplateMonitorEntity(templateMonitorEntity);
         return ruleMonitorEntity;
     }
+
+    @Override
+    public void addAlertTemplateToEtcd(String lightTypeId, String templateId, RuleMonitorEntity ruleMonitorEntity) throws JsonProcessingException {
+        dao.addAlertTemplateToEtcd(lightTypeId,templateId,ruleMonitorEntity);
+    }
+
 
     @Bean
     public RestTemplate rest(){
