@@ -3,6 +3,8 @@ package monitor.entity.view;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 /**
  * Created by gy on 2018/10/14.
  */
@@ -60,5 +62,12 @@ public class OperationMonitorView {
      * k8s 1 2 3 仅监控k8s 监控k8s和所有容器 监控k8s和指定容器
      */
     private String radioType;
+
+    /**
+     * 需要添加的cvkId vmId
+     */
+    private List<CvkId> cvkIds;
+
+
 
 }

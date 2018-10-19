@@ -52,4 +52,35 @@ public interface MonitorEnum {
         }
     }
 
+    enum LightTypeEnum{
+
+        MYSQL("MySQL"),
+
+        TOMCAT("Tomcat"),
+
+        CAS("CAS"),
+
+        CASCLUSTER("CASCluster"),
+
+        CVK("CVK"),
+
+        VIRTUALMACHINE("VirtualMachine"),
+
+        K8S("k8s"),
+
+        K8SNODE("k8sNode"),
+
+        K8SCONTAINER("k8sContainer");
+
+        private String value;
+
+        LightTypeEnum(String msg) {
+            this.value = msg;
+        }
+
+        public String value() {
+            return this.value;
+        }
+    }
+
 }

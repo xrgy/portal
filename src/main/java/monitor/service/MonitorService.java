@@ -36,7 +36,7 @@ public interface MonitorService {
      * 插入虚拟化监控记录
      * @return
      */
-    public ResultMsg addVirtualMonitorRecord(OperationMonitorView view);
+    public ResultMsg addVirtualMonitorRecord(OperationMonitorView view) throws JsonProcessingException;
 
 
     /**
