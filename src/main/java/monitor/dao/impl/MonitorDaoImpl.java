@@ -9,6 +9,9 @@ import monitor.entity.LightTypeEntity;
 import monitor.entity.OperationMonitorEntity;
 import monitor.entity.view.Cluster;
 import monitor.entity.view.Host;
+import monitor.entity.view.k8sView.Container;
+import monitor.entity.view.k8sView.Node;
+import monitorConfig.entity.metric.Metrics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +36,8 @@ public class MonitorDaoImpl implements MonitorDao {
     private static final String PATH_LIGHT="getLightType";
     private static final String PATH_GET_CLUSTERS="getClusterList";
     private static final String PATH_GET_CVK_AND_VM="getCvkAndVmList";
+    private static final String PATH_GET_NODE_LIST="getNodeList";
+    private static final String PATH_GET_CONTAINER_LIST="getContainerList";
 
     private String monitorPrefix() {
         return IP + ":" + MONITOR_PORT + "/" + MONITOR_PREFIX + "/";
@@ -84,6 +89,28 @@ public class MonitorDaoImpl implements MonitorDao {
         ResponseEntity<String> response = rest().postForEntity(monitorPrefix()+PATH_GET_CVK_AND_VM,objectMapper.writeValueAsString(casTransExporterModel),String.class);
         try {
             return objectMapper.readValue(response.getBody(),new TypeReference<List<Host>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<Container> getContainerListByExporter(String ip, String port) {
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_CONTAINER_LIST+"?ip={1}&port={2}",String.class,ip,port);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<Container>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<Node> getNodeListByExporter(String ip, String port) {
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_CONTAINER_LIST+"?ip={1}&port={2}",String.class,ip,port);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<Node>>(){});
         } catch (IOException e) {
             e.printStackTrace();
         }

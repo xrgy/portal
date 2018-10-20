@@ -43,6 +43,6 @@ public interface MonitorService {
      * 插入容器监控记录
      * @return
      */
-    public ResultMsg addContainerMonitorRecord(OperationMonitorView view);
+    public ResultMsg addContainerMonitorRecord(OperationMonitorView view) throws JsonProcessingException;
 
 }

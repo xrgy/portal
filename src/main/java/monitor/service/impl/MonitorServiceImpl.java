@@ -11,6 +11,8 @@ import monitor.entity.view.Cluster;
 import monitor.entity.view.Host;
 import monitor.entity.view.OperationMonitorView;
 import monitor.entity.view.VirtualMachine;
+import monitor.entity.view.k8sView.Container;
+import monitor.entity.view.k8sView.Node;
 import monitor.service.MonitorService;
 import monitorConfig.common.CommonEnum;
 import monitorConfig.entity.template.RuleMonitorEntity;
@@ -398,9 +400,152 @@ public class MonitorServiceImpl implements MonitorService {
     }
 
     @Override
-    public ResultMsg addContainerMonitorRecord(OperationMonitorView view) {
+    public ResultMsg addContainerMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
+        ResultMsg msg = new ResultMsg();
         OperationMonitorEntity operationMonitorEntity = setCommonMonitorFiled(view);
-        return null;
+        operationMonitorEntity.setTemplateId(view.getK8sTemplate());
+        operationMonitorEntity.setMonitorType(MonitorEnum.MonitorTypeEnum.K8S.value());
+        K8sMonitorInfo monitorInfo = new K8sMonitorInfo();
+        monitorInfo.setMasterIp(view.getIp());
+        monitorInfo.setApiPort(view.getApiPort());
+        monitorInfo.setCadvisorPort(view.getCAdvisorPort());
+        operationMonitorEntity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
+        boolean insertK8s = dao.insertMonitorRecord(operationMonitorEntity);
+        // TODO: 2018/10/14 添加监控实体到etcd
+        if (insertK8s) {
+            //添加监控对象的告警规则
+            RuleMonitorEntity ruleMonitorEntity = configService.addMonitorRecordAlertRule(operationMonitorEntity);
+            //生成并下发etcd中的告警模板
+            configService.addAlertTemplateToEtcd(operationMonitorEntity.getLightTypeId(), operationMonitorEntity.getTemplateId(), ruleMonitorEntity);
+        }
+        List<Node> allNode = dao.getNodeListByExporter(view.getIp(), view.getApiPort());
+        //node默认添加全部的
+        Map<String, String> nodeMap = new HashMap<>();
+        Map<String, String> k8snExtra = new HashMap<>();
+        k8snExtra.put("parentId", operationMonitorEntity.getUuid());
+        k8snExtra.put("rootId", operationMonitorEntity.getUuid());
+        allNode.forEach(node -> {
+            if (!node.isBeenAdd()) {
+                try {
+                    OperationMonitorEntity k8snNode = setNodeMonitorField(view, node);
+                    k8snNode.setExtra(objectMapper.writeValueAsString(k8snExtra));
+                    boolean insertK8sn = dao.insertMonitorRecord(k8snNode);
+                    nodeMap.put(node.getNodeIp(), k8snNode.getUuid());
+                    // TODO: 2018/10/14 添加监控实体到etcd
+                    if (insertK8sn) {
+                        //添加监控对象的告警规则
+                        RuleMonitorEntity ruleMonitorEntity = configService.addMonitorRecordAlertRule(k8snNode);
+                        //生成并下发etcd中的告警模板
+                        configService.addAlertTemplateToEtcd(k8snNode.getLightTypeId(), k8snNode.getTemplateId(), ruleMonitorEntity);
+                    }
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        List<Container> myContainerList = new ArrayList<>();
+        allNode.forEach(node -> {
+            node.getPods().forEach(pod -> {
+                myContainerList.addAll(pod.getContainers());
+            });
+        });
+        //添加容器
+        switch (view.getRadioType()) {
+            case MONITOR_1:
+                //仅监控k8s
+                break;
+            case MONITOR_2:
+                //监控k8s和所有容器
+                myContainerList.forEach(container -> {
+                    addContainer(view, container, operationMonitorEntity, nodeMap);
+                });
+
+                break;
+            case MONITOR_3:
+                //监控k8s和指定容器
+                view.getContainerIds().forEach(cId -> {
+                    Optional<Container> optCon = myContainerList.stream().filter(x -> (!x.isBeenAdd()) && x.getContainerId().equals(cId)).findFirst();
+                    optCon.ifPresent(container -> addContainer(view, container, operationMonitorEntity, nodeMap));
+                });
+                break;
+        }
+
+        msg.setCode(HttpStatus.OK.value());
+        msg.setMsg(CommonEnum.MSG_SUCCESS.value());
+        return msg;
+    }
+
+    private void addContainer(OperationMonitorView view, Container container, OperationMonitorEntity operationMonitorEntity, Map<String, String> nodeMap) {
+        try {
+            OperationMonitorEntity monitorContainer = setContainerMonitorField(view, container);
+            Map<String, String> cExtra = new HashMap<>();
+            cExtra.put("rootId", operationMonitorEntity.getUuid());
+            cExtra.put("parentId", nodeMap.getOrDefault(container.getNodeIp(), ""));
+            monitorContainer.setExtra(objectMapper.writeValueAsString(cExtra));
+            boolean insertK8sc = dao.insertMonitorRecord(monitorContainer);
+            // TODO: 2018/10/14 添加监控实体到etcd
+            if (insertK8sc) {
+                //添加监控对象的告警规则
+                RuleMonitorEntity ruleMonitorEntityC = configService.addMonitorRecordAlertRule(monitorContainer);
+                //生成并下发etcd中的告警模板
+                configService.addAlertTemplateToEtcd(monitorContainer.getLightTypeId(), monitorContainer.getTemplateId(), ruleMonitorEntityC);
+            }
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private OperationMonitorEntity setContainerMonitorField(OperationMonitorView view, Container container) throws JsonProcessingException {
+        OperationMonitorEntity operationMonitorEntity = new OperationMonitorEntity();
+        operationMonitorEntity.setUuid(UUID.randomUUID().toString());
+        operationMonitorEntity.setName(container.getContainerName());
+        operationMonitorEntity.setIp(container.getNodeIp());
+        operationMonitorEntity.setMonitorType(MonitorEnum.MonitorTypeEnum.K8SCONTAINER.value());
+        List<LightTypeEntity> lightTypeEntityList = dao.getLightTypeEntity();
+        Optional<LightTypeEntity> lightTypeEntity = lightTypeEntityList.stream().filter(x -> x.getName()
+                .equals(MonitorEnum.LightTypeEnum.K8SCONTAINER.value())).findFirst();
+        lightTypeEntity.ifPresent(lightTypeEntity1 -> operationMonitorEntity.setLightTypeId(lightTypeEntity1.getUuid()));
+        operationMonitorEntity.setTemplateId(view.getK8sContainerTemplate());
+        operationMonitorEntity.setScrapeInterval(view.getTimeinterval());
+        operationMonitorEntity.setScrapeTimeout(view.getTimeout());
+        operationMonitorEntity.setCreateTime(new Date());
+        operationMonitorEntity.setDeleted(0);
+        K8scMonitorInfo monitorInfo = new K8scMonitorInfo();
+        monitorInfo.setMasterIp(view.getIp());
+        monitorInfo.setApiPort(view.getApiPort());
+        monitorInfo.setCadvisorPort(view.getCAdvisorPort());
+        monitorInfo.setNodeIp(container.getNodeIp());
+        monitorInfo.setPodName(container.getPodName());
+        monitorInfo.setPodNamespace(container.getPodNamespace());
+        monitorInfo.setContainerId(container.getContainerId());
+        operationMonitorEntity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
+        return operationMonitorEntity;
+    }
+
+    private OperationMonitorEntity setNodeMonitorField(OperationMonitorView view, Node node) throws JsonProcessingException {
+        OperationMonitorEntity operationMonitorEntity = new OperationMonitorEntity();
+        operationMonitorEntity.setUuid(UUID.randomUUID().toString());
+        operationMonitorEntity.setName(node.getNodeName());
+        operationMonitorEntity.setIp(node.getNodeIp());
+        operationMonitorEntity.setMonitorType(MonitorEnum.MonitorTypeEnum.K8SNODE.value());
+        List<LightTypeEntity> lightTypeEntityList = dao.getLightTypeEntity();
+        Optional<LightTypeEntity> lightTypeEntity = lightTypeEntityList.stream().filter(x -> x.getName()
+                .equals(MonitorEnum.LightTypeEnum.K8SNODE.value())).findFirst();
+        lightTypeEntity.ifPresent(lightTypeEntity1 -> operationMonitorEntity.setLightTypeId(lightTypeEntity1.getUuid()));
+        operationMonitorEntity.setTemplateId(view.getK8sNodeTemplate());
+        operationMonitorEntity.setScrapeInterval(view.getTimeinterval());
+        operationMonitorEntity.setScrapeTimeout(view.getTimeout());
+        operationMonitorEntity.setCreateTime(new Date());
+        operationMonitorEntity.setDeleted(0);
+        K8snMonitorInfo monitorInfo = new K8snMonitorInfo();
+        monitorInfo.setMasterIp(view.getIp());
+        monitorInfo.setApiPort(view.getApiPort());
+        monitorInfo.setCadvisorPort(view.getCAdvisorPort());
+        monitorInfo.setNodeIp(node.getNodeIp());
+        monitorInfo.setNodeName(node.getNodeName());
+        operationMonitorEntity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
+        return operationMonitorEntity;
     }
 
 

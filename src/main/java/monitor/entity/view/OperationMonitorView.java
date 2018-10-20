@@ -57,6 +57,7 @@ public class OperationMonitorView {
 
     private String k8sContainerTemplate;
 
+
     /**
      * cas 1 2 3 仅监控cvk主机 监控所有cvk和vm 监控指定的cvk和vm
      * k8s 1 2 3 仅监控k8s 监控k8s和所有容器 监控k8s和指定容器
@@ -68,6 +69,18 @@ public class OperationMonitorView {
      */
     private List<CvkId> cvkIds;
 
+
+    /**
+     * k8s
+     */
+    private String apiPort;
+
+    private String cAdvisorPort;
+
+    /**
+     * 需要添加的k8s容器
+     */
+    private List<String> containerIds;
 
 
 }

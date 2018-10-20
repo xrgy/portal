@@ -6,6 +6,8 @@ import monitor.entity.LightTypeEntity;
 import monitor.entity.OperationMonitorEntity;
 import monitor.entity.view.Cluster;
 import monitor.entity.view.Host;
+import monitor.entity.view.k8sView.Container;
+import monitor.entity.view.k8sView.Node;
 
 import java.util.List;
 
@@ -48,4 +50,14 @@ public interface MonitorDao {
      * @return
      */
     List<Host> getCvkAndVmListByExporter(CasTransExporterModel casTransExporterModel) throws JsonProcessingException;
+
+    /**
+     * 获取容器列表
+     */
+    List<Container> getContainerListByExporter(String ip, String port);
+
+    /**
+     * 获取Node列表
+     */
+    List<Node> getNodeListByExporter(String ip, String port);
 }
