@@ -54,6 +54,14 @@ public interface MonitorEnum {
 
     enum LightTypeEnum{
 
+        SWITCH("switch"),
+
+        ROUTER("router"),
+
+        FIREWALL("firewall"),
+
+        LB("LB"),
+
         MYSQL("MySQL"),
 
         TOMCAT("Tomcat"),

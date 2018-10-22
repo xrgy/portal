@@ -13,11 +13,12 @@ public class RuleTemplate {
 
     private String uuid;
 
-    @JsonProperty("resourceUuid")
-    private String lightTypeId;
+//    @JsonProperty("resourceUuid")
+//    private String lightTypeId;
 
     private String templateName;
 
-    private String monitorMode;
+//    private String monitorMode;
 
+    private String lightType;
 }

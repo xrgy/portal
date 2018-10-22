@@ -42,6 +42,7 @@ public class MonitorConfigDaoImpl implements MonitorConfigDao {
     private static final String PATH_ADD_TEMPLATE_MONITOR = "addTemplateMonitor";
     private static final String PATH_GET_METRICS_BY_LIGHT="getMetricsUseLight";
     private static final String PATH_ADD_TEMPLATE_ETCD="addAlertTemplateToEtcd";
+    private static final String PATH_DEL_ALERT_MONITOR_RULE="delAlertMonitorRule";
 
 
     private String monitorConfigPrefix() {
@@ -93,10 +94,10 @@ public class MonitorConfigDaoImpl implements MonitorConfigDao {
     }
 
     @Override
-    public List<RuleTemplate> getTemplateByLightType(String lightType,String monitorMode) {
-        ResponseEntity<String> response =  rest().getForEntity(monitorConfigPrefix()+PATH_GET_TEMPLATE+"?lightType={1}&monitorMode={2}", String.class,lightType,monitorMode);
+    public MonitorTemplate getTemplateByLightType(String lightType) {
+        ResponseEntity<String> response =  rest().getForEntity(monitorConfigPrefix()+PATH_GET_TEMPLATE+"?lightType={1}", String.class,lightType);
         try {
-            return objectMapper.readValue(response.getBody(),new TypeReference<List<RuleTemplate>>(){});
+            return objectMapper.readValue(response.getBody(),MonitorTemplate.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -177,5 +178,11 @@ public class MonitorConfigDaoImpl implements MonitorConfigDao {
         map.put("templateId",templateId);
         map.put("ruleMonitorEntity",objectMapper.writeValueAsString(ruleMonitorEntity));
         rest().postForObject(monitorConfigPrefix()+PATH_ADD_TEMPLATE_ETCD,map,String.class);
+    }
+
+    @Override
+    public boolean delAlertRuleByUuid(String uuid) {
+        rest().delete(monitorConfigPrefix()+PATH_DEL_ALERT_MONITOR_RULE+"?uuid={1}",uuid);
+        return true;
     }
 }

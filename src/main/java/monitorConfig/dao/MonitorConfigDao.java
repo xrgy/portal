@@ -35,10 +35,9 @@ public interface MonitorConfigDao {
     /**
      * 根据三级规格获取模板
      * @param lightType
-     * @param monitorMode
      * @return
      */
-    public List<RuleTemplate> getTemplateByLightType(String lightType, String monitorMode);
+    public MonitorTemplate getTemplateByLightType(String lightType);
 
     /**
      * 根据模板id获取可用性规则列表
@@ -89,4 +88,11 @@ public interface MonitorConfigDao {
      * @param ruleMonitorEntity
      */
     void addAlertTemplateToEtcd(String lightTypeId, String templateId, RuleMonitorEntity ruleMonitorEntity) throws JsonProcessingException;
+
+    /**
+     * 删除告警规则监控模板
+     * @param uuid
+     * @return
+     */
+    boolean delAlertRuleByUuid(String uuid);
 }

@@ -6,6 +6,8 @@ import monitorConfig.common.ResultMsg;
 import monitorConfig.entity.metric.NewTemplateView;
 import monitorConfig.entity.template.RuleMonitorEntity;
 
+import java.util.List;
+
 /**
  * Created by gy on 2018/3/31.
  */
@@ -54,4 +56,11 @@ public interface MonitorConfigService {
      * @param ruleMonitorEntity
      */
     void addAlertTemplateToEtcd(String lightTypeId, String templateId, RuleMonitorEntity ruleMonitorEntity) throws JsonProcessingException;
+
+    /**
+     * 删除告警规则监控模板
+     * @param uuids
+     * @return
+     */
+    boolean delAlertRuleByUuids(List<String> uuids);
 }

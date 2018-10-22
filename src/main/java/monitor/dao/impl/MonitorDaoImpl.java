@@ -12,6 +12,7 @@ import monitor.entity.view.Host;
 import monitor.entity.view.k8sView.Container;
 import monitor.entity.view.k8sView.Node;
 import monitorConfig.entity.metric.Metrics;
+import monitorConfig.entity.template.MonitorTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,14 @@ public class MonitorDaoImpl implements MonitorDao {
     private static final String PATH_GET_CVK_AND_VM="getCvkAndVmList";
     private static final String PATH_GET_NODE_LIST="getNodeList";
     private static final String PATH_GET_CONTAINER_LIST="getContainerList";
+    private static final String PATH_DEL_MONITOR_RECORD="delNetworkMonitorRecord";
+    private static final String PATH_GET_ALL_MONITOR_RECORD="getAllMonitorRecord";
+    private static final String PATH_GET_MONITOR_RECORD_BY_ROOTID="getMonitorRecordByRootId";
+    private static final String PATH_GET_MONITOR_RECORD_BY_UUID="getMonitorRecord";
+    private static final String PATH_UPDATE_MONITOR_RECORD = "updateMonitorRecord";
+
+
+
 
     private String monitorPrefix() {
         return IP + ":" + MONITOR_PORT + "/" + MONITOR_PREFIX + "/";
@@ -50,6 +59,17 @@ public class MonitorDaoImpl implements MonitorDao {
 
     @Autowired
     ObjectMapper objectMapper;
+
+    @Override
+    public OperationMonitorEntity getMonitorRecordByUuid(String uuid) {
+        ResponseEntity<String> response =  rest().getForEntity(monitorPrefix()+PATH_GET_MONITOR_RECORD_BY_UUID+"?uuid={1}", String.class,uuid);
+        try {
+            return objectMapper.readValue(response.getBody(),OperationMonitorEntity.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @Override
     public boolean insertMonitorRecord(OperationMonitorEntity entity) throws JsonProcessingException {
@@ -115,6 +135,39 @@ public class MonitorDaoImpl implements MonitorDao {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public boolean delMonitorRecord(String uuid) {
+       return rest().getForObject(monitorPrefix()+PATH_DEL_MONITOR_RECORD+"?uuid={1}",boolean.class,uuid);
+    }
+
+    @Override
+    public List<OperationMonitorEntity> getAllMonitorRecord() {
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_MONITOR_RECORD,String.class);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<OperationMonitorEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<OperationMonitorEntity> getMonitorRecordByRootId(String uuid) {
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_MONITOR_RECORD_BY_ROOTID+"?uuid={1}",String.class,uuid);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<OperationMonitorEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean updateMonitorRecord(OperationMonitorEntity entity) {
+        return rest().postForObject(monitorPrefix() + PATH_INSERT_MONITOR_RECORD_LIST, objectMapper.writeValueAsString(entity), boolean.class);
+
     }
 
 }

@@ -87,18 +87,18 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
     @Override
     public ResultMsg getTemplateByLightType(String lightType,String monitorMode) {
         ResultMsg msg = new ResultMsg();
-        List<RuleTemplate> templateList = dao.getTemplateByLightType(lightType,monitorMode);
-        JSONObject object = new JSONObject();
-        object.put("lightType",lightType);
-        object.put("monitorMode",monitorMode);
-        object.put("template",templateList);
+        MonitorTemplate templateList = dao.getTemplateByLightType(lightType);
+//        JSONObject object = new JSONObject();
+//        object.put("lightType",lightType);
+//        object.put("monitorMode",monitorMode);
+//        object.put("template",templateList);
         if (null == templateList){
             msg.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
             msg.setMsg(CommonEnum.MSG_ERROR.value());
         }else {
             msg.setCode(HttpStatus.OK.value());
             msg.setMsg(CommonEnum.MSG_SUCCESS.value());
-            msg.setData(object);
+            msg.setData(templateList);
         }
         return msg;
 
@@ -152,6 +152,14 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
     @Override
     public void addAlertTemplateToEtcd(String lightTypeId, String templateId, RuleMonitorEntity ruleMonitorEntity) throws JsonProcessingException {
         dao.addAlertTemplateToEtcd(lightTypeId,templateId,ruleMonitorEntity);
+    }
+
+    @Override
+    public boolean delAlertRuleByUuids(List<String> uuids) {
+        uuids.forEach(x->{
+            dao.delAlertRuleByUuid(x);
+        });
+        return true;
     }
 
 

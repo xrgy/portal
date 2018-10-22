@@ -58,15 +58,20 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                             templateName: commonModule.i18n("form.select.default")
                         }];
                         $.ajax({
-                            data: {lightType: lightType, monitorMode: _self.monitorMode},
+                            data: {lightType: lightType},
                             url: _self.path.getTemplateByLightType,
                             success: function (data) {
                                 if (data.msg == "SUCCESS") {
                                     var data = data.data;
-                                    data.template.forEach(function (x) {
-                                        _self.templateList.push(x);
-                                    });
-                                    // _self.templateList.push(data.template);
+                                        if (_self.monitorMode == "snmp_v1"){
+                                            data.snmp_v1.forEach(function (x) {
+                                                _self.templateList.push(x);
+                                            })
+                                        }else if(_self.monitorMode == "snmp_v2c"){
+                                            data.snmp_v2.forEach(function (x) {
+                                                _self.templateList.push(x);
+                                            })
+                                        }
                                 }
                             },
                             error: function () {

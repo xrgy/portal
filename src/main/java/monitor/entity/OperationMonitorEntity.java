@@ -37,6 +37,8 @@ public class OperationMonitorEntity {
 
     private Date createTime;
 
+    private Date updateTime;
+
     private String extra;
 
     private int deleted;

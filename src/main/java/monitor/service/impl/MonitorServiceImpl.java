@@ -301,6 +301,7 @@ public class MonitorServiceImpl implements MonitorService {
         operationMonitorEntity.setScrapeInterval(view.getTimeinterval());
         operationMonitorEntity.setScrapeTimeout(view.getTimeout());
         operationMonitorEntity.setCreateTime(new Date());
+        operationMonitorEntity.setUpdateTime(new Date());
         operationMonitorEntity.setDeleted(0);
         CasMonitorInfo monitorInfo = new CasMonitorInfo();
         monitorInfo.setIp(view.getIp());
@@ -358,6 +359,7 @@ public class MonitorServiceImpl implements MonitorService {
         operationMonitorEntity.setScrapeInterval(view.getTimeinterval());
         operationMonitorEntity.setScrapeTimeout(view.getTimeout());
         operationMonitorEntity.setCreateTime(new Date());
+        operationMonitorEntity.setUpdateTime(new Date());
         operationMonitorEntity.setDeleted(0);
         CasMonitorInfo monitorInfo = new CasMonitorInfo();
         monitorInfo.setIp(view.getIp());
@@ -387,6 +389,7 @@ public class MonitorServiceImpl implements MonitorService {
         operationMonitorEntity.setScrapeInterval(view.getTimeinterval());
         operationMonitorEntity.setScrapeTimeout(view.getTimeout());
         operationMonitorEntity.setCreateTime(new Date());
+        operationMonitorEntity.setUpdateTime(new Date());
         operationMonitorEntity.setDeleted(0);
         CasMonitorInfo monitorInfo = new CasMonitorInfo();
         monitorInfo.setIp(view.getIp());
@@ -475,6 +478,101 @@ public class MonitorServiceImpl implements MonitorService {
         return msg;
     }
 
+    @Override
+    public ResultMsg delNetworkMonitorRecord(List<String> uuids) {
+
+        List<OperationMonitorEntity> allmonitor = dao.getAllMonitorRecord();
+        List<OperationMonitorEntity> delOperationMonitorList = allmonitor.stream().
+                filter(monitor-> uuids.contains(monitor.getUuid())).collect(Collectors.toList());
+        List<LightTypeEntity> lightTypeEntityList = dao.getLightTypeEntity();
+        Optional<LightTypeEntity> lightTypeEntity = lightTypeEntityList.stream().filter(x -> x.getName()
+                .equals(MonitorEnum.LightTypeEnum.K8SCONTAINER.value())).findFirst();
+        delOperationMonitorList.forEach(del->{
+            Optional<LightTypeEntity> light = lightTypeEntityList.stream().filter(x->x.getUuid().equals(del.getLightTypeId())).findFirst();
+            if (light.isPresent()){
+                if (light.get().getName().equals(MonitorEnum.LightTypeEnum.K8S.value())|| light.get().getName().equals(MonitorEnum.LightTypeEnum.CAS.value())){
+                    //k8s和cas的操作相同
+                    //根据这个uuid获取所有的node和container extra uuid
+                    List<OperationMonitorEntity> needdel = dao.getMonitorRecordByRootId(del.getUuid());
+                    boolean delk8s = dao.delMonitorRecord(del.getUuid());
+                    if (delk8s){
+                        // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid
+                        // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid
+                        needdel.forEach(node->{
+                            //删除该k8s下的node和container
+                            boolean delk8snorc = dao.delMonitorRecord(node.getUuid());
+                            if (delk8snorc){
+                                // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid
+                                // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid
+                            }
+                        });
+
+                    }
+                }else{
+                    //其他设备
+                    boolean delres = dao.delMonitorRecord(del.getUuid());
+                    if (delres) {
+                        // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid
+                        // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid
+                    }
+                }
+            }
+        });
+        //从monitorconfig下发，将该告警模板删除
+        boolean flag = configService.delAlertRuleByUuids(uuids);
+
+        return null;
+    }
+
+    @Override
+    public ResultMsg getMonitorRecord(String uuid) {
+        OperationMonitorEntity entity = dao.getMonitorRecordByUuid(uuid);
+        ResultMsg msg = new ResultMsg();
+        if (null!=entity){
+            msg.setCode(HttpStatus.OK.value());
+            msg.setMsg(CommonEnum.MSG_SUCCESS.value());
+            msg.setData(entity);
+        }else {
+            msg.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            msg.setMsg(CommonEnum.MSG_ERROR.value());
+        }
+        return msg;
+    }
+
+    @Override
+    public ResultMsg updateNetworkMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
+        OperationMonitorEntity oldEntity = dao.getMonitorRecordByUuid(view.getUuid());
+        OperationMonitorEntity entity = updateCommonField(view,oldEntity);
+        MonitorInfo monitorInfo = new MonitorInfo();
+        if (view.getMonitorMode().equals(MonitorEnum.MonitorRecordEnum.SNMP_VERSION_V1.value())) {
+            monitorInfo.setSnmpVersion(NUMBER_1);
+        } else if (view.getMonitorMode().equals(MonitorEnum.MonitorRecordEnum.SNMP_VERSION_V2.value())) {
+            monitorInfo.setSnmpVersion(NUMBER_2);
+        }
+        monitorInfo.setReadCommunity(view.getReadcommunity());
+        monitorInfo.setWriteCommunity(view.getWritecommunity());
+        monitorInfo.setPort(view.getPort());
+        entity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
+        boolean flag = dao.updateMonitorRecord(entity);
+        return null;
+    }
+
+    private OperationMonitorEntity updateCommonField(OperationMonitorView view,OperationMonitorEntity oldEntity){
+        OperationMonitorEntity entity = new OperationMonitorEntity();
+        entity.setUuid(view.getUuid());
+        entity.setIp(view.getIp());
+        entity.setMonitorType(oldEntity.getMonitorType());
+        entity.setLightTypeId(oldEntity.getLightTypeId());
+        entity.setTemplateId(view.getMonitortemplate());
+        entity.setName(view.getName());
+        entity.setCreateTime(oldEntity.getCreateTime());
+        entity.setUpdateTime(new Date());
+        entity.setScrapeInterval(view.getTimeinterval());
+        entity.setScrapeTimeout(view.getTimeout());
+        entity.setDeleted(0);
+        return entity;
+    }
+
     private void addContainer(OperationMonitorView view, Container container, OperationMonitorEntity operationMonitorEntity, Map<String, String> nodeMap) {
         try {
             OperationMonitorEntity monitorContainer = setContainerMonitorField(view, container);
@@ -510,6 +608,7 @@ public class MonitorServiceImpl implements MonitorService {
         operationMonitorEntity.setScrapeInterval(view.getTimeinterval());
         operationMonitorEntity.setScrapeTimeout(view.getTimeout());
         operationMonitorEntity.setCreateTime(new Date());
+        operationMonitorEntity.setUpdateTime(new Date());
         operationMonitorEntity.setDeleted(0);
         K8scMonitorInfo monitorInfo = new K8scMonitorInfo();
         monitorInfo.setMasterIp(view.getIp());
@@ -537,6 +636,7 @@ public class MonitorServiceImpl implements MonitorService {
         operationMonitorEntity.setScrapeInterval(view.getTimeinterval());
         operationMonitorEntity.setScrapeTimeout(view.getTimeout());
         operationMonitorEntity.setCreateTime(new Date());
+        operationMonitorEntity.setUpdateTime(new Date());
         operationMonitorEntity.setDeleted(0);
         K8snMonitorInfo monitorInfo = new K8snMonitorInfo();
         monitorInfo.setMasterIp(view.getIp());
@@ -560,6 +660,7 @@ public class MonitorServiceImpl implements MonitorService {
         operationMonitorEntity.setScrapeInterval(view.getTimeinterval());
         operationMonitorEntity.setScrapeTimeout(view.getTimeout());
         operationMonitorEntity.setCreateTime(new Date());
+        operationMonitorEntity.setUpdateTime(new Date());
         operationMonitorEntity.setDeleted(0);
         return operationMonitorEntity;
     }

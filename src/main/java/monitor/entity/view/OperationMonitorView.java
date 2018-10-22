@@ -12,6 +12,8 @@ import java.util.List;
 @Setter
 public class OperationMonitorView {
 
+    private String uuid;
+
     private String ip;
 
     private String name;

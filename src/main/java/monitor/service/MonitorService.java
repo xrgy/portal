@@ -5,6 +5,8 @@ import monitor.common.ResultMsg;
 import monitor.entity.OperationMonitorEntity;
 import monitor.entity.view.OperationMonitorView;
 
+import java.util.List;
+
 
 /**
  * Created by gy on 2018/3/31.
@@ -45,4 +47,24 @@ public interface MonitorService {
      */
     public ResultMsg addContainerMonitorRecord(OperationMonitorView view) throws JsonProcessingException;
 
+    /**
+     * 删除监控记录
+     * @param uuids
+     * @return
+     */
+    public ResultMsg delNetworkMonitorRecord(List<String> uuids);
+
+    /**
+     * 通过uuid获取监控记录
+     * @param uuid
+     * @return
+     */
+    public ResultMsg getMonitorRecord(String uuid);
+
+    /**
+     * 更新网络设备监控记录
+     * @param view
+     * @return
+     */
+    ResultMsg updateNetworkMonitorRecord(OperationMonitorView view) throws JsonProcessingException;
 }

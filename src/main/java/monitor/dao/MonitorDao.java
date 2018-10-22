@@ -18,6 +18,13 @@ import java.util.List;
 public interface MonitorDao {
 
     /**
+     * 通过uuid获取监控对象
+     * @param uuid
+     * @return
+     */
+    public OperationMonitorEntity getMonitorRecordByUuid(String uuid);
+
+    /**
      * 插入监控记录
      * @param entity
      * @return
@@ -60,4 +67,31 @@ public interface MonitorDao {
      * 获取Node列表
      */
     List<Node> getNodeListByExporter(String ip, String port);
+
+    /**
+     * 通过uuid删除监控记录
+     * @param uuid
+     * @return
+     */
+    boolean delMonitorRecord(String uuid);
+
+    /**
+     * 获取所有的监控记录
+     * @return
+     */
+    List<OperationMonitorEntity> getAllMonitorRecord();
+
+    /**
+     * 在extra中查找有该uuid的监控记录(parentId或rootId)
+     * @param uuid
+     * @return
+     */
+    List<OperationMonitorEntity> getMonitorRecordByRootId(String uuid);
+
+    /**
+     * 更新监控记录信息
+     * @param entity
+     * @return
+     */
+    boolean updateMonitorRecord(OperationMonitorEntity entity);
 }

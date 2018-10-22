@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+
 /**
  * Created by gy on 2018/3/24.
  */
@@ -30,6 +32,26 @@ public class MonitorController {
     public ResultMsg addNetworkMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
         return service.addNetworkMonitorRecord(view);
     }
+
+    @RequestMapping("/delNetworkMonitorRecord")
+    @ResponseBody
+    public ResultMsg delNetworkMonitorRecord(List<String> uuids) throws JsonProcessingException {
+        return service.delNetworkMonitorRecord(uuids);
+    }
+
+    @RequestMapping("/getMonitorRecord")
+    @ResponseBody
+    public ResultMsg getMonitorRecord(String uuid) throws JsonProcessingException {
+        return service.getMonitorRecord(uuid);
+    }
+
+
+    @RequestMapping("/updateNetworkMonitorRecord")
+    @ResponseBody
+    public ResultMsg updateNetworkMonitorRecord(OperationMonitorView view){
+        return service.updateNetworkMonitorRecord(view);
+    }
+
 
 
 
