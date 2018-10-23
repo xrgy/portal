@@ -48,9 +48,10 @@ public class MonitorController {
 
     @RequestMapping("/updateNetworkMonitorRecord")
     @ResponseBody
-    public ResultMsg updateNetworkMonitorRecord(OperationMonitorView view){
+    public ResultMsg updateNetworkMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
         return service.updateNetworkMonitorRecord(view);
     }
+
 
 
 

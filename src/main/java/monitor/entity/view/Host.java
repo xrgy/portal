@@ -12,6 +12,9 @@ import java.util.List;
 @Getter
 @Setter
 public class Host {
+
+    private String uuid;
+
     private String name;
 
     private String id;

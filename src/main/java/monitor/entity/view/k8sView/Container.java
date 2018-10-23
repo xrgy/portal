@@ -11,6 +11,8 @@ import lombok.Setter;
 @Setter
 public class Container {
 
+    private String uuid;
+
     @JsonProperty("id")
     private String containerId;
 

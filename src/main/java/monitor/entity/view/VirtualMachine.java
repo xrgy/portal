@@ -10,6 +10,8 @@ import lombok.Setter;
 @Setter
 public class VirtualMachine {
 
+    private String uuid;
+
     private String id;
 
     private String name;

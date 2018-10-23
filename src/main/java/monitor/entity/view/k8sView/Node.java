@@ -12,6 +12,9 @@ import java.util.List;
 @Getter
 @Setter
 public class Node {
+
+    private String uuid;
+
     @JsonProperty("ip")
     private String nodeIp;
 

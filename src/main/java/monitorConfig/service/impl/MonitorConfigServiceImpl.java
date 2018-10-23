@@ -6,13 +6,11 @@ import monitor.entity.OperationMonitorEntity;
 import monitorConfig.common.CommonEnum;
 import monitorConfig.common.ResultMsg;
 import monitorConfig.dao.MonitorConfigDao;
-import monitorConfig.entity.metric.Metrics;
 import monitorConfig.entity.metric.NewTemplateView;
 import monitorConfig.entity.TestEntity;
 import monitorConfig.entity.metric.ResMetricInfo;
 import monitorConfig.entity.template.*;
 import monitorConfig.service.MonitorConfigService;
-import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
@@ -105,9 +103,9 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
     }
 
     @Override
-    public RuleMonitorEntity addMonitorRecordAlertRule(OperationMonitorEntity operationMonitorEntity) {
-        String monitorUuid = operationMonitorEntity.getUuid();
-        String templateId = operationMonitorEntity.getTemplateId();
+    public RuleMonitorEntity addMonitorRecordAlertRule(String monitorUuid,String templateId) {
+//        String monitorUuid = operationMonitorEntity.getUuid();
+//        String templateId = operationMonitorEntity.getTemplateId();
         List<AlertAvlRuleEntity> avlRuleList = dao.getAvlRuleByTemplateId(templateId);
         List<AlertPerfRuleEntity> perfRuleList = dao.getPerfRuleByTemplate(templateId);
         List<AlertAvlRuleMonitorEntity> avlRuleMonitorList = new ArrayList<>();
@@ -160,6 +158,16 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
             dao.delAlertRuleByUuid(x);
         });
         return true;
+    }
+
+    @Override
+    public RuleMonitorEntity updateMonitorRecordAlertRule(String uuid, String templateId) {
+        //删除
+        boolean res = dao.delAlertRuleByUuid(uuid);
+        if (res){
+            return addMonitorRecordAlertRule(uuid,templateId);
+        }
+        return null;
     }
 
 

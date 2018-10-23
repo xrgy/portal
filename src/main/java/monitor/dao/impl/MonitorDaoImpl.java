@@ -165,8 +165,8 @@ public class MonitorDaoImpl implements MonitorDao {
     }
 
     @Override
-    public boolean updateMonitorRecord(OperationMonitorEntity entity) {
-        return rest().postForObject(monitorPrefix() + PATH_INSERT_MONITOR_RECORD_LIST, objectMapper.writeValueAsString(entity), boolean.class);
+    public boolean updateMonitorRecord(OperationMonitorEntity entity) throws JsonProcessingException {
+        return rest().postForObject(monitorPrefix() + PATH_UPDATE_MONITOR_RECORD, objectMapper.writeValueAsString(entity), boolean.class);
 
     }
 

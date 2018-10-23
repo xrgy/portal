@@ -95,4 +95,6 @@ public interface MonitorConfigDao {
      * @return
      */
     boolean delAlertRuleByUuid(String uuid);
+
+
 }

@@ -13,6 +13,8 @@ import java.util.List;
 @Setter
 public class Cluster {
 
+    private String uuid;
+
     private String clusterId;
 
     private String name;
@@ -23,4 +25,6 @@ public class Cluster {
 
     @JsonProperty("host")
     private List<Host> hostList;
+
+    private boolean beenAdd;
 }

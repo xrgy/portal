@@ -67,4 +67,21 @@ public interface MonitorService {
      * @return
      */
     ResultMsg updateNetworkMonitorRecord(OperationMonitorView view) throws JsonProcessingException;
+
+
+    /**
+     * 更新虚拟化监控记录
+     * @param view
+     * @return
+     */
+    ResultMsg updateVirtualMonitorRecord(OperationMonitorView view) throws JsonProcessingException;
+
+
+    /**
+     * 更新容器监控记录
+     * @param view
+     * @return
+     */
+    ResultMsg updateContainerMonitorRecord(OperationMonitorView view) throws JsonProcessingException;
+
 }

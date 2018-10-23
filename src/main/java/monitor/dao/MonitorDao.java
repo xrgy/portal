@@ -93,5 +93,5 @@ public interface MonitorDao {
      * @param entity
      * @return
      */
-    boolean updateMonitorRecord(OperationMonitorEntity entity);
+    boolean updateMonitorRecord(OperationMonitorEntity entity) throws JsonProcessingException;
 }

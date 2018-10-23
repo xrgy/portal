@@ -45,9 +45,10 @@ public interface MonitorConfigService {
 
     /**
      * 根据监控记录id和模板id生成监控实体规则
-     * @param operationMonitorEntity
+     * @param monitorUuid
+     * @param templateId
      */
-    RuleMonitorEntity addMonitorRecordAlertRule(OperationMonitorEntity operationMonitorEntity);
+    RuleMonitorEntity addMonitorRecordAlertRule(String monitorUuid,String templateId);
 
     /**
      * 生成添加etcd监控模板
@@ -63,4 +64,12 @@ public interface MonitorConfigService {
      * @return
      */
     boolean delAlertRuleByUuids(List<String> uuids);
+
+    /**
+     * 更新告警规则监控模板
+     * @param uuid
+     * @param templateId
+     * @return
+     */
+    RuleMonitorEntity updateMonitorRecordAlertRule(String uuid, String templateId);
 }
