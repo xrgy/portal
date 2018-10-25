@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import monitorConfig.entity.metric.Metrics;
 import monitorConfig.entity.metric.NewTemplateView;
 import monitorConfig.entity.metric.ResMetricInfo;
+import monitorConfig.entity.metric.UpTemplateView;
 import monitorConfig.entity.template.*;
 
 import java.util.List;
@@ -97,4 +98,25 @@ public interface MonitorConfigDao {
     boolean delAlertRuleByUuid(String uuid);
 
 
+    /**
+     * 删除监控模板
+     * @param templateUuid
+     * @return
+     */
+    boolean delTemplate(String templateUuid);
+
+    /**
+     * 修改模板
+     * @param view
+     * @return
+     */
+    boolean updateTemplate(UpTemplateView view);
+
+    /**
+     *
+     * 修改打开某个监控模板(模板id)，返回
+     * @param uuid
+     * @return
+     */
+    UpTemplateView getOpenTemplateData(String uuid);
 }

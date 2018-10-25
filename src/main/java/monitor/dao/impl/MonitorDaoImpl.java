@@ -44,7 +44,7 @@ public class MonitorDaoImpl implements MonitorDao {
     private static final String PATH_GET_MONITOR_RECORD_BY_ROOTID="getMonitorRecordByRootId";
     private static final String PATH_GET_MONITOR_RECORD_BY_UUID="getMonitorRecord";
     private static final String PATH_UPDATE_MONITOR_RECORD = "updateMonitorRecord";
-
+    private static final String PATH_GET_MONITOR_RECORD_BY_TEMPLATE = "getMonitorRecordByTemplateId";
 
 
 
@@ -165,9 +165,15 @@ public class MonitorDaoImpl implements MonitorDao {
     }
 
     @Override
-    public boolean updateMonitorRecord(OperationMonitorEntity entity) throws JsonProcessingException {
-        return rest().postForObject(monitorPrefix() + PATH_UPDATE_MONITOR_RECORD, objectMapper.writeValueAsString(entity), boolean.class);
-
+    public List<OperationMonitorEntity> getMonitorRecordByTemplateId(String uuid) {
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_MONITOR_RECORD_BY_TEMPLATE+"?uuid={1}",String.class,uuid);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<OperationMonitorEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
+
 
 }

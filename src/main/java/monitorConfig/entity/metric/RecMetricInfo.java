@@ -13,6 +13,7 @@ import java.util.List;
 @Setter
 public class RecMetricInfo {
 
+    //type: interface...
     private String type;
 
     private List<MetricInfo> data;

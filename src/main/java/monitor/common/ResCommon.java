@@ -1,6 +1,5 @@
 package monitor.common;
 
-import monitorConfig.common.CommonEnum;
 import org.springframework.http.HttpStatus;
 
 /**

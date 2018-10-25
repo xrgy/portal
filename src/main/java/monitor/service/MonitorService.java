@@ -2,7 +2,6 @@ package monitor.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import monitor.common.ResultMsg;
-import monitor.entity.OperationMonitorEntity;
 import monitor.entity.view.OperationMonitorView;
 
 import java.util.List;
@@ -84,4 +83,10 @@ public interface MonitorService {
      */
     ResultMsg updateContainerMonitorRecord(OperationMonitorView view) throws JsonProcessingException;
 
+    /**
+     * 通过templateid获取监控数量
+     * @param uuid
+     * @return
+     */
+    int getMonitorCountByTemplateId(String uuid);
 }

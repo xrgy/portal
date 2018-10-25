@@ -2,13 +2,16 @@ package monitorConfig.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import monitor.common.ResCommon;
+import monitor.common.CommonEnum;
+import monitor.common.ResultMsg;
 import monitor.entity.OperationMonitorEntity;
-import monitorConfig.common.CommonEnum;
-import monitorConfig.common.ResultMsg;
+import monitor.service.MonitorService;
 import monitorConfig.dao.MonitorConfigDao;
 import monitorConfig.entity.metric.NewTemplateView;
 import monitorConfig.entity.TestEntity;
 import monitorConfig.entity.metric.ResMetricInfo;
+import monitorConfig.entity.metric.UpTemplateView;
 import monitorConfig.entity.template.*;
 import monitorConfig.service.MonitorConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,9 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
     @Autowired
     MonitorConfigDao dao;
 
+    @Autowired
+    MonitorService monitorService;
+
     @Override
     public String getJPA() {
 //        objectMapper.writeValueAsString();
@@ -70,16 +76,8 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
 
     @Override
     public ResultMsg addTemplate(NewTemplateView view) {
-        ResultMsg msg = new ResultMsg();
         boolean res = dao.addTemplate(view);
-        if (res) {
-            msg.setCode(HttpStatus.OK.value());
-            msg.setMsg(CommonEnum.MSG_SUCCESS.value());
-        }else {
-            msg.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            msg.setMsg(CommonEnum.MSG_ERROR.value());
-        }
-        return msg;
+        return ResCommon.genSimpleResByBool(res);
     }
 
     @Override
@@ -167,6 +165,32 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
         if (res){
             return addMonitorRecordAlertRule(uuid,templateId);
         }
+        return null;
+    }
+
+    @Override
+    public ResultMsg delTemplate(List<String> templateUuids) {
+        templateUuids.forEach(x->{
+            boolean res = dao.delTemplate(x);
+        });
+        return null;
+    }
+
+    @Override
+    public ResultMsg updateTemplate(UpTemplateView view) {
+        boolean res = dao.updateTemplate(view);
+        if (res){
+
+        }
+        return ResCommon.genSimpleResByBool(res);
+    }
+
+    @Override
+    public ResultMsg OpenTemplate(String uuid) {
+        UpTemplateView templateView = dao.getOpenTemplateData(uuid);
+        int count = monitorService.getMonitorCountByTemplateId(uuid);
+        templateView.setUsedCount(count);
+
         return null;
     }
 

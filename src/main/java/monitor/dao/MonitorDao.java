@@ -88,10 +88,11 @@ public interface MonitorDao {
      */
     List<OperationMonitorEntity> getMonitorRecordByRootId(String uuid);
 
+
     /**
-     * 更新监控记录信息
-     * @param entity
+     * 通过templateid获取监控设备
+     * @param uuid
      * @return
      */
-    boolean updateMonitorRecord(OperationMonitorEntity entity) throws JsonProcessingException;
+    List<OperationMonitorEntity> getMonitorRecordByTemplateId(String uuid);
 }

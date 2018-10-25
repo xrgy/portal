@@ -1,4 +1,4 @@
-package monitorConfig.common;
+package monitor.common;
 
 /**
  * Created by gy on 2018/6/8.

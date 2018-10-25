@@ -1,5 +1,6 @@
 package monitor.service.impl;
 
+import business.service.BusinessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.common.MonitorEnum;
@@ -14,7 +15,7 @@ import monitor.entity.view.VirtualMachine;
 import monitor.entity.view.k8sView.Container;
 import monitor.entity.view.k8sView.Node;
 import monitor.service.MonitorService;
-import monitorConfig.common.CommonEnum;
+import monitor.common.CommonEnum;
 import monitorConfig.entity.template.RuleMonitorEntity;
 import monitorConfig.service.MonitorConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,9 @@ public class MonitorServiceImpl implements MonitorService {
     @Autowired
     MonitorConfigService configService;
 
+    @Autowired
+    BusinessService businessService;
+
     @Bean
     public RestTemplate rest() {
         return new RestTemplate();
@@ -69,8 +73,6 @@ public class MonitorServiceImpl implements MonitorService {
         monitorInfo.setPort(view.getPort());
         operationMonitorEntity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
         boolean insert = dao.insertMonitorRecord(operationMonitorEntity);
-        // TODO: 2018/10/14 添加监控实体到etcd
-
         if (insert) {
             //添加监控对象的告警规则
             RuleMonitorEntity ruleMonitorEntity = configService.addMonitorRecordAlertRule(operationMonitorEntity.getUuid(), operationMonitorEntity.getTemplateId());
@@ -97,8 +99,6 @@ public class MonitorServiceImpl implements MonitorService {
         }
         operationMonitorEntity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
         boolean insert = dao.insertMonitorRecord(operationMonitorEntity);
-        // TODO: 2018/10/14 添加监控实体到etcd
-
         if (insert) {
             //添加监控对象的告警规则
             RuleMonitorEntity ruleMonitorEntity = configService.addMonitorRecordAlertRule(operationMonitorEntity.getUuid(), operationMonitorEntity.getTemplateId());
@@ -121,8 +121,6 @@ public class MonitorServiceImpl implements MonitorService {
         monitorInfo.setPassWord(view.getPassword());
         operationMonitorEntity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
         boolean insert = dao.insertMonitorRecord(operationMonitorEntity);
-        // TODO: 2018/10/14 添加监控实体到etcd
-
         if (insert) {
             //添加监控对象的告警规则
             RuleMonitorEntity ruleMonitorEntity = configService.addMonitorRecordAlertRule(operationMonitorEntity.getUuid(), operationMonitorEntity.getTemplateId());
@@ -148,7 +146,6 @@ public class MonitorServiceImpl implements MonitorService {
         monitorInfo.setPassWord(view.getPassword());
         operationMonitorEntity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
         boolean insertCas = dao.insertMonitorRecord(operationMonitorEntity);
-        // TODO: 2018/10/14 添加监控实体到etcd
         if (insertCas) {
             //添加监控对象的告警规则
             RuleMonitorEntity ruleMonitorEntity = configService.addMonitorRecordAlertRule(operationMonitorEntity.getUuid(), operationMonitorEntity.getTemplateId());
@@ -246,8 +243,6 @@ public class MonitorServiceImpl implements MonitorService {
             clusterMonitor.setExtra(objectMapper.writeValueAsString(map));
             clusterIdMap.put(cluster.getClusterId(), clusterMonitor.getUuid());
             boolean insertCasCluster = dao.insertMonitorRecord(clusterMonitor);
-            // TODO: 2018/10/14 添加监控实体到etcd
-
             if (insertCasCluster) {
                 //添加监控对象的告警规则
                 RuleMonitorEntity cluterRuleMonitorEntity = configService.addMonitorRecordAlertRule(clusterMonitor.getUuid(), clusterMonitor.getTemplateId());
@@ -334,8 +329,6 @@ public class MonitorServiceImpl implements MonitorService {
             extra.put("rootName", view.getName());
             hostMonitor.setExtra(objectMapper.writeValueAsString(extra));
             boolean insertCvk = dao.insertMonitorRecord(hostMonitor);
-            // TODO: 2018/10/14 添加监控实体到etcd
-
             if (insertCvk) {
                 //添加监控对象的告警规则
                 RuleMonitorEntity hostRuleMonitorEntity = configService.addMonitorRecordAlertRule(hostMonitor.getUuid(), hostMonitor.getTemplateId());
@@ -419,7 +412,6 @@ public class MonitorServiceImpl implements MonitorService {
         monitorInfo.setCadvisorPort(view.getCAdvisorPort());
         operationMonitorEntity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
         boolean insertK8s = dao.insertMonitorRecord(operationMonitorEntity);
-        // TODO: 2018/10/14 添加监控实体到etcd
         if (insertK8s) {
             //添加监控对象的告警规则
             RuleMonitorEntity ruleMonitorEntity = configService.addMonitorRecordAlertRule(operationMonitorEntity.getUuid(), operationMonitorEntity.getTemplateId());
@@ -478,7 +470,12 @@ public class MonitorServiceImpl implements MonitorService {
         List<LightTypeEntity> lightTypeEntityList = dao.getLightTypeEntity();
         Optional<LightTypeEntity> lightTypeEntity = lightTypeEntityList.stream().filter(x -> x.getName()
                 .equals(MonitorEnum.LightTypeEnum.K8SCONTAINER.value())).findFirst();
-        delOperationMonitorList.forEach(del -> {
+//        delOperationMonitorList.forEach(del -> {
+        for (OperationMonitorEntity del : delOperationMonitorList) {
+            // TODO: 2018/10/25 加入业务监控的设备不能删除 
+            if (businessService.isJoinBusinessMonitor(del.getUuid())) {
+                continue;
+            }
             Optional<LightTypeEntity> light = lightTypeEntityList.stream().filter(x -> x.getUuid().equals(del.getLightTypeId())).findFirst();
             if (light.isPresent()) {
                 if (light.get().getName().equals(MonitorEnum.LightTypeEnum.K8S.value()) || light.get().getName().equals(MonitorEnum.LightTypeEnum.CAS.value())) {
@@ -508,7 +505,7 @@ public class MonitorServiceImpl implements MonitorService {
                     }
                 }
             }
-        });
+        }
         //从monitorconfig下发，将该告警模板删除
         boolean flag = configService.delAlertRuleByUuids(uuids);
 
@@ -545,7 +542,7 @@ public class MonitorServiceImpl implements MonitorService {
         monitorInfo.setWriteCommunity(view.getWritecommunity());
         monitorInfo.setPort(view.getPort());
         entity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
-        boolean flag = dao.updateMonitorRecord(entity);
+        boolean flag = dao.insertMonitorRecord(entity);
         if (flag) {
             //更新告警模板
             RuleMonitorEntity updateAlertRule = configService.updateMonitorRecordAlertRule(entity.getUuid(), entity.getTemplateId());
@@ -568,7 +565,7 @@ public class MonitorServiceImpl implements MonitorService {
         monitorInfo.setUserName(view.getUserName());
         monitorInfo.setPassWord(view.getPassword());
         operationMonitorEntity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
-        boolean updateCas = dao.updateMonitorRecord(operationMonitorEntity);
+        boolean updateCas = dao.insertMonitorRecord(operationMonitorEntity);
         if (updateCas) {
             //更新告警模板
             RuleMonitorEntity updateAlertRule = configService.updateMonitorRecordAlertRule(operationMonitorEntity.getUuid(), operationMonitorEntity.getTemplateId());
@@ -597,7 +594,7 @@ public class MonitorServiceImpl implements MonitorService {
                         OperationMonitorEntity updateCluster = updateCasClusterField(view, oldCluster, cluster);
                         updateCluster.setExtra(objectMapper.writeValueAsString(map));
                         clusterIdMap.put(cluster.getClusterId(), updateCluster.getUuid());
-                        boolean updateClusterres = dao.updateMonitorRecord(updateCluster);
+                        boolean updateClusterres = dao.insertMonitorRecord(updateCluster);
                         if (updateClusterres) {
                             //更新告警模板
                             RuleMonitorEntity updateClusterAlertRule = configService.updateMonitorRecordAlertRule(updateCluster.getUuid(), updateCluster.getTemplateId());
@@ -743,7 +740,7 @@ public class MonitorServiceImpl implements MonitorService {
                 vmMonitor = updateVmMonitorField(vm, view, host.getHostpoolId(), "", host.getId(), oldVm);
                 vmMonitor.setExtra(objectMapper.writeValueAsString(vmExtra));
             }
-            boolean updateVm = dao.updateMonitorRecord(vmMonitor);
+            boolean updateVm = dao.insertMonitorRecord(vmMonitor);
             if (updateVm) {
                 //更新告警模板
                 RuleMonitorEntity updateVmAlertRule = configService.updateMonitorRecordAlertRule(vmMonitor.getUuid(), vmMonitor.getTemplateId());
@@ -792,7 +789,7 @@ public class MonitorServiceImpl implements MonitorService {
             extra.put("rootId", casMonitor.getUuid());
             extra.put("rootName", view.getName());
             hostMonitor.setExtra(objectMapper.writeValueAsString(extra));
-            boolean updateCvkres = dao.updateMonitorRecord(hostMonitor);
+            boolean updateCvkres = dao.insertMonitorRecord(hostMonitor);
             if (updateCvkres) {
                 //更新告警模板
                 RuleMonitorEntity updateCvkAlertRule = configService.updateMonitorRecordAlertRule(hostMonitor.getUuid(), hostMonitor.getTemplateId());
@@ -846,7 +843,7 @@ public class MonitorServiceImpl implements MonitorService {
         monitorInfo.setApiPort(view.getApiPort());
         monitorInfo.setCadvisorPort(view.getCAdvisorPort());
         operationMonitorEntity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
-        boolean updateK8s = dao.updateMonitorRecord(operationMonitorEntity);
+        boolean updateK8s = dao.insertMonitorRecord(operationMonitorEntity);
         if (updateK8s) {
             RuleMonitorEntity updateAlertRule = configService.updateMonitorRecordAlertRule(operationMonitorEntity.getUuid(), operationMonitorEntity.getTemplateId());
             if (null != updateAlertRule) {
@@ -866,7 +863,7 @@ public class MonitorServiceImpl implements MonitorService {
                     OperationMonitorEntity oldK8sNode = dao.getMonitorRecordByUuid(node.getUuid());
                     OperationMonitorEntity k8snNode = updateNodeMonitorField(view, node, oldK8sNode);
                     k8snNode.setExtra(objectMapper.writeValueAsString(k8snExtra));
-                    boolean updateK8sn = dao.updateMonitorRecord(k8snNode);
+                    boolean updateK8sn = dao.insertMonitorRecord(k8snNode);
                     nodeMap.put(node.getNodeIp(), k8snNode.getUuid());
                     if (updateK8sn) {
                         //更新告警模板
@@ -911,8 +908,8 @@ public class MonitorServiceImpl implements MonitorService {
             case MONITOR_3:
                 //监控k8s和指定容器
                 view.getContainerIds().forEach(cId -> {
-                    Optional<Container> optCon = myContainerList.stream().filter(x ->  x.getContainerId().equals(cId)).findFirst();
-                    if (optCon.isPresent()){
+                    Optional<Container> optCon = myContainerList.stream().filter(x -> x.getContainerId().equals(cId)).findFirst();
+                    if (optCon.isPresent()) {
                         if (optCon.get().isBeenAdd()) {
                             //修改container
                             OperationMonitorEntity oldContainer = dao.getMonitorRecordByUuid(optCon.get().getUuid());
@@ -929,6 +926,12 @@ public class MonitorServiceImpl implements MonitorService {
         return null;
     }
 
+    @Override
+    public int getMonitorCountByTemplateId(String uuid) {
+        List<OperationMonitorEntity> list = dao.getMonitorRecordByTemplateId(uuid);
+        return list.size();
+    }
+
     private void updateContainer(OperationMonitorView view, Container container, OperationMonitorEntity operationMonitorEntity, Map<String, String> nodeMap, OperationMonitorEntity oldContainer) {
 
         try {
@@ -937,7 +940,7 @@ public class MonitorServiceImpl implements MonitorService {
             cExtra.put("rootId", operationMonitorEntity.getUuid());
             cExtra.put("parentId", nodeMap.getOrDefault(container.getNodeIp(), ""));
             monitorContainer.setExtra(objectMapper.writeValueAsString(cExtra));
-            boolean updateK8sc = dao.updateMonitorRecord(monitorContainer);
+            boolean updateK8sc = dao.insertMonitorRecord(monitorContainer);
             if (updateK8sc) {
                 RuleMonitorEntity updateContainerAlertRule = configService.updateMonitorRecordAlertRule(monitorContainer.getUuid(), monitorContainer.getTemplateId());
                 if (null != updateContainerAlertRule) {
@@ -980,7 +983,6 @@ public class MonitorServiceImpl implements MonitorService {
             k8snNode.setExtra(objectMapper.writeValueAsString(k8snExtra));
             boolean insertK8sn = dao.insertMonitorRecord(k8snNode);
             nodeMap.put(node.getNodeIp(), k8snNode.getUuid());
-            // TODO: 2018/10/14 添加监控实体到etcd
             if (insertK8sn) {
                 //添加监控对象的告警规则
                 RuleMonitorEntity ruleMonitorEntity = configService.addMonitorRecordAlertRule(k8snNode.getUuid(), k8snNode.getTemplateId());
@@ -1061,7 +1063,6 @@ public class MonitorServiceImpl implements MonitorService {
             cExtra.put("parentId", nodeMap.getOrDefault(container.getNodeIp(), ""));
             monitorContainer.setExtra(objectMapper.writeValueAsString(cExtra));
             boolean insertK8sc = dao.insertMonitorRecord(monitorContainer);
-            // TODO: 2018/10/14 添加监控实体到etcd
             if (insertK8sc) {
                 //添加监控对象的告警规则
                 RuleMonitorEntity ruleMonitorEntityC = configService.addMonitorRecordAlertRule(monitorContainer.getUuid(), monitorContainer.getTemplateId());

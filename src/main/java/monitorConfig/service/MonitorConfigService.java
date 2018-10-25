@@ -2,8 +2,9 @@ package monitorConfig.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import monitor.entity.OperationMonitorEntity;
-import monitorConfig.common.ResultMsg;
+import monitor.common.ResultMsg;
 import monitorConfig.entity.metric.NewTemplateView;
+import monitorConfig.entity.metric.UpTemplateView;
 import monitorConfig.entity.template.RuleMonitorEntity;
 
 import java.util.List;
@@ -72,4 +73,25 @@ public interface MonitorConfigService {
      * @return
      */
     RuleMonitorEntity updateMonitorRecordAlertRule(String uuid, String templateId);
+
+    /**
+     * 删除监控模板
+     * @param templateUuids
+     * @return
+     */
+    ResultMsg delTemplate(List<String> templateUuids);
+
+    /**
+     * 修改监控模板
+     * @param view
+     * @return
+     */
+    ResultMsg updateTemplate(UpTemplateView view);
+
+    /**
+     * 修改打开某个监控模板(模板id)，返回
+     * @param uuid
+     * @return
+     */
+    ResultMsg OpenTemplate(String uuid);
 }
