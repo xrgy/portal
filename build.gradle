@@ -1,5 +1,5 @@
 group 'com.gy.testPortal'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 apply plugin: 'java'
 apply plugin: 'war'
@@ -12,7 +12,13 @@ targetCompatibility = 1.8
     dependencies {
         compile group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: '1.5.8.RELEASE'
     }
-
+//sourceSets {
+//    main {
+//        java {
+//            srcDirs=["src/main"]
+//        }
+//    }
+//}
 dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '1.5.8.RELEASE'
     testCompile group: 'junit', name: 'junit', version: '4.11'
@@ -25,4 +31,37 @@ dependencies {
     compile group: 'org.springframework', name: 'spring-beans', version: '4.3.14.RELEASE'
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
     compile group: 'top.jfunc.json', name: 'Json-Jsonlib', version: '1.0'
+    compile fileTree(dir: 'lib',include:'*.jar')
+}
+
+jar {
+    String someString = ''
+    configurations.runtime.each { someString = someString + "lib/" + it.name+" "}
+    manifest {
+//        attributes 'Main-Class': 'org.springframework.boot.SpringApplication'
+        attributes 'Main-Class': 'BingoApplication'
+        attributes 'Class-Path': someString
+    }
+    into('lib'){
+        from configurations.runtime
+    }
+}
+
+//依赖编译 然后打包成Jar
+//task taskJar(type:Jar,dependsOn: compileJava){
+//    from 'build/classes'
+//    destinationDir = file('build/libs')
+//}
+task copyJar(type:Copy){
+    from configurations.runtime
+    into ('lib')
+}
+
+////清除上次的编译过的文件
+task clearPj(type:Delete){
+    delete 'build','target'
+}
+task release(type: Copy,dependsOn: [build,copyJar]) {
+    from configurations.runtime
+    into ('target')
 }

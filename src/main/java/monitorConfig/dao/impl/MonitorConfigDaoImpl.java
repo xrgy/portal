@@ -29,8 +29,10 @@ import java.util.Map;
 @Repository
 public class MonitorConfigDaoImpl implements MonitorConfigDao {
 
-    private static final String IP = "http://127.0.0.1";
-    private static final String CONFIG_PORT = "8086";
+//    private static final String IP = "http://127.0.0.1";
+//    private static final String CONFIG_PORT = "8086";
+    private static final String IP = "http://172.31.105.232";
+    private static final String CONFIG_PORT = "30006";
     private static final String MONITOR_PREFIX = "monitorConfig";
     private static final String PATH_METRIC_INFO = "getMetricInfo";
     private static final String PATH_NAME_DUP = "isTemplateNameDup";

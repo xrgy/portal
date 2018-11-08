@@ -48,6 +48,7 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                     },
                     monitorMode: "snmp_v1",
                     lightType: "switch",
+                    lightClass:"network",
                     availDataObj: null,
                     perfDataObj: null,
                     resourceUuid:"",
@@ -83,6 +84,7 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                         var _self = this;
                         console.log(commonModule.i18n("monitorConfig.templateName"));
                         $.ajax({
+                            //"MySQL mysql"
                             data: {"lightType": _self.lightType, "monitorMode": _self.monitorMode},
                             url: _self.path.getMetricInfo,
                             success: function (data) {
@@ -292,6 +294,15 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
 
         }
         $("#monitorConfig").on('show.bs.modal', function () {
+            var light = sessionStorage.getItem('addConfigLightType');
+            monitorConfig.lightType = light;
+            if (light === "switch" || light ==="router" || light ==="firewall" || light ==="LB"){
+                monitorConfig.monitorMode="snmp_v1";
+                monitorConfig.lightClass="network";
+            }else {
+                monitorConfig.monitorMode = light.toLowerCase();
+                monitorConfig.lightClass="";
+            }
             monitorConfig.initData();
         })
     }

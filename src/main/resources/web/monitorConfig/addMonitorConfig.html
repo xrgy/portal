@@ -25,7 +25,7 @@
                             <input class="form-control input-sm def-input-sm" type="text" name="tempName" id="tempName"
                                    v-model="templateName" data-i18n-placeholder="monitorConfig.placeInput"/>
                         </div>
-                        <div class="form-group radio-group">
+                        <div class="form-group radio-group" v-show="lightClass=='network'">
                             <label data-i18n="monitorConfig.snmpVerion"></label>
                             <!--<div class="radio-one radio-left">-->
                             <input type="radio" id="snmpv1" class="snmp-magic-radio radio-left hidden "
@@ -93,7 +93,7 @@
                                     </thead>
                                     <tbody>
                                     <template v-for="(i,j) in perfDataObj">
-                                        <tr :id="'perf_'+i.type">
+                                        <tr :id="'perf_'+i.type+j">
                                             <td colspan="3" class="td-group">{{i.type|convertType}}<i
                                                     class="fa fa-angle-down skin-color toggle-font"
                                                     v-on:click="toggleType($event)"></i></td>
@@ -110,7 +110,7 @@
                                                             <select v-model="item.level_one_alert_first_condition">
                                                                 <option v-for="(condition,conditionin) in alertCondition" :value="condition.value">{{condition.text}}</option>
                                                             </select>
-                                                            <input type="text" id="'perf_'+oneoneshresh"
+                                                            <input type="text" id="'perf_'+oneoneshresh+index"
                                                                    v-model="item.level_one_first_threshold"/>
                                                             <span id="firstFirstUnit">{{item.metric_display_unit}}</span>
                                                             <span class="span-more-condition"
@@ -123,7 +123,7 @@
                                                             <select v-model="item.level_one_alert_second_condition">
                                                                 <option v-for="(condition,conditionin) in alertCondition" :value="condition.value">{{condition.text}}</option>
                                                             </select>
-                                                            <input type="text" id="'perf_'+onetwoshresh"
+                                                            <input type="text" id="'perf_'+onetwoshresh+index"
                                                                    v-model="item.level_one_second_threshold"/>
                                                             <span id="firstSecondUnit">{{item.metric_display_unit}}</span>
                                                             <i class="fa fa-close skin-color def-close"
@@ -141,7 +141,7 @@
                                                             <select v-model="item.level_two_alert_first_condition">
                                                                 <option v-for="(condition,conditionin) in alertCondition" :value="condition.value">{{condition.text}}</option>
                                                             </select>
-                                                            <input type="text" id="'perf_'+twooneshresh"
+                                                            <input type="text" id="'perf_'+twooneshresh+index"
                                                                    v-model="item.level_two_first_threshold"/>
                                                             <span id="secondFirstUnit">{{item.metric_display_unit}}</span>
                                                             <i class="fa fa-close skin-color def-close"
@@ -156,7 +156,7 @@
                                                             <select v-model="item.level_two_alert_second_condition">
                                                                 <option v-for="(condition,conditionin) in alertCondition" :value="condition.value">{{condition.text}}</option>
                                                             </select>
-                                                            <input type="text" id="'perf_'+twotwoshresh"
+                                                            <input type="text" id="'perf_'+twotwoshresh+index"
                                                                    v-model="item.level_two_second_threshold"/>
                                                             <span id="secondSecondUnit">{{item.metric_display_unit}}</span>
                                                             <i class="fa fa-close skin-color def-close"

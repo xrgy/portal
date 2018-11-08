@@ -28,6 +28,11 @@ define(['jquery','bootstrap', 'vue','commonModule'], function ($,bootstrap, Vue,
                       $(e).toggleClass('fa-angle-down fa-angle-up');
                       $('#device-list').toggleClass('hidden');
                     },
+                    toggleConfigList:function (event) {
+                        var  e = event.currentTarget;
+                        $(e).toggleClass('fa-angle-down fa-angle-up');
+                        $('#config-list').toggleClass('hidden');
+                    },
                     addDevice:function (middletype,lighttype) {
                         sessionStorage.setItem('addLightType',lighttype);
                         switch(middletype){
@@ -37,12 +42,17 @@ define(['jquery','bootstrap', 'vue','commonModule'], function ($,bootstrap, Vue,
                             case 'middleware':
                                 break;
                             case 'database':
+                                $('#adddb').modal({backdrop:'static',keyboard:false,show:true});
                                 break;
                             case 'virtualization':
                                 break;
                             case 'container':
                                 break;
                         }
+                    },
+                    addDeviceConfig:function (lighttype) {
+                        sessionStorage.setItem('addConfigLightType',lighttype);
+                        $("#monitorConfig").modal({backdrop: 'static', keyboard: false, show: true})
                     }
                 }
             })

@@ -21,6 +21,7 @@ require.config({
         'commonModule':'./common-module',
         'validate-extend':'./validate-extend',
         'addNetwork':'./monitor/add-network',
+        'addDb':'./monitor/add-db',
     },
     shim:{
         'jquery-i18n':['jquery'],

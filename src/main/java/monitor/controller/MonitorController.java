@@ -32,6 +32,11 @@ public class MonitorController {
     public ResultMsg addNetworkMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
         return service.addNetworkMonitorRecord(view);
     }
+    @RequestMapping("/addDbMonitorRecord")
+    @ResponseBody
+    public ResultMsg addDbMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
+        return service.addDataBaseMonitorRecord(view);
+    }
 
     @RequestMapping("/delNetworkMonitorRecord")
     @ResponseBody

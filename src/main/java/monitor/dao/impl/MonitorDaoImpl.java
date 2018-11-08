@@ -29,8 +29,10 @@ import java.util.List;
 @Repository
 public class MonitorDaoImpl implements MonitorDao {
 
-    private static final String IP = "http://127.0.0.1";
-    private static final String MONITOR_PORT = "8084";
+//    private static final String IP = "http://127.0.0.1";
+//    private static final String MONITOR_PORT = "8084";
+    private static final String IP = "http://172.31.105.232";
+    private static final String MONITOR_PORT = "30004";
     private static final String MONITOR_PREFIX = "monitor";
     private static final String PATH_INSERT_MONITOR_RECORD = "addMonitorRecord";
     private static final String PATH_INSERT_MONITOR_RECORD_LIST = "addMonitorRecordList";

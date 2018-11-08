@@ -1,3 +1,4 @@
+#configList #config-list,
 #configList #device-list{
     border: solid 1px #ec670b;
     border-radius: 5px;
@@ -6,9 +7,14 @@
     z-index: 10;
     padding: 10px;
 }
+#configList #device-list{
+    left: 100px;
+}
+#config-list .deviceTitle,
 #device-list .deviceTitle{
     font-weight: bold;
 }
+#config-list .deviceBtn,
 #device-list .deviceBtn{
     padding: 4px;
     background: #f3f3f3;
