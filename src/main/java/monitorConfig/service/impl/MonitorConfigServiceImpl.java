@@ -29,7 +29,7 @@ import java.util.*;
 @Service
 public class MonitorConfigServiceImpl implements MonitorConfigService {
 
-    private static final String RULE_ANME_START="rule";
+    private static final String RULE_ANME_START="rule_";
     private static final String AVL_RULE_NAME="_avl";
     private static final String ONE="one";
     private static final String TWO="two";
@@ -110,7 +110,7 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
         List<AlertPerfRuleMonitorEntity> perfRuleMonitorEntityList = new ArrayList<>();
         avlRuleList.forEach(x->{
             AlertAvlRuleMonitorEntity entity = new AlertAvlRuleMonitorEntity();
-            String id =UUID.randomUUID().toString();
+            String id =UUID.randomUUID().toString().replaceAll("-","");
             entity.setUuid(id);
             entity.setAlertRuleName(RULE_ANME_START+id+AVL_RULE_NAME);
             entity.setMonitorUuid(monitorUuid);
@@ -120,7 +120,7 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
         dao.addAvlRuleMonitorList(avlRuleMonitorList);
         perfRuleList.forEach(x->{
             AlertPerfRuleMonitorEntity entity = new AlertPerfRuleMonitorEntity();
-            String id = UUID.randomUUID().toString();
+            String id = UUID.randomUUID().toString().replaceAll("-","");
             entity.setUuid(id);
             entity.setMonitorUuid(monitorUuid);
             entity.setPerfRuleUuid(x.getUuid());
@@ -133,7 +133,8 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
         });
         dao.addPerfRuleMonitorList(perfRuleMonitorEntityList);
         AlertRuleTemplateMonitorEntity templateMonitorEntity = new AlertRuleTemplateMonitorEntity();
-        templateMonitorEntity.setUuid(UUID.randomUUID().toString());
+        String temuuid = UUID.randomUUID().toString();
+        templateMonitorEntity.setUuid(temuuid.replaceAll("-",""));
         templateMonitorEntity.setMonitorUuid(monitorUuid);
         templateMonitorEntity.setTemplateUuid(templateId);
         dao.addTemplateMonitorEntity(templateMonitorEntity);
