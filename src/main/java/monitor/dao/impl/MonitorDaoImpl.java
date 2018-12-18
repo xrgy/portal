@@ -3,6 +3,7 @@ package monitor.dao.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import common.EtcdUtil;
 import monitor.dao.MonitorDao;
 import monitor.entity.CasTransExporterModel;
 import monitor.entity.LightTypeEntity;
@@ -30,11 +31,11 @@ import java.util.List;
 public class MonitorDaoImpl implements MonitorDao {
 
 //    private static final String IP = "http://127.0.0.1";
-//    private static final String MONITOR_PORT = "8084";
+    private static final String MONITOR_PORT = "8084";
 
-    private static final String IP = "http://172.17.5.135";
+//    private static final String IP = "http://172.17.5.135";
 //    private static final String IP = "http://172.31.105.232";
-    private static final String MONITOR_PORT = "30004";
+//    private static final String MONITOR_PORT = "30004";
     private static final String MONITOR_PREFIX = "monitor";
     private static final String PATH_INSERT_MONITOR_RECORD = "addMonitorRecord";
     private static final String PATH_INSERT_MONITOR_RECORD_LIST = "addMonitorRecordList";
@@ -49,11 +50,17 @@ public class MonitorDaoImpl implements MonitorDao {
     private static final String PATH_GET_MONITOR_RECORD_BY_UUID="getMonitorRecord";
     private static final String PATH_UPDATE_MONITOR_RECORD = "updateMonitorRecord";
     private static final String PATH_GET_MONITOR_RECORD_BY_TEMPLATE = "getMonitorRecordByTemplateId";
+    private static final String HTTP="http://";
 
 
-
-    private String monitorPrefix() {
-        return IP + ":" + MONITOR_PORT + "/" + MONITOR_PREFIX + "/";
+    private String monitorPrefix(){
+        try {
+           String ip = EtcdUtil.getClusterIpByServiceName("monitor-core-service");
+            return HTTP+ip + ":" + MONITOR_PORT + "/" + MONITOR_PREFIX + "/";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     @Bean

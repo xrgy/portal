@@ -3,6 +3,7 @@ package monitorConfig.dao.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import common.EtcdUtil;
 import monitorConfig.dao.MonitorConfigDao;
 import monitorConfig.entity.metric.Metrics;
 import monitorConfig.entity.metric.NewTemplateView;
@@ -29,11 +30,11 @@ import java.util.Map;
 @Repository
 public class MonitorConfigDaoImpl implements MonitorConfigDao {
 
-//    private static final String IP = "http://127.0.0.1";
-//    private static final String CONFIG_PORT = "8086";
-    private static final String IP = "http://172.17.5.135";
+//    private static final String  = "http://127.0.0.1";
+    private static final String CONFIG_PORT = "8081";
+//    private static final String IP = "http://172.17.5.135";
 //    private static final String IP = "http://172.31.105.232";
-    private static final String CONFIG_PORT = "30006";
+//    private static final String CONFIG_PORT = "30006";
     private static final String MONITOR_PREFIX = "monitorConfig";
     private static final String PATH_METRIC_INFO = "getMetricInfo";
     private static final String PATH_NAME_DUP = "isTemplateNameDup";
@@ -49,9 +50,17 @@ public class MonitorConfigDaoImpl implements MonitorConfigDao {
     private static final String PATH_DEL_ALERT_MONITOR_RULE = "delAlertMonitorRule";
     private static final String PATH_GET_OPEN_TEMPLATE_DATA = "getOpenTemplateData";
     private static final String PATH_UPDATE_TEMPLATE = "updateTemplate";
+    private static final String HTTP="http://";
+
 
     private String monitorConfigPrefix() {
-        return IP + ":" + CONFIG_PORT + "/" + MONITOR_PREFIX + "/";
+        try {
+            String ip = EtcdUtil.getClusterIpByServiceName("monitorconfig-core-service");
+            return HTTP+ip + ":" + CONFIG_PORT + "/" + MONITOR_PREFIX + "/";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     @Bean
@@ -69,6 +78,7 @@ public class MonitorConfigDaoImpl implements MonitorConfigDao {
         ResponseEntity<TestEntity> response = rest().getForEntity("http://127.0.0.1:8085/monitorConfig/jpa", TestEntity.class);
         return response.getBody().getName();
     }
+
 
 
     @Override

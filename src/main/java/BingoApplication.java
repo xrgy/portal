@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication  // same as @Configuration @EnableAutoConfiguration @ComponentScan
-@ComponentScan(basePackages= {"monitorConfig","monitor","alert","business"})
+@ComponentScan(basePackages= {"monitorConfig","monitor","alert","business","common","topo"})
 //@ComponentScan(basePackageClasses = MonitorConfigController.class,Moni)
 public class BingoApplication {
     public static void main(String[] args) throws Exception  {
