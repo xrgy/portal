@@ -243,3 +243,7 @@ li.active {
 .form-group .input-no-required{
     margin-left: 18px;
 }
+
+a{
+    color: #fff;
+}

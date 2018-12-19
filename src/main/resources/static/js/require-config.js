@@ -13,6 +13,7 @@ require.config({
         'bootstrap':'./lib/bootstrap/bootstrap.min',
         'jquery-i18n': './lib/jquery/jquery.i18n.properties',
         'jquery-validate':'./lib/jquery/jquery-validate',
+        'twaver':'./lib/twaver/twaver',
 
         /**自定义js**/
         'addMonitorConfig':'./monitorConfig/add-monitor-config',
@@ -22,6 +23,7 @@ require.config({
         'validate-extend':'./validate-extend',
         'addNetwork':'./monitor/add-network',
         'addDb':'./monitor/add-db',
+        'topoMain':'./topo/topo-main'
     },
     shim:{
         'jquery-i18n':['jquery'],

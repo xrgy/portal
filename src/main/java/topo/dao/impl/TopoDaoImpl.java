@@ -20,7 +20,7 @@ import java.util.List;
 @Repository
 public class TopoDaoImpl implements TopoDao {
 
-    private static final String ip = "http://127.0.0.1";
+    private static final String ip = "127.0.0.1";
     private static final String CONFIG_PORT = "8085";
 //    private static final String IP = "http://172.17.5.135";
 //    private static final String IP = "http://172.31.105.232";

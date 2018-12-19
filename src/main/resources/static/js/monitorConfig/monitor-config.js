@@ -2,7 +2,7 @@
  * Created by gy on 2018/3/24.
  */
 'use strict'
-define(['jquery','bootstrap', 'vue','commonModule'], function ($,bootstrap, Vue,commonModule) {
+define(['jquery','bootstrap', 'vue','commonModule','topoMain'], function ($,bootstrap, Vue,commonModule,topoMain) {
     var confList = function () {
         if ($('#configList')[0]) {
             var monitorList = new Vue({
@@ -53,6 +53,11 @@ define(['jquery','bootstrap', 'vue','commonModule'], function ($,bootstrap, Vue,
                     addDeviceConfig:function (lighttype) {
                         sessionStorage.setItem('addConfigLightType',lighttype);
                         $("#monitorConfig").modal({backdrop: 'static', keyboard: false, show: true})
+                    },
+                    loadTopo:function () {
+                        window.open("/topo/showWeaveTopo",'_parent');
+                        topoMain.startTopo();
+
                     }
                 }
             })
