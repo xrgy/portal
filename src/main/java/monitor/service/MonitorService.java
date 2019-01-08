@@ -89,4 +89,10 @@ public interface MonitorService {
      * @return
      */
     int getMonitorCountByTemplateId(String uuid);
+
+    /**
+     * business获取monitor record进行添加
+     * @return
+     */
+    ResultMsg getBusinessMonitorRecord();
 }

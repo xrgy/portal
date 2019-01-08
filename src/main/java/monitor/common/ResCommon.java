@@ -17,4 +17,17 @@ public class ResCommon {
         }
         return msg;
     }
+
+    public static ResultMsg getCommonResultMsg(Object o){
+        ResultMsg msg = new ResultMsg();
+        if (null != o) {
+            msg.setCode(HttpStatus.OK.value());
+            msg.setMsg(CommonEnum.MSG_SUCCESS.value());
+            msg.setData(o);
+        }else {
+            msg.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            msg.setMsg(CommonEnum.MSG_ERROR.value());
+        }
+        return msg;
+    }
 }

@@ -1,11 +1,19 @@
 package business.service.impl;
 
 import business.dao.BusinessDao;
+import business.entity.BusinessResourceEntity;
 import business.service.BusinessService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import monitor.common.ResCommon;
+import monitor.common.ResultMsg;
 import monitor.service.MonitorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by gy on 2018/3/31.
@@ -30,5 +38,24 @@ public class BusinessServiceImpl implements BusinessService {
     @Override
     public boolean isJoinBusinessMonitor(String monitorUuid) {
         return false;
+    }
+
+    @Override
+    public ResultMsg getBusinessList() {
+        return ResCommon.getCommonResultMsg(dao.getBusinessList());
+    }
+
+    @Override
+    public ResultMsg addBusinessResource(String businessId, List<String> uuids) throws JsonProcessingException {
+        List<BusinessResourceEntity> resourceList = new ArrayList<>();
+        uuids.forEach(x->{
+            BusinessResourceEntity entity = new BusinessResourceEntity();
+            entity.setUuid(UUID.randomUUID().toString());
+            entity.setBusinessUuid(businessId);
+            entity.setMonitorId(x);
+            resourceList.add(entity);
+        });
+        boolean res = dao.insertBusinessResourceList(resourceList);
+        return ResCommon.genSimpleResByBool(res);
     }
 }

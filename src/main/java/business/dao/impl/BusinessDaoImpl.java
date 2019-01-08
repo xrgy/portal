@@ -1,12 +1,19 @@
 package business.dao.impl;
 
 import business.dao.BusinessDao;
+import business.entity.BusinessEntity;
+import business.entity.BusinessResourceEntity;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -15,28 +22,23 @@ import org.springframework.web.client.RestTemplate;
 @Repository
 public class BusinessDaoImpl implements BusinessDao {
 
-//    private static final String IP = "http://127.0.0.1";
+    //    private static final String IP = "http://127.0.0.1";
 //    private static final String CONFIG_PORT = "8088";
-    private static final String IP = "http://172.31.105.232";
-    private static final String CONFIG_PORT = "30008";
-    private static final String MONITOR_PREFIX = "monitorConfig";
-    private static final String PATH_METRIC_INFO = "getMetricInfo";
-    private static final String PATH_NAME_DUP = "isTemplateNameDup";
-    private static final String PATH_ADD_TEMPLATE = "template";
-    private static final String PATH_GET_TEMPLATE = "getTemplate";
-    private static final String PATH_GET_AVL_RULE = "getAvlRule";
-    private static final String PATH_GET_PERF_RULE = "getPerfRule";
-    private static final String PATH_ADD_AVL_MONITOR = "addAvlRuleMonitorList";
-    private static final String PATH_ADD_PERF_MONITOR = "addPerfRuleMonitorList";
-    private static final String PATH_ADD_TEMPLATE_MONITOR = "addTemplateMonitor";
-    private static final String PATH_GET_METRICS_BY_LIGHT = "getMetricsUseLight";
-    private static final String PATH_ADD_TEMPLATE_ETCD = "addAlertTemplateToEtcd";
-    private static final String PATH_DEL_ALERT_MONITOR_RULE = "delAlertMonitorRule";
-    private static final String PATH_GET_OPEN_TEMPLATE_DATA = "getOpenTemplateData";
-    private static final String PATH_UPDATE_TEMPLATE = "updateTemplate";
+    private static final String ip = "127.0.0.1";
+    private static final String CONFIG_PORT = "8088";
+    private static final String BUSINESS_PREFIX = "business";
+    private static final String PATH_BUSINESS_LIST = "getBusinessList";
+    private static final String PATH_ADD_BUSINESS_RESOURCE_LIST = "addBusinessResourceList";
+    private static final String HTTP = "http://";
 
-    private String monitorConfigPrefix() {
-        return IP + ":" + CONFIG_PORT + "/" + MONITOR_PREFIX + "/";
+    private String businessPrefix() {
+        //        try {
+//            String ip = EtcdUtil.getClusterIpByServiceName("business-core-service");
+        return HTTP + ip + ":" + CONFIG_PORT + "/" + BUSINESS_PREFIX + "/";
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return "";
     }
 
     @Bean
@@ -48,4 +50,19 @@ public class BusinessDaoImpl implements BusinessDao {
     ObjectMapper objectMapper;
 
 
+    @Override
+    public List<BusinessEntity> getBusinessList() {
+        ResponseEntity<String> response = rest().getForEntity(businessPrefix()+PATH_BUSINESS_LIST,String.class);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<BusinessEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean insertBusinessResourceList(List<BusinessResourceEntity> resourceList) throws JsonProcessingException {
+        return rest().postForObject(businessPrefix() + PATH_ADD_BUSINESS_RESOURCE_LIST, objectMapper.writeValueAsString(resourceList), boolean.class);
+    }
 }

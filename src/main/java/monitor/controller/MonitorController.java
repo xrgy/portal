@@ -58,6 +58,13 @@ public class MonitorController {
     }
 
 
+    @RequestMapping("/getBusinessMonitorRecord")
+    @ResponseBody
+    public ResultMsg getBusinessMonitorRecord() throws JsonProcessingException {
+        return service.getBusinessMonitorRecord();
+    }
+
+
 
 
 

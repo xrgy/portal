@@ -1146,5 +1146,16 @@ public class MonitorServiceImpl implements MonitorService {
         return operationMonitorEntity;
     }
 
-
+    @Override
+    public ResultMsg getBusinessMonitorRecord() {
+        List<OperationMonitorEntity> allmonitor = dao.getAllMonitorRecord();
+        List<OperationMonitorEntity> monitorEntityList= allmonitor.stream()
+                .filter(x->(x.getMonitorType().equals(MonitorEnum.MonitorTypeEnum.TOMCAT.value())
+                        ||x.getMonitorType().equals(MonitorEnum.MonitorTypeEnum.MYSQL.value())
+                        ||x.getMonitorType().equals(MonitorEnum.MonitorTypeEnum.CVK.value())
+                        ||x.getMonitorType().equals(MonitorEnum.MonitorTypeEnum.VIRTUALMACHINE.value())
+                        ||x.getMonitorType().equals(MonitorEnum.MonitorTypeEnum.K8SNODE.value())
+                        ||x.getMonitorType().equals(MonitorEnum.MonitorTypeEnum.K8SCONTAINER.value()))).collect(Collectors.toList());
+        return ResCommon.getCommonResultMsg(monitorEntityList);
+    }
 }
