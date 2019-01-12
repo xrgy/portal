@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body th:fragment="addTomcat">
+<div id="addtomcat" class="modal fade" tabindex="-1" role="dialog" aria-hidden="false">
+    <div class="modal-dialog def-dialog middle-dialog">
+        <div class="modal-content def-modal-content">
+            <div class="modal-header def-modal-header">
+                <i class="fa fa-plus skin-color"></i>
+                <span>{{title}}</span>
+                <button type="button" class="close skin-color close-style" data-dismiss="modal">&times;</button>
+            </div>
+            <hr class="skin-color border-color"/>
+            <form role="form" id="add-tomcat">
+                <div class="modal-body def-modal-body">
+                    <div id="leftMenu" class="model-tab col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <ul>
+                            <li v-on:click="clickResource($event,'tomcat')" :class="{active:tabSelected=='tomcat'}">
+                                Tomcat
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                        <div class="form-group">
+                            <label for="tomcatip" data-i18n="monitor.baseinfo.ip"></label>
+                            <i class="required">*</i>
+                            <input class="form-control input-sm def-input-sm" type="text" name="ip" id="tomcatip"
+                                   v-model="infoIp"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="tomcatname" data-i18n="monitor.baseinfo.name"></label>
+                            <i class="required">*</i>
+                            <input class="form-control input-sm def-input-sm" type="text" name="name" id="tomcatname"
+                                   v-model="infoName" data-i18n-placeholder="monitorConfig.placeInput"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="tomcatport" data-i18n="monitor.baseinfo.dbport"></label>
+                            <i class="required">*</i>
+                            <input class="form-control input-sm def-input-sm" type="number" name="port" id="tomcatport"
+                                   v-model="infoPort"/>
+                        </div>
+
+                        <div>
+                            <div class="form-group">
+                                <input type='checkbox' class='input-checkbox'  id="sshcheck"  v-model="checkedSSL"/>
+                                <label for="sshcheck" data-i18n="monitor.baseinfo.sslenable"></label>
+                            </div>
+                            <div v-show="checkedSSL">
+                            <!--开启认证-->
+                            <div class="form-group">
+                                <label for="tomcatusername" data-i18n="monitor.baseinfo.username"></label>
+                                <i class="required">*</i>
+                                <input class="form-control input-sm def-input-sm" type="text" name="userName"
+                                       id="tomcatusername"
+                                       v-model="infoUsername" data-i18n-placeholder="monitorConfig.placeInput"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="tomcatpassword" data-i18n="monitor.baseinfo.password"></label>
+                                <i class="required">*</i>
+                                <input class="form-control input-sm def-input-sm" type="password"
+                                       name="password" id="tomcatpassword"
+                                       v-model="infoPassword" data-i18n-placeholder="monitorConfig.placeInput"/>
+                            </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tomcattimeinterval" data-i18n="monitor.baseinfo.timeinterval"></label>
+                            <i class="required">*</i>
+                            <input class="form-control input-sm def-input-sm" type="number" name="timeinterval"
+                                   id="tomcattimeinterval"
+                                   v-model="infoTimeinterval"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="tomcattimeout" data-i18n="monitor.baseinfo.timeout"></label>
+                            <i class="required">*</i>
+                            <input class="form-control input-sm def-input-sm" type="number" name="timeout"
+                                   id="tomcattimeout"
+                                   v-model="infoTimeout"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tomcatmonitortemplate" data-i18n="monitor.baseinfo.monitortemplate"></label>
+                            <i class="required">*</i>
+                            <select class="form-control input-sm def-input-sm" name="monitortemplate"
+                                    id="tomcatmonitortemplate"
+                                    v-model="infoMonitortemplate">
+                                <option v-for="template in templateList" :value="template.uuid">
+                                    {{template.templateName}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer def-modal-footer">
+                        <button type="button" class="btn def-btn def-btn-primary"
+                                data-i18n="modal.footer.test"></button>
+                        <input type="submit" class="btn def-btn def-btn-primary" data-i18n="modal.footer.submit"/>
+                        <button type="button" class="btn def-btn def-btn-default" data-dismiss="modal"
+                                data-i18n="modal.footer.cancel"></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

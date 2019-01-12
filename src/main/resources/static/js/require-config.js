@@ -23,6 +23,7 @@ require.config({
         'validate-extend':'./validate-extend',
         'addNetwork':'./monitor/add-network',
         'addDb':'./monitor/add-db',
+        'addTomcat':'./monitor/add-tomcat',
         'topoMain':'./topo/topo-main'
     },
     shim:{

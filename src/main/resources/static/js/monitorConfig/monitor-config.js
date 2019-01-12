@@ -7,15 +7,21 @@ define(['jquery','bootstrap', 'vue','commonModule','topoMain'], function ($,boot
         if ($('#configList')[0]) {
             var monitorList = new Vue({
                 el: '#configList',
-                data: {
+                data: {//value是三级规格
                     networkdevice:[{name: commonModule.i18n('monitor.networkdevice.switch'),value:"switch",type:'network_device'},
                         {name: commonModule.i18n('monitor.networkdevice.router'),value:"router",type:'network_device'},
                         {name: commonModule.i18n('monitor.networkdevice.firewall'),value:"firewall",type:'network_device'},
                         {name: commonModule.i18n('monitor.networkdevice.LB'),value:"LB",type:'network_device'}],
                     middleware:[{name: 'tomcat',value:"Tomcat",type:'middleware'}],
                     databasedevice:[{name: 'MySQL',value:"MySQL",type:'database'}],
-                    virtualdevice:[{name: 'CAS',value:"CAS",type:'virtualization'},{name: 'vCenter',value:"vCenter",type:'virtualization'}],
-                    container:[{name: 'kubernetes',value:"k8s",type:'container'}]
+                    virtualdevice:[{name: 'CAS',value:"CAS",type:'virtualization'},
+                        {name: 'CVK',value:"CVK",type:'virtualization'},
+                        {name: 'VirtualMachine',value:"VirtualMachine",type:'virtualization'}],
+                    addvirtualdevice:[{name: 'CAS',value:"CAS",type:'virtualization'}],
+                    container:[{name: 'kubernetes',value:"k8s",type:'container'},
+                        {name: commonModule.i18n('monitor.containerdevice.k8snode'),value:"k8sNode",type:'container'},
+                        {name: commonModule.i18n('monitor.containerdevice.k8scontainer'),value:"k8sContainer",type:'container'}],
+                    addcontainer:[{name: 'kubernetes',value:"k8s",type:'container'}]
                 },
                 mounted: function () {
                 },
@@ -40,6 +46,7 @@ define(['jquery','bootstrap', 'vue','commonModule','topoMain'], function ($,boot
                                 $('#addnetwork').modal({backdrop:'static',keyboard:false,show:true});
                                 break;
                             case 'middleware':
+                                $('#addtomcat').modal({backdrop:'static',keyboard:false,show:true});
                                 break;
                             case 'database':
                                 $('#adddb').modal({backdrop:'static',keyboard:false,show:true});

@@ -51,7 +51,7 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                     lightClass:"network",
                     availDataObj: null,
                     perfDataObj: null,
-                    resourceUuid:"",
+                    // resourceUuid:"",
                 },
                 filters: {
                     convertType: function (type) {
@@ -95,17 +95,17 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                                     var availArray = [], perfArray = [];
                                     for (var availdata in available) {
                                         var avail = {};
-                                        avail.type = available[availdata].type_name;
+                                        avail.type = available[availdata].metric_type;
                                         avail.data = available[availdata];
                                         availArray.push(avail);
-                                        if (_self.resourceUuid === ""){
-                                            _self.resourceUuid = available[availdata].metric_light_type_id;
-                                        }
+                                        // if (_self.resourceUuid === ""){
+                                        //     _self.resourceUuid = available[availdata].metric_light_type_id;
+                                        // }
                                     }
                                     _self.availDataObj = _self.groupByType(availArray);
                                     for (var perfdata in performance) {
                                         var perf = {};
-                                        perf.type = performance[perfdata].type_name;
+                                        perf.type = performance[perfdata].metric_type;
                                         perf.data = performance[perfdata];
                                         perfArray.push(perf);
                                     }
@@ -211,7 +211,7 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                         data.template_name=_self.templateName;
                         data.monitor_mode= _self.monitorMode;
                         data.template_type= 1;
-                        data.resource_uuid=_self.resourceUuid;
+                        data.light_type=_self.lightType;
                         data.available = _self.availDataObj;
                         data.performance = _self.perfDataObj;
 
@@ -305,6 +305,15 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
             if (light === "switch" || light ==="router" || light ==="firewall" || light ==="LB"){
                 monitorConfig.monitorMode="snmp_v1";
                 monitorConfig.lightClass="network";
+            }else if (light === "Tomcat"){
+                monitorConfig.monitorMode="jmx";
+                monitorConfig.lightClass="";
+            }else if (light === "CVK" || light === "VirtualMachine"){
+                monitorConfig.monitorMode="cas";
+                monitorConfig.lightClass="";
+            }else if (light === "k8sNode" || light === "k8sContainer"){
+                monitorConfig.monitorMode="k8s";
+                monitorConfig.lightClass="";
             }else {
                 monitorConfig.monitorMode = light.toLowerCase();
                 monitorConfig.lightClass="";

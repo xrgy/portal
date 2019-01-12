@@ -34,8 +34,8 @@ public class NewTemplateView {
     /**
      * 资源三级规格id
      */
-    @JsonProperty("resource_uuid")
-    private String resourceUuid;
+    @JsonProperty("light_type")
+    private String lightType;
 
     /**
      * 可用性数据

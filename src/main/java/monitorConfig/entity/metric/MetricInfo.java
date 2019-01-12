@@ -15,17 +15,17 @@ public class MetricInfo {
 
     private String name;
 
-    @JsonProperty("metric_type_id")
-    private String metricTypeId;
+    @JsonProperty("metric_type")
+    private String metricType;
 
-    @JsonProperty("metric_group_id")
-    private String metricGroupId;
+    @JsonProperty("metric_group")
+    private String metricGroup;
 
-    @JsonProperty("metric_collection_id")
-    private String metricCollectionId;
+    @JsonProperty("metric_collection")
+    private String metricCollection;
 
-    @JsonProperty("metric_light_type_id")
-    private String metricLightTypeId;
+    @JsonProperty("metric_light_type")
+    private String metricLightType;
 
     @JsonProperty("metric_unit")
     private String metricUnit;
@@ -37,15 +37,15 @@ public class MetricInfo {
     private String metricQueryExpression;
 
     private String description;
-
-    @JsonProperty("collection_name")
-    private String collectionName;
-
-    @JsonProperty("type_name")
-    private String typeName;
-
-    @JsonProperty("group_name")
-    private String groupName;
+//
+//    @JsonProperty("collection_name")
+//    private String collectionName;
+//
+//    @JsonProperty("type_name")
+//    private String typeName;
+//
+//    @JsonProperty("group_name")
+//    private String groupName;
 
     //告警级别
     private String severity;
