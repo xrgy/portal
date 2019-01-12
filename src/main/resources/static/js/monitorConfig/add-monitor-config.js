@@ -198,6 +198,12 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                         // $($(e).parent().parent().siblings("tr[id^="+start+"]")).slideToggle();
 
                     },
+                    toggleMoitorMode:function (str) {
+                        var _self =this;
+                        _self.monitorMode=str;
+                        console.log("monitorMode:"+_self.monitorMode);
+                        _self.initData();
+                    },
                     //新建模板提交
                     submitForm:function () {
                         var _self = this;
