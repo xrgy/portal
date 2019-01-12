@@ -59,6 +59,7 @@ input[type=text]{
 .magic-radio:checked +label::after{
     display: block;
 }
+
 label{
     font: normal 12px arial;
 }
@@ -246,4 +247,40 @@ li.active {
 
 a{
     color: #fff;
+}
+.mycheck{
+    position: relative;
+    margin-left: 60px;
+}
+input[type="checkbox"]{
+    -webkit-appearance: none;
+    vertical-align:middle;
+    margin-top:0;
+    background:#fff;
+    border:#ec670b solid 1px;
+    /*border-radius: 3px;*/
+    min-height: 14px;
+    min-width: 14px;
+}
+input[type="checkbox"]:checked {
+    background: #ec670b;
+}
+input[type="checkbox"]:checked::after {
+    content: '';
+    top: 5px;
+    left: 3px;
+    position: absolute;
+    background: transparent;
+    border: #fff solid 2px;
+    border-top: none;
+    border-right: none;
+    height: 6px;
+    width: 10px;
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+.label-alginleft{
+    text-align: left !important;
 }
