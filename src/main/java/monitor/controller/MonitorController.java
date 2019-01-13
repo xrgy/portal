@@ -37,7 +37,22 @@ public class MonitorController {
     public ResultMsg addDbMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
         return service.addDataBaseMonitorRecord(view);
     }
-
+    @RequestMapping("/addVirtualMonitorRecord")
+    @ResponseBody
+    public ResultMsg addVirtualMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
+        return service.addVirtualMonitorRecord(view);
+    }
+    @RequestMapping("/addMiddleWareMonitorRecord")
+    @ResponseBody
+    public ResultMsg addMiddleWareMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
+        return service.addMiddleWareMonitorRecord(view);
+    }
+    @RequestMapping("/addContainerMonitorRecord")
+    @ResponseBody
+    public ResultMsg addContainerMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
+//        return service.addContainerMonitorRecord(view);
+        return null;
+    }
     @RequestMapping("/delNetworkMonitorRecord")
     @ResponseBody
     public ResultMsg delNetworkMonitorRecord(List<String> uuids) throws JsonProcessingException {
@@ -64,6 +79,12 @@ public class MonitorController {
         return service.getBusinessMonitorRecord();
     }
 
+
+    @RequestMapping("/getContainerList")
+    @ResponseBody
+    public ResultMsg getContainerList(String ip,String apiPort) throws JsonProcessingException {
+        return service.getContainerListByExporter(ip,apiPort);
+    }
 
 
 

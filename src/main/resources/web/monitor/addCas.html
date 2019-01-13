@@ -4,8 +4,8 @@
     <meta charset="UTF-8"/>
     <title>Title</title>
 </head>
-<body th:fragment="addDB">
-<div id="adddb" class="modal fade" tabindex="-1" role="dialog" aria-hidden="false">
+<body th:fragment="addCas">
+<div id="addcas" class="modal fade" tabindex="-1" role="dialog" aria-hidden="false">
     <div class="modal-dialog def-dialog middle-dialog">
         <div class="modal-content def-modal-content">
             <div class="modal-header def-modal-header">
@@ -14,69 +14,96 @@
                 <button type="button" class="close skin-color close-style" data-dismiss="modal">&times;</button>
             </div>
             <hr class="skin-color border-color"/>
-            <form role="form" id="add-db">
+            <form role="form" id="add-cas">
                 <div class="modal-body def-modal-body">
                     <div id="leftMenu" class="model-tab col-xs-3 col-sm-3 col-md-3 col-lg-3">
                         <ul>
-                            <li v-on:click="clickResource($event,'mysql')" :class="{active:tabSelected=='mysql'}">MySQL</li>
+                            <li v-on:click="clickResource($event,'CAS')" :class="{active:tabSelected=='CAS'}">CAS</li>
                         </ul>
                     </div>
                     <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
                         <div class="form-group">
-                            <label for="dbip" data-i18n="monitor.baseinfo.ip"></label>
+                            <label for="casip" data-i18n="monitor.baseinfo.ip"></label>
                             <i class="required">*</i>
-                            <input class="form-control input-sm def-input-sm" type="text" name="ip" id="dbip"
+                            <input class="form-control input-sm def-input-sm" type="text" name="ip" id="casip"
                                    v-model="infoIp"/>
                         </div>
                         <div class="form-group">
-                            <label for="dbname" data-i18n="monitor.baseinfo.name"></label>
+                            <label for="casname" data-i18n="monitor.baseinfo.name"></label>
                             <i class="required">*</i>
-                            <input class="form-control input-sm def-input-sm" type="text" name="name" id="dbname"
+                            <input class="form-control input-sm def-input-sm" type="text" name="name" id="casname"
                                    v-model="infoName" data-i18n-placeholder="monitorConfig.placeInput"/>
                         </div>
                         <div class="form-group">
-                            <label for="dbusername" data-i18n="monitor.baseinfo.username"></label>
+                            <label for="casport" data-i18n="monitor.baseinfo.dbport"></label>
                             <i class="required">*</i>
-                            <input class="form-control input-sm def-input-sm" type="text" name="userName" id="dbusername"
-                                   v-model="infoUsername" data-i18n-placeholder="monitorConfig.placeInput"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="dbpassword" data-i18n="monitor.baseinfo.password"></label>
-                            <i class="required">*</i>
-                            <input class="form-control input-sm def-input-sm input-no-required" type="password" name="password" id="dbpassword"
-                                   v-model="infoPassword" data-i18n-placeholder="monitorConfig.placeInput"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="dbport" data-i18n="monitor.baseinfo.dbport"></label>
-                            <i class="required">*</i>
-                            <input class="form-control input-sm def-input-sm" type="number" name="port" id="dbport"
+                            <input class="form-control input-sm def-input-sm" type="number" name="port" id="casport"
                                    v-model="infoPort" />
                         </div>
                         <div class="form-group">
-                            <label for="dbtimeinterval" data-i18n="monitor.baseinfo.timeinterval"></label>
+                            <label for="casusername" data-i18n="monitor.baseinfo.username"></label>
                             <i class="required">*</i>
-                            <input class="form-control input-sm def-input-sm" type="number" name="timeinterval" id="dbtimeinterval"
+                            <input class="form-control input-sm def-input-sm" type="text" name="userName" id="casusername"
+                                   v-model="infoUsername" data-i18n-placeholder="monitorConfig.placeInput"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="caspassword" data-i18n="monitor.baseinfo.password"></label>
+                            <i class="required">*</i>
+                            <input class="form-control input-sm def-input-sm input-no-required" type="password" name="password" id="caspassword"
+                                   v-model="infoPassword" data-i18n-placeholder="monitorConfig.placeInput"/>
+                        </div>
+
+                        <!--radio-->
+                        <div class="divradio">
+                            <div class="myradio">
+                                <input type='radio' class='type-radio'  id="raonlycvk" name="radioType"  v-model="radioType" value="1"/>
+                                <label class="" for="raonlycvk" data-i18n="monitor.baseinfo.radio.onlycvk"></label>
+                            </div>
+                            <div class="myradio">
+                                <input type='radio' class='type-radio'  id="allcvkvm" name="radioType"  v-model="radioType" value="2"/>
+                                <label class="" for="allcvkvm" data-i18n="monitor.baseinfo.radio.allcvkvm"></label>
+                            </div>
+                            <div class="myradio">
+                                <input type='radio' class='type-radio'  id="pointcvkvm" name="radioType" v-model="radioType" value="3"/>
+                                <label class="" for="pointcvkvm" data-i18n="monitor.baseinfo.radio.pointcvkvm"></label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="castimeinterval" data-i18n="monitor.baseinfo.timeinterval"></label>
+                            <i class="required">*</i>
+                            <input class="form-control input-sm def-input-sm" type="number" name="timeinterval" id="castimeinterval"
                                    v-model="infoTimeinterval" />
                         </div>
                         <div class="form-group">
-                            <label for="dbtimeout" data-i18n="monitor.baseinfo.timeout"></label>
+                            <label for="castimeout" data-i18n="monitor.baseinfo.timeout"></label>
                             <i class="required">*</i>
-                            <input class="form-control input-sm def-input-sm" type="number" name="timeout" id="dbtimeout"
+                            <input class="form-control input-sm def-input-sm" type="number" name="timeout" id="castimeout"
                                    v-model="infoTimeout" />
-                        </div>
-                        <div class="form-group">
-                            <label for="dbdatabaseName" data-i18n="monitor.baseinfo.dbname"></label>
-                            <i class="required">*</i>
-                            <input class="form-control input-sm def-input-sm" type="text" name="databaseName" id="dbdatabaseName"
-                                   v-model="infoBbname"  data-i18n-placeholder="monitorConfig.placeInput"/>
                         </div>
                         <!--<div class="form-group">-->
                         <div class="form-group">
-                            <label for="dbmonitortemplate" data-i18n="monitor.baseinfo.monitortemplate"></label>
+                            <label for="casmonitortemplate" data-i18n="monitor.baseinfo.casMonitortemplate"></label>
                             <i class="required">*</i>
-                            <select class="form-control input-sm def-input-sm"  name="monitortemplate" id="dbmonitortemplate"
-                                    v-model="infoMonitortemplate" >
-                                <option v-for="template in templateList" :value="template.uuid">{{template.templateName}}</option>
+                            <select class="form-control input-sm def-input-sm"  name="casTemplate" id="casmonitortemplate"
+                                    v-model="infoCasMonitortemplate" >
+                                <option v-for="template in casTemplateList" :value="template.uuid">{{template.templateName}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="cvkmonitortemplate" data-i18n="monitor.baseinfo.cvkMonitortemplate"></label>
+                            <i class="required">*</i>
+                            <select class="form-control input-sm def-input-sm"  name="cvkTemplate" id="cvkmonitortemplate"
+                                    v-model="infoCvkMonitortemplate" >
+                                <option v-for="template in cvkTemplateList" :value="template.uuid">{{template.templateName}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="vmmonitortemplate" data-i18n="monitor.baseinfo.vmMonitortemplate"></label>
+                            <i class="required">*</i>
+                            <select class="form-control input-sm def-input-sm"  name="vmTemplate" id="vmmonitortemplate"
+                                    v-model="infoVmMonitortemplate" >
+                                <option v-for="template in vmTemplateList" :value="template.uuid">{{template.templateName}}</option>
                             </select>
                         </div>
                     <!--</div>-->

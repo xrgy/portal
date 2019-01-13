@@ -52,8 +52,10 @@ define(['jquery','bootstrap', 'vue','commonModule','topoMain'], function ($,boot
                                 $('#adddb').modal({backdrop:'static',keyboard:false,show:true});
                                 break;
                             case 'virtualization':
+                                $('#addcas').modal({backdrop:'static',keyboard:false,show:true});
                                 break;
                             case 'container':
+                                $('#addk8s').modal({backdrop:'static',keyboard:false,show:true});
                                 break;
                         }
                     },

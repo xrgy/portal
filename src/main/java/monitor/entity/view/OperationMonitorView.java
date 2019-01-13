@@ -44,6 +44,7 @@ public class OperationMonitorView {
     //tomcat是否开启登录认证
     private boolean authentication;
 
+
     //模板
     private String casTemplate;
 

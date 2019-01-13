@@ -67,7 +67,7 @@ label{
     float: left;
     margin-left: 30px;
 }
-.active{
+.active:not(.page-item){
     background: #ec670b;
 }
 .snmp-magic-radio +label{
@@ -212,18 +212,18 @@ form span[id$="error"]{
     /*float: left;*/
     box-shadow: 1px 2px 20px 2px #eee;
 }
-ul {
+ul:not(.pagination) {
     list-style: none;
     padding:0;
 }
-li {
+li:not(.page-item) {
     height: 50px;
     text-align: left;
     padding: 12px;
     cursor: pointer;
 }
-li:hover,
-li.active {
+li:hover:not(.page-item),
+li.active:not(.page-item) {
     border-left: 10px solid #ec670b;
     color: #ec670b;
     background: -webkit-linear-gradient(left, rgb(249, 203, 164), rgb(245, 237, 229));
@@ -251,6 +251,9 @@ a{
 .mycheck{
     position: relative;
     margin-left: 60px;
+}
+.myradio{
+    position: relative;
 }
 input[type="checkbox"]{
     -webkit-appearance: none;
@@ -283,4 +286,34 @@ input[type="checkbox"]:checked::after {
 }
 .label-alginleft{
     text-align: left !important;
+}
+.type-radio{
+    -webkit-appearance: none;
+    vertical-align:middle;
+    margin-top:0 !important;
+    background:#fff;
+    border:#ec670b solid 1px;
+    border-radius: 10px;
+    min-height: 14px;
+    min-width: 14px;
+}
+.type-radio:checked {
+    background: #fff;
+}
+.type-radio:checked::after {
+    content: '';
+    top: 8px;
+    left: 4px;
+    position: absolute;
+    border: #ec670b solid 3px;
+    height: 6px;
+    width: 6px;
+    border-radius: 3px;
+}
+.mycheck input[type="checkbox"]:checked::after{
+    top: 14px;
+    left: 13px;
+}
+.bootstrap-table .pagination-detail{
+    display: none;
 }

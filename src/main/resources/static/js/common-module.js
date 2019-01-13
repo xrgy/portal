@@ -8,7 +8,7 @@ define(['jquery', 'jquery-i18n'], function ($, jqueryi18n) {
     };
     $(document).ready(function () {
         loadProperties("message", "../i18n/", sessionStorage.language);
-        require(['validate-extend', 'monitorConfig','addMonitorConfig','addNetwork','addDb','addTomcat','topoMain']);
+        require(['validate-extend', 'monitorConfig','addMonitorConfig','addNetwork','addDb','addTomcat','addCas','addK8s','topoMain']);
         $("#prompt-close").click(function () {
             $(this).parent().addClass("hidden");
         })

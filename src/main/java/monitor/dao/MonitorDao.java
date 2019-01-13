@@ -95,4 +95,5 @@ public interface MonitorDao {
      * @return
      */
     List<OperationMonitorEntity> getMonitorRecordByTemplateId(String uuid);
+
 }

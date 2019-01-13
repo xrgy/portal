@@ -18,7 +18,7 @@
                 <div class="modal-body def-modal-body">
                     <div id="leftMenu" class="model-tab col-xs-3 col-sm-3 col-md-3 col-lg-3">
                         <ul>
-                            <li v-on:click="clickResource($event,'tomcat')" :class="{active:tabSelected=='tomcat'}">
+                            <li v-on:click="clickResource($event,'Tomcat')" :class="{active:tabSelected=='Tomcat'}">
                                 Tomcat
                             </li>
                         </ul>
@@ -45,7 +45,7 @@
 
                         <div>
                             <div class="form-group mycheck">
-                                <input type='checkbox' class='input-checkbox'  id="sshcheck"  v-model="checkedSSL"/>
+                                <input type='checkbox' class='input-checkbox'  id="sshcheck" name="authentication"  v-model="checkedSSL"/>
                                 <label class="label-alginleft" for="sshcheck" data-i18n="monitor.baseinfo.sslenable"></label>
                             </div>
                             <div v-show="checkedSSL">

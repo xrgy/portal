@@ -95,4 +95,13 @@ public interface MonitorService {
      * @return
      */
     ResultMsg getBusinessMonitorRecord();
+
+
+    /**
+     * 根据ip和api port获取容器列表
+     * @param ip
+     * @param apiPort
+     * @return
+     */
+    ResultMsg getContainerListByExporter(String ip, String apiPort);
 }

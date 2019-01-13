@@ -20,7 +20,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     infoMonitortemplate: '',
                     path: {
                         getTemplateByLightType: "/monitorConfig/getTemplateByLightType",
-                        addNetworkMonitorRecord: "/monitor/addDbMonitorRecord"
+                        addDBMonitorRecord: "/monitor/addDbMonitorRecord"
                     },
                     templateList: [{uuid: '', templateName: commonModule.i18n("form.select.default")}],
                     lightType: "",
@@ -90,13 +90,22 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                             data: formdata,
                             contentType: false,
                             processData: false,
-                            url: _self.path.addNetworkMonitorRecord,
+                            url: _self.path.addDBMonitorRecord,
                             dataType: 'json',//预期服务器返回数据类型
                             success: function (data) {
-
+                                if (data.msg === "SUCCESS") {
+                                    //弹出框 新建成功
+                                    commonModule.prompt("prompt.insertSuccess",data.msg);
+                                }else {
+                                    //弹出框 新建失败
+                                    commonModule.prompt("prompt.insertError","alert");
+                                }
+                                $("#adddb").modal('hide');
                             },
                             error: function () {
-
+                                //处理异常，请重试
+                                $("#adddb").modal('hide');
+                                commonModule.prompt("prompt.exceptionPleaseTryAgain","alert");
                             }
                         })
                     },
@@ -126,8 +135,11 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     name: {
                         required: true
                     },
-                    readcommunity: {
-                        required: true
+                    userName:{
+                        required:true
+                    },
+                    password:{
+                      required:true
                     },
                     port: {
                         required: true
@@ -137,6 +149,9 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     },
                     timeout: {
                         required: true
+                    },
+                    databaseName:{
+                        required:true
                     },
                     monitortemplate: {
                         required: true,
@@ -150,7 +165,10 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     name: {
                         required: commonModule.i18n("validate.inputNotEmpty")
                     },
-                    readcommunity: {
+                    userName:{
+                        required: commonModule.i18n("validate.inputNotEmpty")
+                    },
+                    password:{
                         required: commonModule.i18n("validate.inputNotEmpty")
                     },
                     port: {

@@ -1158,4 +1158,11 @@ public class MonitorServiceImpl implements MonitorService {
                         ||x.getMonitorType().equals(MonitorEnum.MonitorTypeEnum.K8SCONTAINER.value()))).collect(Collectors.toList());
         return ResCommon.getCommonResultMsg(monitorEntityList);
     }
+
+    @Override
+    public ResultMsg getContainerListByExporter(String ip, String apiPort) {
+        List<Container> containerList = dao.getContainerListByExporter(ip,apiPort);
+        return ResCommon.getCommonResultMsg(containerList);
+    }
+
 }

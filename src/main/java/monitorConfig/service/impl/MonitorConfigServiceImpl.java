@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.common.ResCommon;
 import monitor.common.CommonEnum;
 import monitor.common.ResultMsg;
-import monitor.entity.OperationMonitorEntity;
 import monitor.service.MonitorService;
 import monitorConfig.dao.MonitorConfigDao;
 import monitorConfig.entity.metric.NewTemplateView;

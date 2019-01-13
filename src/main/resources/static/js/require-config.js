@@ -11,6 +11,8 @@ require.config({
         'vueRouter': './lib/vue/vue-router',
         'pjax':'./lib/jquery/jquery.pjax',
         'bootstrap':'./lib/bootstrap/bootstrap.min',
+        'bootstrap-table':'./lib/bootstrap/bootstrap-table.min',
+        'bootstrap-table-zh-CN':'./lib/bootstrap/bootstrap-table-zh-CN.min',
         'jquery-i18n': './lib/jquery/jquery.i18n.properties',
         'jquery-validate':'./lib/jquery/jquery-validate',
         'twaver':'./lib/twaver/twaver',
@@ -24,6 +26,8 @@ require.config({
         'addNetwork':'./monitor/add-network',
         'addDb':'./monitor/add-db',
         'addTomcat':'./monitor/add-tomcat',
+        'addCas':'./monitor/add-cas',
+        'addK8s':'./monitor/add-k8s',
         'topoMain':'./topo/topo-main'
     },
     shim:{
@@ -31,7 +35,9 @@ require.config({
         'jquery-validate':['jquery'],
         'vueRouter':['jquery','vue'],
         'pjax':['jquery'],
-        'bootstrap':['jquery']
+        'bootstrap':['jquery'],
+        'bootstrap-table':['bootstrap'],
+        'bootstrap-table-zh-CN':['bootstrap'],
     }
 
 });
