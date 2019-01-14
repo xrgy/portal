@@ -317,3 +317,10 @@ input[type="checkbox"]:checked::after {
 .bootstrap-table .pagination-detail{
     display: none;
 }
+.tr-background{
+    background: #ec670b;
+}
+table{
+    overflow-y: auto;
+    overflow-x: hidden;
+}

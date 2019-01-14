@@ -2,6 +2,7 @@ package monitor.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import monitor.common.ResultMsg;
+import monitor.entity.CasTransExporterModel;
 import monitor.entity.view.OperationMonitorView;
 
 import java.util.List;
@@ -104,4 +105,12 @@ public interface MonitorService {
      * @return
      */
     ResultMsg getContainerListByExporter(String ip, String apiPort);
+
+
+    /**
+     * 获取cvk 和 vm列表
+     * @param casTransExporterModel
+     * @return
+     */
+    ResultMsg getCvkAndVmListByExporter(CasTransExporterModel casTransExporterModel) throws JsonProcessingException;
 }

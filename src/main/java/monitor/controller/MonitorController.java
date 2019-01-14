@@ -3,6 +3,7 @@ package monitor.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.common.ResultMsg;
+import monitor.entity.CasTransExporterModel;
 import monitor.entity.view.OperationMonitorView;
 import monitor.service.MonitorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +87,11 @@ public class MonitorController {
         return service.getContainerListByExporter(ip,apiPort);
     }
 
+    @RequestMapping("/getCvkAndVmList")
+    @ResponseBody
+    ResultMsg getCvkAndVmListByExporter(CasTransExporterModel casTransExporterModel) throws JsonProcessingException {
+        return service.getCvkAndVmListByExporter(casTransExporterModel);
+    }
 
 
 

@@ -1165,4 +1165,62 @@ public class MonitorServiceImpl implements MonitorService {
         return ResCommon.getCommonResultMsg(containerList);
     }
 
+    @Override
+    public ResultMsg getCvkAndVmListByExporter(CasTransExporterModel casTransExporterModel) throws JsonProcessingException {
+//        List<Host> hosts = dao.getCvkAndVmListByExporter(casTransExporterModel);
+
+        List<Host> hosts = new ArrayList<>();
+        Host host1 = new Host();
+        host1.setName("cvk1");
+        host1.setId("111111");
+        host1.setStatus("1");
+        host1.setIp("172.17.5.135");
+        host1.setBeenAdd(false);
+        host1.setClusterId("1");
+        host1.setHostpoolId("1");
+        List<VirtualMachine> vms1  = new ArrayList<>();
+        VirtualMachine vm1 = new VirtualMachine();
+        vm1.setName("vm1");
+        vm1.setId("1");
+        vm1.setStatus("1");
+        vm1.setOs("linux");
+        vm1.setIp("172.17.5.133");
+        vm1.setBeenAdd(false);
+        vm1.setCvkId("111111");
+        vms1.add(vm1);
+        VirtualMachine vm2 = new VirtualMachine();
+        vm2.setName("vm2");
+        vm2.setId("2");
+        vm2.setStatus("1");
+        vm2.setOs("linux");
+        vm2.setIp("172.17.5.134");
+        vm2.setBeenAdd(false);
+        vm2.setCvkId("111111");
+        vms1.add(vm2);
+        host1.setVirtualMachineList(vms1);
+        hosts.add(host1);
+
+        Host host2 = new Host();
+        host2.setName("cvk2");
+        host2.setId("111112");
+        host2.setStatus("1");
+        host2.setIp("172.17.5.133");
+        host2.setBeenAdd(false);
+        host2.setClusterId("1");
+        host2.setHostpoolId("1");
+        List<VirtualMachine> vms2  = new ArrayList<>();
+        VirtualMachine vm3 = new VirtualMachine();
+        vm3.setName("vm3");
+        vm3.setId("3");
+        vm3.setStatus("1");
+        vm3.setOs("linux");
+        vm3.setIp("172.17.5.139");
+        vm3.setCvkId("111112");
+        vm3.setBeenAdd(false);
+        vms2.add(vm3);
+        host2.setVirtualMachineList(vms2);
+        hosts.add(host2);
+        return ResCommon.getCommonResultMsg(hosts);
+    }
+
 }

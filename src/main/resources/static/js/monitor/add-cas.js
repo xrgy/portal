@@ -21,9 +21,14 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     infoCvkMonitortemplate: '',
                     infoVmMonitortemplate: '',
                     radioType:"1",
+                    cvkList:[],
+                    cvkvmMap:{},
+                    chosecvkList:{},
+                    vmList:[],
                     path: {
                         getTemplateByLightType: "/monitorConfig/getTemplateByLightType",
-                        addVirtualMonitorRecord: "/monitor/addVirtualMonitorRecord"
+                        addVirtualMonitorRecord: "/monitor/addVirtualMonitorRecord",
+                        getCvkAndVmList: "/monitor/getCvkAndVmList"
                     },
                     casTemplateList: [{uuid: '', templateName: commonModule.i18n("form.select.default")}],
                     cvkTemplateList: [{uuid: '', templateName: commonModule.i18n("form.select.default")}],
@@ -36,7 +41,87 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     this.tabSelected = light;
                 },
                 methods: {
+                    clearCvkAndVm:function () {
+                        this.cvkList=[];
+                        this.cvkvmMap={};
+                        this.chosecvkList={};
+                        this.vmList=[];
+                    },
+                    getCvkAndVm:function () {
+                        var _self=this;
+                        $.ajax({
+                            data: {ip: _self.infoIp,port:_self.infoPort,username:_self.infoUsername,password:_self.infoPassword},
+                            url: _self.path.getCvkAndVmList,
+                            success: function (data) {
+                                if (data.msg == "SUCCESS") {
+                                    var data = data.data;
+                                    data.forEach(function (x) {
+                                        _self.cvkList.push(x);
+                                    });
+                                    for (var i = 0; i < data.length; i++) {
+                                        _self.cvkvmMap[data[i].id]=data[i].vm;
+                                    }
 
+                                }
+                            },
+                            error: function () {
+
+                            }
+
+                        })
+                    },
+                    addVm:function (event, vm) {
+                        var _self = this;
+                        var e = event.target;
+                        //closet从当前元素开始向上查找，包括当前元素
+                        var tr = $(e).closest('tr');
+                        var cvkid = vm.cvkId;
+                        if ($(tr).hasClass("tr-background")){
+                            //已选中 则删除选中 并从准备提交的vm列表中删除vmid
+                            var l = _self.chosecvkList[cvkid];
+                            for(var i=0;i<l.length;i++){
+                                if (vm.id === l[i]){
+                                    _self.vmList.splice(i, 1);
+                                    break;
+                                }
+                            }
+                            $(tr).removeClass("tr-background");
+                        }else {
+                            $(tr).addClass("tr-background");
+                            _self.chosecvkList[cvkid].push(vm.id);
+                        }
+                    },
+                    choseHost:function (event, hostid) {
+                        var _self = this;
+                        var e = event.target;
+                        //closet从当前元素开始向上查找，包括当前元素
+                        var tr = $(e).closest('tr');
+                        var tmpVm = _self.cvkvmMap[hostid];
+                        if ($(tr).hasClass("tr-background")){
+                            //如果有某个class 行背景颜色 则是取消选中
+                            //从vmList中去除这个map  hostId的vm
+                             //并remove这个class
+                            $(tr).removeClass("tr-background");
+                            tmpVm.forEach(function (x) {
+                                for(var i=0;i<_self.vmList.length;i++){
+                                    if (x.id === _self.vmList[i].id){
+                                        _self.vmList.splice(i, 1);
+                                        break;
+                                    }
+                                }
+
+                            });
+                            delete _self.chosecvkList[hostid];
+                        }else {
+                            //如果没有这个class 则添加这个host的vm 到vmList中
+                            //并且添加这个class
+                            tmpVm.forEach(function (x) {
+                                _self.vmList.push(x);
+                            });
+                            $(tr).addClass("tr-background");
+                            _self.chosecvkList[hostid]=[];
+                        }
+                    },
                     initForm: function () {
                         $("#add-cas").validate().resetForm();
                         $('.form-group').removeClass("has-error");
@@ -49,6 +134,10 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                             this.infoTimeinterval = '180',
                             this.infoTimeout = '175',
                             this.radioType="1",
+                            this.cvkList=[],
+                            this.cvkvmMap={},
+                            this.chosecvkList={},
+                            this.vmList=[],
                             this.infoCasMonitortemplate = '',
                             this.infoCvkMonitortemplate = '',
                             this.infoVmMonitortemplate = '',
@@ -97,6 +186,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                         var _self = this;
                         var formdata = new FormData($('#add-cas')[0]);
                         formdata.append("lightType", _self.lightType);
+                        formdata.append("cvkIds", _self.chosecvkList);
                         $.ajax({
                             type: "post",
                             data: formdata,
@@ -163,13 +253,13 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                         required: true
                     },
                     casTemplate: {
-                        required: true,
+                        // required: true,
                     },
                     cvkTemplate: {
-                        required: true,
+                        // required: true,
                     },
                     vmTemplate: {
-                        required: true,
+                        // required: true,
                     }
                 },
                 messages: {
@@ -196,13 +286,13 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                         required: commonModule.i18n("validate.inputNotEmpty")
                     },
                     casTemplate: {
-                        required: commonModule.i18n("validate.inputNotEmpty")
+                        // required: commonModule.i18n("validate.inputNotEmpty")
                     },
                     cvkTemplate: {
-                        required: commonModule.i18n("validate.inputNotEmpty")
+                        // required: commonModule.i18n("validate.inputNotEmpty")
                     },
                     vmTemplate: {
-                        required: commonModule.i18n("validate.inputNotEmpty")
+                        // required: commonModule.i18n("validate.inputNotEmpty")
                     }
 
                 },

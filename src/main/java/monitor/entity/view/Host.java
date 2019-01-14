@@ -15,12 +15,16 @@ public class Host {
 
     private String uuid;
 
+    // host name
     private String name;
 
+    //host id
     private String id;
 
+    //host status
     private String status;
 
+    //host ip
     private String ip;
 
     private String clusterId;

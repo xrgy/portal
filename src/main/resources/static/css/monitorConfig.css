@@ -58,3 +58,17 @@
 #addk8s .divradio{
     margin-left: 120px;
 }
+#add-cas table{
+    width: 146px;
+    height: 400px;
+    display: inline-block;
+}
+#add-cas .table-left{
+    margin-left: 102px;
+}
+#add-cas .table-right{
+    margin-left: 250px;
+}
+#add-cas .no-part-border {
+    border-right: 1px solid transparent !important;
+}

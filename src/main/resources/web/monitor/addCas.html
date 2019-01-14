@@ -56,19 +56,44 @@
                         <!--radio-->
                         <div class="divradio">
                             <div class="myradio">
-                                <input type='radio' class='type-radio'  id="raonlycvk" name="radioType"  v-model="radioType" value="1"/>
+                                <input type='radio' class='type-radio'  id="raonlycvk" name="radioType"  v-model="radioType" value="1"
+                                       v-on:click="clearCvkAndVm"/>
                                 <label class="" for="raonlycvk" data-i18n="monitor.baseinfo.radio.onlycvk"></label>
                             </div>
                             <div class="myradio">
-                                <input type='radio' class='type-radio'  id="allcvkvm" name="radioType"  v-model="radioType" value="2"/>
+                                <input type='radio' class='type-radio'  id="allcvkvm" name="radioType"  v-model="radioType" value="2"
+                                       v-on:click="clearCvkAndVm"/>
                                 <label class="" for="allcvkvm" data-i18n="monitor.baseinfo.radio.allcvkvm"></label>
                             </div>
                             <div class="myradio">
-                                <input type='radio' class='type-radio'  id="pointcvkvm" name="radioType" v-model="radioType" value="3"/>
+                                <input type='radio' class='type-radio'  id="pointcvkvm" name="radioType" v-model="radioType" value="3"
+                                       v-on:click="getCvkAndVm"/>
                                 <label class="" for="pointcvkvm" data-i18n="monitor.baseinfo.radio.pointcvkvm"></label>
                             </div>
                         </div>
 
+                        <div  v-show="radioType=='3'" class="form-group">
+                            <table class="table table-bordered table-left">
+                                <tbody>
+                                <template v-for="(i,j) in cvkList">
+                                    <tr :id="i.id"  v-on:click="choseHost($event,i.id)">
+                                        <td  class="no-part-border">{{i.name}}</td>
+                                        <td class="">{{i.ip}}</td>
+                                    </tr>
+                                </template>
+                                </tbody>
+                            </table>
+                            <table class="table table-bordered">
+                                <tbody>
+                                <template v-for="(i,j) in vmList" >
+                                    <tr :id="i.id"  v-on:click="addVm($event,i)">
+                                        <td class="no-part-border">{{i.name}}</td>
+                                        <td >{{i.ip}}</td>
+                                    </tr>
+                                </template>
+                                </tbody>
+                            </table>
+                        </div>
                         <div class="form-group">
                             <label for="castimeinterval" data-i18n="monitor.baseinfo.timeinterval"></label>
                             <i class="required">*</i>
