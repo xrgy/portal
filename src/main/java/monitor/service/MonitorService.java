@@ -52,7 +52,7 @@ public interface MonitorService {
      * @param uuids
      * @return
      */
-    public ResultMsg delNetworkMonitorRecord(List<String> uuids);
+    public ResultMsg delNetworkMonitorRecord(List<String> uuids,String lightType);
 
     /**
      * 通过uuid获取监控记录

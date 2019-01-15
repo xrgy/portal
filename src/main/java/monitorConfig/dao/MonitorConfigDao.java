@@ -54,26 +54,26 @@ public interface MonitorConfigDao {
      */
     List<AlertPerfRuleEntity> getPerfRuleByTemplate(String templateId);
 
-    /**
-     * 持久化可用性监控实体列表到数据库
-     * @param avlRuleMonitorList
-     * @return
-     */
-    boolean addAvlRuleMonitorList(List<AlertAvlRuleMonitorEntity> avlRuleMonitorList);
-
-    /**
-     * 持久化性能监控实体列表到数据库
-     * @param perfRuleMonitorList
-     * @return
-     */
-    boolean addPerfRuleMonitorList(List<AlertPerfRuleMonitorEntity> perfRuleMonitorList);
-
-    /**
-     * 持久化模板监控实体到数据库
-     * @param templateMonitorEntity
-     * @return
-     */
-    boolean addTemplateMonitorEntity(AlertRuleTemplateMonitorEntity templateMonitorEntity);
+//    /**
+//     * 持久化可用性监控实体列表到数据库
+//     * @param avlRuleMonitorList
+//     * @return
+//     */
+//    boolean addAvlRuleMonitorList(List<AlertAvlRuleMonitorEntity> avlRuleMonitorList);
+//
+//    /**
+//     * 持久化性能监控实体列表到数据库
+//     * @param perfRuleMonitorList
+//     * @return
+//     */
+//    boolean addPerfRuleMonitorList(List<AlertPerfRuleMonitorEntity> perfRuleMonitorList);
+//
+//    /**
+//     * 持久化模板监控实体到数据库
+//     * @param templateMonitorEntity
+//     * @return
+//     */
+//    boolean addTemplateMonitorEntity(AlertRuleTemplateMonitorEntity templateMonitorEntity);
 
     /**
      * 获取三级规格资源的指标列表

@@ -109,17 +109,23 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
         List<AlertPerfRuleMonitorEntity> perfRuleMonitorEntityList = new ArrayList<>();
         avlRuleList.forEach(x->{
             AlertAvlRuleMonitorEntity entity = new AlertAvlRuleMonitorEntity();
-            String id =UUID.randomUUID().toString().replaceAll("-","");
+            String monitortemid = monitorUuid.replaceAll("-","");
+            String avltemId = x.getUuid().replaceAll("-","");
+//            String id =UUID.randomUUID().toString().replaceAll("-","");
+            String id = monitortemid+avltemId;
             entity.setUuid(id);
             entity.setAlertRuleName(RULE_ANME_START+id+AVL_RULE_NAME);
             entity.setMonitorUuid(monitorUuid);
             entity.setAvlRuleUuid(x.getUuid());
             avlRuleMonitorList.add(entity);
         });
-        dao.addAvlRuleMonitorList(avlRuleMonitorList);
+//        dao.addAvlRuleMonitorList(avlRuleMonitorList);
         perfRuleList.forEach(x->{
             AlertPerfRuleMonitorEntity entity = new AlertPerfRuleMonitorEntity();
-            String id = UUID.randomUUID().toString().replaceAll("-","");
+            String monitortemid = monitorUuid.replaceAll("-","");
+            String perftemId = x.getUuid().replaceAll("-","");
+            String id = monitortemid+perftemId;
+//            String id = UUID.randomUUID().toString().replaceAll("-","");
             entity.setUuid(id);
             entity.setMonitorUuid(monitorUuid);
             entity.setPerfRuleUuid(x.getUuid());
@@ -130,13 +136,15 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
             }
             perfRuleMonitorEntityList.add(entity);
         });
-        dao.addPerfRuleMonitorList(perfRuleMonitorEntityList);
+//        dao.addPerfRuleMonitorList(perfRuleMonitorEntityList);
         AlertRuleTemplateMonitorEntity templateMonitorEntity = new AlertRuleTemplateMonitorEntity();
-        String temuuid = UUID.randomUUID().toString();
-        templateMonitorEntity.setUuid(temuuid.replaceAll("-",""));
+        String monitortemid = monitorUuid.replaceAll("-","");
+        String temptemId = templateId.replaceAll("-","");
+        String temuuid = monitortemid+temptemId;
+        templateMonitorEntity.setUuid(temuuid);
         templateMonitorEntity.setMonitorUuid(monitorUuid);
         templateMonitorEntity.setTemplateUuid(templateId);
-        dao.addTemplateMonitorEntity(templateMonitorEntity);
+//        dao.addTemplateMonitorEntity(templateMonitorEntity);
 
         RuleMonitorEntity ruleMonitorEntity = new RuleMonitorEntity();
         ruleMonitorEntity.setAvlRuleMonitorList(avlRuleMonitorList);

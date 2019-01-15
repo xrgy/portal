@@ -1,9 +1,7 @@
 package monitor.dao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import monitor.entity.CasTransExporterModel;
-import monitor.entity.LightTypeEntity;
-import monitor.entity.OperationMonitorEntity;
+import monitor.entity.*;
 import monitor.entity.view.Cluster;
 import monitor.entity.view.Host;
 import monitor.entity.view.k8sView.Container;
@@ -24,12 +22,23 @@ public interface MonitorDao {
      */
     public OperationMonitorEntity getMonitorRecordByUuid(String uuid);
 
+//    /**
+//     * 插入监控记录
+//     * @param entity
+//     * @return
+//     */
+//    public boolean insertMonitorRecord(OperationMonitorEntity entity) throws JsonProcessingException;
+
+
     /**
      * 插入监控记录
-     * @param entity
+     * @param data
+     * @param lightType
      * @return
      */
-    public boolean insertMonitorRecord(OperationMonitorEntity entity) throws JsonProcessingException;
+    boolean insertMonitorRecord(Object data, String lightType) throws JsonProcessingException;
+
+
 
     /**
      * 获取三级规格列表
@@ -42,7 +51,7 @@ public interface MonitorDao {
      * @param casTransExporterModel
      * @return
      */
-    List<Cluster> getClusterListByExporter(CasTransExporterModel casTransExporterModel) throws JsonProcessingException;
+//    List<Cluster> getClusterListByExporter(CasTransExporterModel casTransExporterModel) throws JsonProcessingException;
 
     /**
      * 插入监控记录列表
@@ -95,5 +104,69 @@ public interface MonitorDao {
      * @return
      */
     List<OperationMonitorEntity> getMonitorRecordByTemplateId(String uuid);
+
+
+
+    public List<NetworkMonitorEntity> getAllNetworkMonitorEntity();
+
+
+
+    /**
+     * 获取所有的tomcat
+     * @return
+     */
+    public List<TomcatMonitorEntity> getAllTomcatMonitorEntity();
+
+
+    /**
+     * 获取所有的mysql
+     * @return
+     */
+    public List<DBMonitorEntity> getAllDbMonitorEntity();
+
+
+    /**
+     * 获取所有的cas
+     * @return
+     */
+    public List<CasMonitorEntity> getAllCasMonitorEntity();
+
+
+    /**
+     * 获取所有的cvk
+     * @return
+     */
+    public List<HostMonitorEntity> getAllHostMonitorEntity();
+
+
+    /**
+     * 获取所有的vm
+     * @return
+     */
+    public List<VmMonitorEntity> getAllVmMonitorEntity();
+
+
+    /**
+     * 获取所有的k8s
+     * @return
+     */
+    public List<K8sMonitorEntity> getAllK8sMonitorEntity();
+
+
+
+    /**
+     * 获取所有的k8snode
+     * @return
+     */
+    public List<K8snodeMonitorEntity> getAllK8snodeMonitorEntity();
+
+
+
+    /**
+     * 获取所有的k8scontainer
+     * @return
+     */
+
+    public List<K8scontainerMonitorEntity> getAllK8sContainerMonitorEntity();
 
 }

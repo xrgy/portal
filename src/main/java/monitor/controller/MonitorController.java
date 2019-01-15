@@ -51,13 +51,12 @@ public class MonitorController {
     @RequestMapping("/addContainerMonitorRecord")
     @ResponseBody
     public ResultMsg addContainerMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
-//        return service.addContainerMonitorRecord(view);
-        return null;
+        return service.addContainerMonitorRecord(view);
     }
     @RequestMapping("/delNetworkMonitorRecord")
     @ResponseBody
-    public ResultMsg delNetworkMonitorRecord(List<String> uuids) throws JsonProcessingException {
-        return service.delNetworkMonitorRecord(uuids);
+    public ResultMsg delNetworkMonitorRecord(List<String> uuids,String lightType) throws JsonProcessingException {
+        return service.delNetworkMonitorRecord(uuids,lightType);
     }
 
     @RequestMapping("/getMonitorRecord")

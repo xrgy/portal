@@ -5,9 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.EtcdUtil;
 import monitor.dao.MonitorDao;
-import monitor.entity.CasTransExporterModel;
-import monitor.entity.LightTypeEntity;
-import monitor.entity.OperationMonitorEntity;
+import monitor.entity.*;
 import monitor.entity.view.Cluster;
 import monitor.entity.view.Host;
 import monitor.entity.view.k8sView.Container;
@@ -50,6 +48,16 @@ public class MonitorDaoImpl implements MonitorDao {
     private static final String PATH_GET_MONITOR_RECORD_BY_UUID="getMonitorRecord";
     private static final String PATH_UPDATE_MONITOR_RECORD = "updateMonitorRecord";
     private static final String PATH_GET_MONITOR_RECORD_BY_TEMPLATE = "getMonitorRecordByTemplateId";
+    private static final String PATH_GET_ALL_NETWORK_MONITOR_RECORD="getAllNetworkMonitorRecord";
+    private static final String PATH_GET_ALL_TOMCAT_MONITOR_RECORD="getAllTomcatMonitorRecord";
+    private static final String PATH_GET_ALL_DB_MONITOR_RECORD="getAllDbMonitorRecord";
+    private static final String PATH_GET_ALL_CAS_MONITOR_RECORD="getAllCasMonitorRecord";
+    private static final String PATH_GET_ALL_HOST_MONITOR_RECORD="getAllHostMonitorRecord";
+    private static final String PATH_GET_ALL_VM_MONITOR_RECORD="getAllVmMonitorRecord";
+    private static final String PATH_GET_ALL_K8S_MONITOR_RECORD="getAllK8sMonitorRecord";
+    private static final String PATH_GET_ALL_K8SNODE_MONITOR_RECORD="getAllK8snodeMonitorRecord";
+    private static final String PATH_GET_ALL_K8SCONTAINER_MONITOR_RECORD="getAllK8scontainerMonitorRecord";
+
     private static final String HTTP="http://";
 
 
@@ -84,9 +92,14 @@ public class MonitorDaoImpl implements MonitorDao {
     }
 
     @Override
-    public boolean insertMonitorRecord(OperationMonitorEntity entity) throws JsonProcessingException {
-        return rest().postForObject(monitorPrefix() + PATH_INSERT_MONITOR_RECORD, objectMapper.writeValueAsString(entity), boolean.class);
+    public boolean insertMonitorRecord(Object data, String lightType) throws JsonProcessingException {
+        return rest().postForObject(monitorPrefix() + PATH_INSERT_MONITOR_RECORD+"?lightType={1}", objectMapper.writeValueAsString(data), boolean.class,lightType);
     }
+
+//    @Override
+//    public boolean insertMonitorRecord(OperationMonitorEntity entity) throws JsonProcessingException {
+//        return rest().postForObject(monitorPrefix() + PATH_INSERT_MONITOR_RECORD, objectMapper.writeValueAsString(entity), boolean.class);
+//    }
 
     @Override
     public List<LightTypeEntity> getLightTypeEntity() {
@@ -99,16 +112,16 @@ public class MonitorDaoImpl implements MonitorDao {
         return null;
     }
 
-    @Override
-    public List<Cluster> getClusterListByExporter(CasTransExporterModel casTransExporterModel) throws JsonProcessingException {
-        ResponseEntity<String> response = rest().postForEntity(monitorPrefix()+PATH_GET_CLUSTERS,objectMapper.writeValueAsString(casTransExporterModel),String.class);
-        try {
-            return objectMapper.readValue(response.getBody(),new TypeReference<List<Cluster>>(){});
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+//    @Override
+//    public List<Cluster> getClusterListByExporter(CasTransExporterModel casTransExporterModel) throws JsonProcessingException {
+//        ResponseEntity<String> response = rest().postForEntity(monitorPrefix()+PATH_GET_CLUSTERS,objectMapper.writeValueAsString(casTransExporterModel),String.class);
+//        try {
+//            return objectMapper.readValue(response.getBody(),new TypeReference<List<Cluster>>(){});
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
     @Override
     public boolean insertMonitorRecordList(List<OperationMonitorEntity> entity) throws JsonProcessingException {
@@ -140,7 +153,7 @@ public class MonitorDaoImpl implements MonitorDao {
 
     @Override
     public List<Node> getNodeListByExporter(String ip, String port) {
-        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_CONTAINER_LIST+"?ip={1}&port={2}",String.class,ip,port);
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_NODE_LIST+"?ip={1}&port={2}",String.class,ip,port);
         try {
             return objectMapper.readValue(response.getBody(),new TypeReference<List<Node>>(){});
         } catch (IOException e) {
@@ -181,6 +194,105 @@ public class MonitorDaoImpl implements MonitorDao {
         ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_MONITOR_RECORD_BY_TEMPLATE+"?uuid={1}",String.class,uuid);
         try {
             return objectMapper.readValue(response.getBody(),new TypeReference<List<OperationMonitorEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<NetworkMonitorEntity> getAllNetworkMonitorEntity() {
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_NETWORK_MONITOR_RECORD,String.class);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<NetworkMonitorEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<TomcatMonitorEntity> getAllTomcatMonitorEntity() {
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_TOMCAT_MONITOR_RECORD,String.class);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<TomcatMonitorEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<DBMonitorEntity> getAllDbMonitorEntity() {
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_DB_MONITOR_RECORD,String.class);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<DBMonitorEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<CasMonitorEntity> getAllCasMonitorEntity() {
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_CAS_MONITOR_RECORD,String.class);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<CasMonitorEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<HostMonitorEntity> getAllHostMonitorEntity() {
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_HOST_MONITOR_RECORD,String.class);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<HostMonitorEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<VmMonitorEntity> getAllVmMonitorEntity() {
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_VM_MONITOR_RECORD,String.class);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<VmMonitorEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<K8sMonitorEntity> getAllK8sMonitorEntity() {
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_K8S_MONITOR_RECORD,String.class);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<K8sMonitorEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<K8snodeMonitorEntity> getAllK8snodeMonitorEntity() {
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_K8SNODE_MONITOR_RECORD,String.class);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<K8snodeMonitorEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<K8scontainerMonitorEntity> getAllK8sContainerMonitorEntity() {
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_K8SCONTAINER_MONITOR_RECORD,String.class);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<K8scontainerMonitorEntity>>(){});
         } catch (IOException e) {
             e.printStackTrace();
         }
