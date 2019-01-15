@@ -3,11 +3,14 @@ package monitor.dao;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import monitor.entity.*;
 import monitor.entity.view.Cluster;
+import monitor.entity.view.CvkAndVmView;
 import monitor.entity.view.Host;
+import monitor.entity.view.K8sNodeAndContainerView;
 import monitor.entity.view.k8sView.Container;
 import monitor.entity.view.k8sView.Node;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -20,7 +23,15 @@ public interface MonitorDao {
      * @param uuid
      * @return
      */
-    public OperationMonitorEntity getMonitorRecordByUuid(String uuid);
+//    public OperationMonitorEntity getMonitorRecordByUuid(String uuid);
+
+    /**
+     * 通过uuid获取监控对象
+     * @param uuid
+     * @return
+     */
+    public String getMonitorRecordByUuid(String uuid,String lightType);
+
 
 //    /**
 //     * 插入监控记录
@@ -82,7 +93,7 @@ public interface MonitorDao {
      * @param uuid
      * @return
      */
-    boolean delMonitorRecord(String uuid);
+    boolean delMonitorRecord(String uuid,String lighType);
 
     /**
      * 获取所有的监控记录
@@ -168,5 +179,40 @@ public interface MonitorDao {
      */
 
     public List<K8scontainerMonitorEntity> getAllK8sContainerMonitorEntity();
+
+
+
+
+    /**
+     * 通过k8suuid获取其下所有的node和container
+     * @param uuid
+     * @return
+     * @throws JsonProcessingException
+     */
+    public List<K8sNodeAndContainerView> getAllNodeAndContainerByK8suuid(String uuid) throws JsonProcessingException;
+
+    /**
+     * 通过k8snodeuuid获取其下的container列表
+     * @param uuid
+     * @return
+     */
+    public List<K8scontainerMonitorEntity> getAllContainerByK8sNodeuuid(String uuid);
+
+
+    /**
+     * 根据casuuid获取其下所有的cvk和vm
+     * @param uuid
+     * @return
+     * @throws JsonProcessingException
+     */
+    public List<CvkAndVmView> getAllCvkAndVmByCasuuid(String uuid) throws JsonProcessingException;
+
+
+    /**
+     * 根据cvkuuid获取其下所有的vm
+     * @param uuid
+     * @return
+     */
+    public List<VmMonitorEntity> getAllVmByCvkuuid(String uuid);
 
 }

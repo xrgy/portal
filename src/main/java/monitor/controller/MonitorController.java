@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.common.ResultMsg;
 import monitor.entity.CasTransExporterModel;
+import monitor.entity.DelMonitorRecordView;
 import monitor.entity.view.OperationMonitorView;
 import monitor.service.MonitorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,23 +54,48 @@ public class MonitorController {
     public ResultMsg addContainerMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
         return service.addContainerMonitorRecord(view);
     }
+
+    //全部类型的
     @RequestMapping("/delNetworkMonitorRecord")
     @ResponseBody
-    public ResultMsg delNetworkMonitorRecord(List<String> uuids,String lightType) throws JsonProcessingException {
-        return service.delNetworkMonitorRecord(uuids,lightType);
+    public ResultMsg delNetworkMonitorRecord(List<DelMonitorRecordView> view) throws JsonProcessingException {
+        return service.delNetworkMonitorRecord(view);
     }
 
-    @RequestMapping("/getMonitorRecord")
-    @ResponseBody
-    public ResultMsg getMonitorRecord(String uuid) throws JsonProcessingException {
-        return service.getMonitorRecord(uuid);
-    }
+
+//    @RequestMapping("/getMonitorRecord")
+//    @ResponseBody
+//    public ResultMsg getMonitorRecord(String uuid) throws JsonProcessingException {
+//        return service.getMonitorRecord(uuid);
+//    }
 
 
     @RequestMapping("/updateNetworkMonitorRecord")
     @ResponseBody
     public ResultMsg updateNetworkMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
         return service.updateNetworkMonitorRecord(view);
+    }
+    @RequestMapping("/updateMiddleMonitorRecord")
+    @ResponseBody
+    public ResultMsg updateMiddleMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
+        return service.updateMiddleMonitorRecord(view);
+    }
+    @RequestMapping("/updateDbMonitorRecord")
+    @ResponseBody
+    public ResultMsg updateDbMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
+        return service.updateDbMonitorRecord(view);
+    }
+    @RequestMapping("/updateVirtualMonitorRecord")
+    @ResponseBody
+    public ResultMsg updateVirtualMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
+        return service.updateVirtualMonitorRecord(view);
+    }
+
+    //k8s
+    @RequestMapping("/updateContainerMonitorRecord")
+    @ResponseBody
+    public ResultMsg updateContainerMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
+        return service.updateContainerMonitorRecord(view);
     }
 
 

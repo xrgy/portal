@@ -7,7 +7,9 @@ import common.EtcdUtil;
 import monitor.dao.MonitorDao;
 import monitor.entity.*;
 import monitor.entity.view.Cluster;
+import monitor.entity.view.CvkAndVmView;
 import monitor.entity.view.Host;
+import monitor.entity.view.K8sNodeAndContainerView;
 import monitor.entity.view.k8sView.Container;
 import monitor.entity.view.k8sView.Node;
 import monitorConfig.entity.metric.Metrics;
@@ -20,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -58,6 +61,13 @@ public class MonitorDaoImpl implements MonitorDao {
     private static final String PATH_GET_ALL_K8SNODE_MONITOR_RECORD="getAllK8snodeMonitorRecord";
     private static final String PATH_GET_ALL_K8SCONTAINER_MONITOR_RECORD="getAllK8scontainerMonitorRecord";
 
+    private static final String PATH_GET_ALL_NODE_AND_CONTAINER_BY_K8S="getAllNodeAndContainerByK8suuid";
+    private static final String PATH_GET_ALL_CONTAINER_BY_K8SNODE="getAllContainerByK8sNodeuuid";
+    private static final String PATH_GET_ALL_CVK_AND_VM_BY_CAS="getAllCvkAndVmByCasuuid";
+    private static final String PATH_GET_ALL_VM_BY_CVK="getAllVmByCvkuuid";
+
+
+
     private static final String HTTP="http://";
 
 
@@ -81,14 +91,9 @@ public class MonitorDaoImpl implements MonitorDao {
     ObjectMapper objectMapper;
 
     @Override
-    public OperationMonitorEntity getMonitorRecordByUuid(String uuid) {
-        ResponseEntity<String> response =  rest().getForEntity(monitorPrefix()+PATH_GET_MONITOR_RECORD_BY_UUID+"?uuid={1}", String.class,uuid);
-        try {
-            return objectMapper.readValue(response.getBody(),OperationMonitorEntity.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public String getMonitorRecordByUuid(String uuid,String lightType) {
+        ResponseEntity<String> response =  rest().getForEntity(monitorPrefix()+PATH_GET_MONITOR_RECORD_BY_UUID+"?uuid={1}&lightType={2}", String.class,uuid,lightType);
+        return response.getBody();
     }
 
     @Override
@@ -163,8 +168,8 @@ public class MonitorDaoImpl implements MonitorDao {
     }
 
     @Override
-    public boolean delMonitorRecord(String uuid) {
-       return rest().getForObject(monitorPrefix()+PATH_DEL_MONITOR_RECORD+"?uuid={1}",boolean.class,uuid);
+    public boolean delMonitorRecord(String uuid,String lightType) {
+       return rest().getForObject(monitorPrefix()+PATH_DEL_MONITOR_RECORD+"?uuid={1}&lightType={2}",boolean.class,uuid,lightType);
     }
 
     @Override
@@ -293,6 +298,51 @@ public class MonitorDaoImpl implements MonitorDao {
         ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_K8SCONTAINER_MONITOR_RECORD,String.class);
         try {
             return objectMapper.readValue(response.getBody(),new TypeReference<List<K8scontainerMonitorEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<K8sNodeAndContainerView> getAllNodeAndContainerByK8suuid(String uuid) throws JsonProcessingException {
+
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_NODE_AND_CONTAINER_BY_K8S,String.class);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<K8sNodeAndContainerView>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<K8scontainerMonitorEntity> getAllContainerByK8sNodeuuid(String uuid) {
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_CONTAINER_BY_K8SNODE,String.class);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<K8scontainerMonitorEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<CvkAndVmView> getAllCvkAndVmByCasuuid(String uuid) throws JsonProcessingException {
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_CVK_AND_VM_BY_CAS,String.class);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<CvkAndVmView>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<VmMonitorEntity> getAllVmByCvkuuid(String uuid) {
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_VM_BY_CVK,String.class);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<VmMonitorEntity>>(){});
         } catch (IOException e) {
             e.printStackTrace();
         }

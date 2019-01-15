@@ -2,9 +2,10 @@ package monitor.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import monitor.common.ResultMsg;
-import monitor.entity.CasTransExporterModel;
+import monitor.entity.*;
 import monitor.entity.view.OperationMonitorView;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -49,25 +50,42 @@ public interface MonitorService {
 
     /**
      * 删除监控记录
-     * @param uuids
+     * @param view
      * @return
      */
-    public ResultMsg delNetworkMonitorRecord(List<String> uuids,String lightType);
+    public ResultMsg delNetworkMonitorRecord(List<DelMonitorRecordView> view);
 
     /**
      * 通过uuid获取监控记录
      * @param uuid
      * @return
      */
-    public ResultMsg getMonitorRecord(String uuid);
+//    public ResultMsg getMonitorRecord(String uuid);
 
     /**
      * 更新网络设备监控记录
      * @param view
      * @return
      */
-    ResultMsg updateNetworkMonitorRecord(OperationMonitorView view) throws JsonProcessingException;
+    ResultMsg updateNetworkMonitorRecord(OperationMonitorView view) throws IOException;
 
+
+    /**
+     * 更新tomcat监控记录
+     * @param view
+     * @return
+     * @throws JsonProcessingException
+     */
+    ResultMsg updateMiddleMonitorRecord(OperationMonitorView view) throws IOException;
+
+
+    /**
+     * 更新mysql监控记录
+     * @param view
+     * @return
+     * @throws JsonProcessingException
+     */
+    ResultMsg updateDbMonitorRecord(OperationMonitorView view) throws IOException;
 
     /**
      * 更新虚拟化监控记录
@@ -113,4 +131,72 @@ public interface MonitorService {
      * @return
      */
     ResultMsg getCvkAndVmListByExporter(CasTransExporterModel casTransExporterModel) throws JsonProcessingException;
+
+
+
+
+
+    public NetworkMonitorEntity getNetworkMonitorEntity(String uuid);
+
+
+    /**
+     * uuid获取Tomcat设备监控实体
+     * @param uuid
+     * @return
+     */
+    public TomcatMonitorEntity getTomcatMonitorEntity(String uuid);
+
+    /**
+     * uuid获取Mysql设备监控实体
+     * @param uuid
+     * @return
+     */
+    public DBMonitorEntity getDbMonitorEntity(String uuid);
+
+    /**
+     * uuid获取Cas监控实体
+     * @param uuid
+     * @return
+     */
+    public CasMonitorEntity getCasMonitorEntity(String uuid);
+
+    /**
+     * uuid获取Host cvk监控实体
+     * @param uuid
+     * @return
+     */
+    public HostMonitorEntity getHostMonitorEntity(String uuid);
+
+
+    /**
+     * uuid获取vm监控实体
+     * @param uuid
+     * @return
+     */
+    public VmMonitorEntity getVmMonitorEntity(String uuid);
+
+
+
+    /**
+     * uuid获取k8a监控实体
+     * @param uuid
+     * @return
+     */
+    public K8sMonitorEntity getK8sMonitorEntity(String uuid);
+
+    /**
+     * uuid获取k8snode监控实体
+     * @param uuid
+     * @return
+     */
+    public K8snodeMonitorEntity getK8snodeMonitorEntity(String uuid);
+
+
+    /**
+     * uuid获取k8scontainer监控实体
+     * @param uuid
+     * @return
+     */
+    public K8scontainerMonitorEntity getK8sContainerMonitorEntity(String uuid);
+
 }

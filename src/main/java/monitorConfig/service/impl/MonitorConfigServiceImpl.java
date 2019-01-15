@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.common.ResCommon;
 import monitor.common.CommonEnum;
 import monitor.common.ResultMsg;
+import monitor.entity.DelMonitorRecordView;
 import monitor.service.MonitorService;
 import monitorConfig.dao.MonitorConfigDao;
 import monitorConfig.entity.metric.NewTemplateView;
@@ -108,11 +109,9 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
         List<AlertAvlRuleMonitorEntity> avlRuleMonitorList = new ArrayList<>();
         List<AlertPerfRuleMonitorEntity> perfRuleMonitorEntityList = new ArrayList<>();
         avlRuleList.forEach(x->{
-            AlertAvlRuleMonitorEntity entity = new AlertAvlRuleMonitorEntity();
-            String monitortemid = monitorUuid.replaceAll("-","");
-            String avltemId = x.getUuid().replaceAll("-","");
+            AlertAvlRuleMonitorEntity entity = new AlertAvlRuleMonitorEntity();S
 //            String id =UUID.randomUUID().toString().replaceAll("-","");
-            String id = monitortemid+avltemId;
+            String id = (monitorUuid+x.getUuid()).replaceAll("-","");
             entity.setUuid(id);
             entity.setAlertRuleName(RULE_ANME_START+id+AVL_RULE_NAME);
             entity.setMonitorUuid(monitorUuid);
@@ -122,9 +121,7 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
 //        dao.addAvlRuleMonitorList(avlRuleMonitorList);
         perfRuleList.forEach(x->{
             AlertPerfRuleMonitorEntity entity = new AlertPerfRuleMonitorEntity();
-            String monitortemid = monitorUuid.replaceAll("-","");
-            String perftemId = x.getUuid().replaceAll("-","");
-            String id = monitortemid+perftemId;
+            String id = (monitorUuid+x.getUuid()).replaceAll("-","");
 //            String id = UUID.randomUUID().toString().replaceAll("-","");
             entity.setUuid(id);
             entity.setMonitorUuid(monitorUuid);
@@ -138,9 +135,7 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
         });
 //        dao.addPerfRuleMonitorList(perfRuleMonitorEntityList);
         AlertRuleTemplateMonitorEntity templateMonitorEntity = new AlertRuleTemplateMonitorEntity();
-        String monitortemid = monitorUuid.replaceAll("-","");
-        String temptemId = templateId.replaceAll("-","");
-        String temuuid = monitortemid+temptemId;
+        String temuuid = (monitorUuid+templateId).replaceAll("-","");
         templateMonitorEntity.setUuid(temuuid);
         templateMonitorEntity.setMonitorUuid(monitorUuid);
         templateMonitorEntity.setTemplateUuid(templateId);
@@ -169,7 +164,9 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
     @Override
     public RuleMonitorEntity updateMonitorRecordAlertRule(String uuid, String templateId) {
         //删除
-        boolean res = dao.delAlertRuleByUuid(uuid);
+        //delAlertRuleByUuid 需要uuid是monitoruuid+templateuuid 去除'-'
+        String tempuuid = (uuid+templateId).replaceAll("-", "");
+        boolean res = dao.delAlertRuleByUuid(tempuuid);
         if (res){
             return addMonitorRecordAlertRule(uuid,templateId);
         }

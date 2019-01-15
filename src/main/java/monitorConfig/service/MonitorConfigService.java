@@ -1,6 +1,7 @@
 package monitorConfig.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import monitor.entity.DelMonitorRecordView;
 import monitor.entity.OperationMonitorEntity;
 import monitor.common.ResultMsg;
 import monitorConfig.entity.metric.NewTemplateView;
