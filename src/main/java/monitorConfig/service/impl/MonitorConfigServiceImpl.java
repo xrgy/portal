@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -109,7 +110,7 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
         List<AlertAvlRuleMonitorEntity> avlRuleMonitorList = new ArrayList<>();
         List<AlertPerfRuleMonitorEntity> perfRuleMonitorEntityList = new ArrayList<>();
         avlRuleList.forEach(x->{
-            AlertAvlRuleMonitorEntity entity = new AlertAvlRuleMonitorEntity();S
+            AlertAvlRuleMonitorEntity entity = new AlertAvlRuleMonitorEntity();
 //            String id =UUID.randomUUID().toString().replaceAll("-","");
             String id = (monitorUuid+x.getUuid()).replaceAll("-","");
             entity.setUuid(id);
@@ -191,12 +192,12 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
     }
 
     @Override
-    public ResultMsg OpenTemplate(String uuid) {
+    public ResultMsg OpenTemplate(String uuid) throws IOException {
         UpTemplateView templateView = dao.getOpenTemplateData(uuid);
-        int count = monitorService.getMonitorCountByTemplateId(uuid);
+        int count = monitorService.getMonitorCountByTemplateId(uuid,templateView.getLightType());
         templateView.setUsedCount(count);
 
-        return null;
+        return ResCommon.getCommonResultMsg(templateView);
     }
 
 

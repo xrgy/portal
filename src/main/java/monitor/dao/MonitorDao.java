@@ -114,7 +114,7 @@ public interface MonitorDao {
      * @param uuid
      * @return
      */
-    List<OperationMonitorEntity> getMonitorRecordByTemplateId(String uuid);
+    String getMonitorRecordByTemplateId(String uuid,String lightType);
 
 
 

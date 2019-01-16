@@ -195,14 +195,10 @@ public class MonitorDaoImpl implements MonitorDao {
     }
 
     @Override
-    public List<OperationMonitorEntity> getMonitorRecordByTemplateId(String uuid) {
-        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_MONITOR_RECORD_BY_TEMPLATE+"?uuid={1}",String.class,uuid);
-        try {
-            return objectMapper.readValue(response.getBody(),new TypeReference<List<OperationMonitorEntity>>(){});
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public String getMonitorRecordByTemplateId(String uuid,String lightType) {
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_MONITOR_RECORD_BY_TEMPLATE+"?uuid={1}&lightType={2}",String.class,uuid,lightType);
+
+        return response.getBody();
     }
 
     @Override

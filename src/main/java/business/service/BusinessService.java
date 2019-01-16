@@ -3,6 +3,7 @@ package business.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import monitor.common.ResultMsg;
+import monitor.entity.DelMonitorRecordView;
 
 import java.util.List;
 
@@ -26,8 +27,8 @@ public interface BusinessService {
 
     /**
      * 添加业务资源
-     * @param uuids
+     * @param view
      * @return
      */
-    ResultMsg addBusinessResource(String businessId,List<String> uuids) throws JsonProcessingException;
+    ResultMsg addBusinessResource(String businessId,List<DelMonitorRecordView> view) throws JsonProcessingException;
 }

@@ -8,6 +8,7 @@ import monitorConfig.entity.metric.NewTemplateView;
 import monitorConfig.entity.metric.UpTemplateView;
 import monitorConfig.entity.template.RuleMonitorEntity;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -94,5 +95,5 @@ public interface MonitorConfigService {
      * @param uuid
      * @return
      */
-    ResultMsg OpenTemplate(String uuid);
+    ResultMsg OpenTemplate(String uuid) throws IOException;
 }

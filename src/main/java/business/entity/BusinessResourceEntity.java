@@ -22,6 +22,6 @@ public class BusinessResourceEntity {
 
     private float available_score;
 
-    private String type;
+    private String lightType;
 
 }

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.common.ResCommon;
 import monitor.common.ResultMsg;
+import monitor.entity.DelMonitorRecordView;
 import monitor.service.MonitorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,13 +47,14 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public ResultMsg addBusinessResource(String businessId, List<String> uuids) throws JsonProcessingException {
+    public ResultMsg addBusinessResource(String businessId, List<DelMonitorRecordView> view) throws JsonProcessingException {
         List<BusinessResourceEntity> resourceList = new ArrayList<>();
-        uuids.forEach(x->{
+        view.forEach(x->{
             BusinessResourceEntity entity = new BusinessResourceEntity();
             entity.setUuid(UUID.randomUUID().toString());
             entity.setBusinessUuid(businessId);
-            entity.setMonitorId(x);
+            entity.setMonitorId(x.getUuid());
+            entity.setLightType(x.getLightType());
             resourceList.add(entity);
         });
         boolean res = dao.insertBusinessResourceList(resourceList);

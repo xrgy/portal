@@ -92,7 +92,7 @@ public interface MonitorService {
      * @param view
      * @return
      */
-    ResultMsg updateVirtualMonitorRecord(OperationMonitorView view) throws JsonProcessingException;
+    ResultMsg updateVirtualMonitorRecord(OperationMonitorView view) throws IOException;
 
 
     /**
@@ -100,14 +100,14 @@ public interface MonitorService {
      * @param view
      * @return
      */
-    ResultMsg updateContainerMonitorRecord(OperationMonitorView view) throws JsonProcessingException;
+    ResultMsg updateContainerMonitorRecord(OperationMonitorView view) throws IOException;
 
     /**
      * 通过templateid获取监控数量
      * @param uuid
      * @return
      */
-    int getMonitorCountByTemplateId(String uuid);
+    int getMonitorCountByTemplateId(String uuid,String lightType) throws IOException;
 
     /**
      * business获取monitor record进行添加

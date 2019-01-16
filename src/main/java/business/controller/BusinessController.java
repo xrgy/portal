@@ -4,6 +4,7 @@ import business.service.BusinessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.common.ResultMsg;
+import monitor.entity.DelMonitorRecordView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +35,7 @@ public class BusinessController {
 
     @RequestMapping("/addBusinessResource")
     @ResponseBody
-    public ResultMsg addBusinessResource(String businessId,List<String> uuids) throws JsonProcessingException {
-        return service.addBusinessResource(businessId,uuids);
+    public ResultMsg addBusinessResource(String businessId,List<DelMonitorRecordView> view) throws JsonProcessingException {
+        return service.addBusinessResource(businessId,view);
     }
 }

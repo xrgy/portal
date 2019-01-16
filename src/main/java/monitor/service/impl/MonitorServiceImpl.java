@@ -470,39 +470,39 @@ public class MonitorServiceImpl implements MonitorService {
             if (lightType.equals(MonitorEnum.LightTypeEnum.SWITCH.value()) || lightType.equals(MonitorEnum.LightTypeEnum.ROUTER.value())
                     || lightType.equals(MonitorEnum.LightTypeEnum.LB.value()) || lightType.equals(MonitorEnum.LightTypeEnum.FIREWALL.value())) {
                 NetworkMonitorEntity net = getNetworkMonitorEntity(x.getUuid());
-                String tempuuid = (x.getUuid()+net.getTemplateId()).replaceAll("-", "");
+                String tempuuid = (x.getUuid() + net.getTemplateId()).replaceAll("-", "");
                 monitoUuidTemplateUUid.add(tempuuid);
             } else if (lightType.equals(MonitorEnum.LightTypeEnum.MYSQL.value())) {
                 DBMonitorEntity db = getDbMonitorEntity(x.getUuid());
-                String tempuuid = (x.getUuid()+db.getTemplateId()).replaceAll("-", "");
+                String tempuuid = (x.getUuid() + db.getTemplateId()).replaceAll("-", "");
                 monitoUuidTemplateUUid.add(tempuuid);
             } else if (lightType.equals(MonitorEnum.LightTypeEnum.TOMCAT.value())) {
                 TomcatMonitorEntity tomcat = getTomcatMonitorEntity(x.getUuid());
-                String tempuuid = (x.getUuid()+tomcat.getTemplateId()).replaceAll("-", "");
+                String tempuuid = (x.getUuid() + tomcat.getTemplateId()).replaceAll("-", "");
                 monitoUuidTemplateUUid.add(tempuuid);
             } else if (lightType.equals(MonitorEnum.LightTypeEnum.CAS.value())) {
                 CasMonitorEntity cas = getCasMonitorEntity(x.getUuid());
-                String tempuuid = (x.getUuid()+cas.getTemplateId()).replaceAll("-", "");
+                String tempuuid = (x.getUuid() + cas.getTemplateId()).replaceAll("-", "");
                 monitoUuidTemplateUUid.add(tempuuid);
             } else if (lightType.equals(MonitorEnum.LightTypeEnum.CVK.value())) {
                 HostMonitorEntity cvk = getHostMonitorEntity(x.getUuid());
-                String tempuuid = (x.getUuid()+cvk.getTemplateId()).replaceAll("-", "");
+                String tempuuid = (x.getUuid() + cvk.getTemplateId()).replaceAll("-", "");
                 monitoUuidTemplateUUid.add(tempuuid);
             } else if (lightType.equals(MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value())) {
                 VmMonitorEntity vm = getVmMonitorEntity(x.getUuid());
-                String tempuuid = (x.getUuid()+vm.getTemplateId()).replaceAll("-", "");
+                String tempuuid = (x.getUuid() + vm.getTemplateId()).replaceAll("-", "");
                 monitoUuidTemplateUUid.add(tempuuid);
             } else if (lightType.equals(MonitorEnum.LightTypeEnum.K8S.value())) {
                 K8sMonitorEntity k8s = getK8sMonitorEntity(x.getUuid());
-                String tempuuid = (x.getUuid()+k8s.getTemplateId()).replaceAll("-", "");
+                String tempuuid = (x.getUuid() + k8s.getTemplateId()).replaceAll("-", "");
                 monitoUuidTemplateUUid.add(tempuuid);
             } else if (lightType.equals(MonitorEnum.LightTypeEnum.K8SNODE.value())) {
                 K8snodeMonitorEntity k8sn = getK8snodeMonitorEntity(x.getUuid());
-                String tempuuid = (x.getUuid()+k8sn.getTemplateId()).replaceAll("-", "");
+                String tempuuid = (x.getUuid() + k8sn.getTemplateId()).replaceAll("-", "");
                 monitoUuidTemplateUUid.add(tempuuid);
             } else if (lightType.equals(MonitorEnum.LightTypeEnum.K8SCONTAINER.value())) {
                 K8scontainerMonitorEntity k8sc = getK8sContainerMonitorEntity(x.getUuid());
-                String tempuuid = (x.getUuid()+k8sc.getTemplateId()).replaceAll("-", "");
+                String tempuuid = (x.getUuid() + k8sc.getTemplateId()).replaceAll("-", "");
                 monitoUuidTemplateUUid.add(tempuuid);
             }
         });
@@ -522,21 +522,21 @@ public class MonitorServiceImpl implements MonitorService {
         if (lightype.equals(MonitorEnum.LightTypeEnum.K8S.value())) {
             //k8s和cas的操作相同
             //根据这个uuid获取所有的node和container extra uuid
-            boolean delk8s = dao.delMonitorRecord(uuid,lightype);
-            if (delk8s){
+            boolean delk8s = dao.delMonitorRecord(uuid, lightype);
+            if (delk8s) {
                 // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除k8s
                 // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除k8s
 
                 List<K8sNodeAndContainerView> view = dao.getAllNodeAndContainerByK8suuid(uuid);
-                view.forEach(x->{
+                view.forEach(x -> {
                     K8snodeMonitorEntity node = x.getK8snode();
-                    boolean delk8snorc = dao.delMonitorRecord(node.getUuid(),MonitorEnum.LightTypeEnum.K8SNODE.value());
+                    boolean delk8snorc = dao.delMonitorRecord(node.getUuid(), MonitorEnum.LightTypeEnum.K8SNODE.value());
                     if (delk8snorc) {
                         // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除node
                         // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除node
 
-                        x.getK8sContainerList().forEach(y->{
-                            boolean delk8scrc = dao.delMonitorRecord(y.getUuid(),MonitorEnum.LightTypeEnum.K8SCONTAINER.value());
+                        x.getK8sContainerList().forEach(y -> {
+                            boolean delk8scrc = dao.delMonitorRecord(y.getUuid(), MonitorEnum.LightTypeEnum.K8SCONTAINER.value());
                             if (delk8scrc) {
                                 // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除container
                                 // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除container
@@ -548,13 +548,13 @@ public class MonitorServiceImpl implements MonitorService {
                 return true;
             }
         } else if (lightype.equals(MonitorEnum.LightTypeEnum.K8SNODE.value())) {
-                      boolean delk8sn = dao.delMonitorRecord(uuid,lightype);
-            if (delk8sn){
+            boolean delk8sn = dao.delMonitorRecord(uuid, lightype);
+            if (delk8sn) {
                 // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除node
                 // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除node
-                List<K8scontainerMonitorEntity> k8scList =  dao.getAllContainerByK8sNodeuuid(uuid);
-                k8scList.forEach(y->{
-                    boolean delk8scrc = dao.delMonitorRecord(y.getUuid(),MonitorEnum.LightTypeEnum.K8SCONTAINER.value());
+                List<K8scontainerMonitorEntity> k8scList = dao.getAllContainerByK8sNodeuuid(uuid);
+                k8scList.forEach(y -> {
+                    boolean delk8scrc = dao.delMonitorRecord(y.getUuid(), MonitorEnum.LightTypeEnum.K8SCONTAINER.value());
                     if (delk8scrc) {
                         // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除container
                         // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除container
@@ -565,21 +565,21 @@ public class MonitorServiceImpl implements MonitorService {
             }
 
         } else if (lightype.equals(MonitorEnum.LightTypeEnum.CAS.value())) {
-            boolean delcas = dao.delMonitorRecord(uuid,lightype);
-            if (delcas){
+            boolean delcas = dao.delMonitorRecord(uuid, lightype);
+            if (delcas) {
                 // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除cas
                 // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除cas
 
                 List<CvkAndVmView> view = dao.getAllCvkAndVmByCasuuid(uuid);
-                view.forEach(x->{
+                view.forEach(x -> {
                     HostMonitorEntity host = x.getHostMonitor();
-                    boolean delk8snorc = dao.delMonitorRecord(host.getUuid(),MonitorEnum.LightTypeEnum.CVK.value());
+                    boolean delk8snorc = dao.delMonitorRecord(host.getUuid(), MonitorEnum.LightTypeEnum.CVK.value());
                     if (delk8snorc) {
                         // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除cvk
                         // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除cvk
 
-                        x.getVmMonitorList().forEach(y->{
-                            boolean delk8scrc = dao.delMonitorRecord(y.getUuid(),MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value());
+                        x.getVmMonitorList().forEach(y -> {
+                            boolean delk8scrc = dao.delMonitorRecord(y.getUuid(), MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value());
                             if (delk8scrc) {
                                 // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除vm
                                 // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除vm
@@ -594,14 +594,14 @@ public class MonitorServiceImpl implements MonitorService {
             }
         } else if (lightype.equals(MonitorEnum.LightTypeEnum.CVK.value())) {
 
-            boolean dekcvk = dao.delMonitorRecord(uuid,lightype);
-            if (dekcvk){
+            boolean dekcvk = dao.delMonitorRecord(uuid, lightype);
+            if (dekcvk) {
                 // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除cvk
                 // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除cvk
 
-                List<VmMonitorEntity> vmList =  dao.getAllVmByCvkuuid(uuid);
-                vmList.forEach(y->{
-                    boolean delvmrc = dao.delMonitorRecord(y.getUuid(),MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value());
+                List<VmMonitorEntity> vmList = dao.getAllVmByCvkuuid(uuid);
+                vmList.forEach(y -> {
+                    boolean delvmrc = dao.delMonitorRecord(y.getUuid(), MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value());
                     if (delvmrc) {
                         // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除vm
                         // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除vm
@@ -610,7 +610,7 @@ public class MonitorServiceImpl implements MonitorService {
                 });
                 return true;
             }
-        }else {
+        } else {
             //其他设备
             boolean delres = dao.delMonitorRecord(uuid, lightype);
             if (delres) {
@@ -641,9 +641,9 @@ public class MonitorServiceImpl implements MonitorService {
 
     @Override
     public ResultMsg updateNetworkMonitorRecord(OperationMonitorView view) throws IOException {
-        NetworkMonitorEntity oldEntity = objectMapper.readValue(dao.getMonitorRecordByUuid(view.getUuid(), MonitorEnum.LightTypeEnum.FIREWALL.value()),NetworkMonitorEntity.class);
+        NetworkMonitorEntity oldEntity = objectMapper.readValue(dao.getMonitorRecordByUuid(view.getUuid(), MonitorEnum.LightTypeEnum.FIREWALL.value()), NetworkMonitorEntity.class);
         NetworkMonitorEntity entity = updateNetworkCommonField(view, oldEntity);
-        boolean flag = dao.insertMonitorRecord(entity,entity.getLightType());
+        boolean flag = dao.insertMonitorRecord(entity, entity.getLightType());
         if (flag) {
             //更新告警模板
             RuleMonitorEntity updateAlertRule = configService.updateMonitorRecordAlertRule(entity.getUuid(), entity.getTemplateId());
@@ -656,9 +656,9 @@ public class MonitorServiceImpl implements MonitorService {
 
     @Override
     public ResultMsg updateMiddleMonitorRecord(OperationMonitorView view) throws IOException {
-        TomcatMonitorEntity oldEntity = objectMapper.readValue(dao.getMonitorRecordByUuid(view.getUuid(), MonitorEnum.LightTypeEnum.TOMCAT.value()),TomcatMonitorEntity.class);
+        TomcatMonitorEntity oldEntity = objectMapper.readValue(dao.getMonitorRecordByUuid(view.getUuid(), MonitorEnum.LightTypeEnum.TOMCAT.value()), TomcatMonitorEntity.class);
         TomcatMonitorEntity entity = updateMiddleCommonField(view, oldEntity);
-        boolean flag = dao.insertMonitorRecord(entity,MonitorEnum.LightTypeEnum.TOMCAT.value());
+        boolean flag = dao.insertMonitorRecord(entity, MonitorEnum.LightTypeEnum.TOMCAT.value());
         if (flag) {
             //更新告警模板
             RuleMonitorEntity updateAlertRule = configService.updateMonitorRecordAlertRule(entity.getUuid(), entity.getTemplateId());
@@ -678,11 +678,11 @@ public class MonitorServiceImpl implements MonitorService {
         entity.setScrapeInterval(view.getTimeinterval());
         entity.setScrapeTimeout(view.getTimeout());
         entity.setTemplateId(view.getMonitortemplate());
-        if (view.isAuthentication()){
+        if (view.isAuthentication()) {
             entity.setAuthentication(1);
             entity.setUsername(view.getUserName());
             entity.setPassword(view.getPassword());
-        }else {
+        } else {
             entity.setAuthentication(0);
         }
         entity.setPort(view.getPort());
@@ -691,9 +691,9 @@ public class MonitorServiceImpl implements MonitorService {
 
     @Override
     public ResultMsg updateDbMonitorRecord(OperationMonitorView view) throws IOException {
-        DBMonitorEntity oldEntity = objectMapper.readValue(dao.getMonitorRecordByUuid(view.getUuid(), MonitorEnum.LightTypeEnum.MYSQL.value()),DBMonitorEntity.class);
+        DBMonitorEntity oldEntity = objectMapper.readValue(dao.getMonitorRecordByUuid(view.getUuid(), MonitorEnum.LightTypeEnum.MYSQL.value()), DBMonitorEntity.class);
         DBMonitorEntity entity = updateDbCommonField(view, oldEntity);
-        boolean flag = dao.insertMonitorRecord(entity,MonitorEnum.LightTypeEnum.MYSQL.value());
+        boolean flag = dao.insertMonitorRecord(entity, MonitorEnum.LightTypeEnum.MYSQL.value());
         if (flag) {
             //更新告警模板
             RuleMonitorEntity updateAlertRule = configService.updateMonitorRecordAlertRule(entity.getUuid(), entity.getTemplateId());
@@ -721,23 +721,17 @@ public class MonitorServiceImpl implements MonitorService {
     }
 
     @Override
-    public ResultMsg updateVirtualMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
+    public ResultMsg updateVirtualMonitorRecord(OperationMonitorView view) throws IOException {
+        ResultMsg msg = new ResultMsg();
         //先修改cas
-        OperationMonitorEntity oldEntity = dao.getMonitorRecordByUuid(view.getUuid());
-        OperationMonitorEntity operationMonitorEntity = updateCommonField(view, oldEntity);
-        operationMonitorEntity.setTemplateId(view.getCasTemplate());
-        CasMonitorInfo monitorInfo = new CasMonitorInfo();
-        monitorInfo.setIp(view.getIp());
-        monitorInfo.setPort(view.getPort());
-        monitorInfo.setUserName(view.getUserName());
-        monitorInfo.setPassWord(view.getPassword());
-        operationMonitorEntity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
-        boolean updateCas = dao.insertMonitorRecord(operationMonitorEntity);
+        CasMonitorEntity oldEntity = objectMapper.readValue(dao.getMonitorRecordByUuid(view.getUuid(), MonitorEnum.LightTypeEnum.CAS.value()), CasMonitorEntity.class);
+        CasMonitorEntity operationMonitorEntity = updateCasCommonField(view, oldEntity);
+        boolean updateCas = dao.insertMonitorRecord(operationMonitorEntity, MonitorEnum.LightTypeEnum.CAS.value());
         if (updateCas) {
             //更新告警模板
             RuleMonitorEntity updateAlertRule = configService.updateMonitorRecordAlertRule(operationMonitorEntity.getUuid(), operationMonitorEntity.getTemplateId());
             if (null != updateAlertRule) {
-                configService.addAlertTemplateToEtcd(operationMonitorEntity.getLightTypeId(), operationMonitorEntity.getTemplateId(), updateAlertRule);
+                configService.addAlertTemplateToEtcd(MonitorEnum.LightTypeEnum.CAS.value(), operationMonitorEntity.getTemplateId(), updateAlertRule);
             }
             //修改cas下的资源
             CasTransExporterModel casTransExporterModel = new CasTransExporterModel();
@@ -746,38 +740,40 @@ public class MonitorServiceImpl implements MonitorService {
             casTransExporterModel.setPort(view.getPort());
             casTransExporterModel.setUsername(view.getUserName());
             casTransExporterModel.setPassword(view.getPassword());
-            List<Cluster> clusterList = dao.getClusterListByExporter(casTransExporterModel);
-            Map<String, String> map = new HashMap<>();
-            map.put("parentId", operationMonitorEntity.getUuid());
-            map.put("parentName", view.getName());
-            map.put("rootId", operationMonitorEntity.getUuid());
-            map.put("rootName", view.getName());
-            Map<String, String> clusterIdMap = new HashMap<>();
-            clusterList.forEach(cluster -> {
-                if (cluster.isBeenAdd()) {
-                    //更新cluster
-                    try {
-                        OperationMonitorEntity oldCluster = dao.getMonitorRecordByUuid(cluster.getUuid());
-                        OperationMonitorEntity updateCluster = updateCasClusterField(view, oldCluster, cluster);
-                        updateCluster.setExtra(objectMapper.writeValueAsString(map));
-                        clusterIdMap.put(cluster.getClusterId(), updateCluster.getUuid());
-                        boolean updateClusterres = dao.insertMonitorRecord(updateCluster);
-                        if (updateClusterres) {
-                            //更新告警模板
-                            RuleMonitorEntity updateClusterAlertRule = configService.updateMonitorRecordAlertRule(updateCluster.getUuid(), updateCluster.getTemplateId());
-                            if (null != updateClusterAlertRule) {
-                                configService.addAlertTemplateToEtcd(updateCluster.getLightTypeId(), updateCluster.getTemplateId(), updateClusterAlertRule);
-                            }
-                        }
-                    } catch (JsonProcessingException e) {
-                        e.printStackTrace();
-                    }
 
-                } else {
-                    //新插入cluster
-                    addCasCluster(view, cluster, map, clusterIdMap);
-                }
-            });
+            //不再管cas cluster
+//            List<Cluster> clusterList = dao.getClusterListByExporter(casTransExporterModel);
+//            Map<String, String> map = new HashMap<>();
+//            map.put("parentId", operationMonitorEntity.getUuid());
+//            map.put("parentName", view.getName());
+//            map.put("rootId", operationMonitorEntity.getUuid());
+//            map.put("rootName", view.getName());
+//            Map<String, String> clusterIdMap = new HashMap<>();
+//            clusterList.forEach(cluster -> {
+//                if (cluster.isBeenAdd()) {
+//                    //更新cluster
+//                    try {
+//                        OperationMonitorEntity oldCluster = dao.getMonitorRecordByUuid(cluster.getUuid());
+//                        OperationMonitorEntity updateCluster = updateCasClusterField(view, oldCluster, cluster);
+//                        updateCluster.setExtra(objectMapper.writeValueAsString(map));
+//                        clusterIdMap.put(cluster.getClusterId(), updateCluster.getUuid());
+//                        boolean updateClusterres = dao.insertMonitorRecord(updateCluster);
+//                        if (updateClusterres) {
+//                            //更新告警模板
+//                            RuleMonitorEntity updateClusterAlertRule = configService.updateMonitorRecordAlertRule(updateCluster.getUuid(), updateCluster.getTemplateId());
+//                            if (null != updateClusterAlertRule) {
+//                                configService.addAlertTemplateToEtcd(updateCluster.getLightTypeId(), updateCluster.getTemplateId(), updateClusterAlertRule);
+//                            }
+//                        }
+//                    } catch (JsonProcessingException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                } else {
+//                    //新插入cluster
+//                    addCasCluster(view, cluster, map, clusterIdMap);
+//                }
+//            });
             //更新cvk vm
             List<Host> hostList = dao.getCvkAndVmListByExporter(casTransExporterModel);
             switch (view.getRadioType()) {
@@ -787,20 +783,16 @@ public class MonitorServiceImpl implements MonitorService {
                         //如果有集群，则parentId为集群Id，否则为casUuid
                         if (host.isBeenAdd()) {
                             //修改cvk
-                            OperationMonitorEntity oldHost = dao.getMonitorRecordByUuid(host.getUuid());
-                            if (null != host.getClusterId()) {
-                                updateHost(host, view, operationMonitorEntity, clusterIdMap.get(host.getClusterId()), oldHost);
-                            } else {
-                                updateHost(host, view, operationMonitorEntity, operationMonitorEntity.getUuid(), oldHost);
+                            HostMonitorEntity oldHost = null;
+                            try {
+                                oldHost = objectMapper.readValue(dao.getMonitorRecordByUuid(host.getUuid(), MonitorEnum.LightTypeEnum.CVK.value()), HostMonitorEntity.class);
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-
+                            updateHost(host, view, operationMonitorEntity.getUuid(), oldHost);
                         } else {
                             //添加cvk
-                            if (null != host.getClusterId()) {
-                                addHost(host, view, operationMonitorEntity, clusterIdMap.get(host.getClusterId()));
-                            } else {
-                                addHost(host, view, operationMonitorEntity, operationMonitorEntity.getUuid());
-                            }
+                            addHost(host, view, operationMonitorEntity.getUuid());
                         }
 
 
@@ -814,29 +806,32 @@ public class MonitorServiceImpl implements MonitorService {
                         //如果有集群，则parentId为集群Id，否则为casUuid
                         if (host.isBeenAdd()) {
                             //修改cvk
-                            OperationMonitorEntity oldHost = dao.getMonitorRecordByUuid(host.getUuid());
-                            if (null != host.getClusterId()) {
-                                reHostId = updateHost(host, view, operationMonitorEntity, clusterIdMap.get(host.getClusterId()), oldHost);
-                            } else {
-                                reHostId = updateHost(host, view, operationMonitorEntity, operationMonitorEntity.getUuid(), oldHost);
+                            HostMonitorEntity oldHost = null;
+                            try {
+                                oldHost = objectMapper.readValue(dao.getMonitorRecordByUuid(host.getUuid(), MonitorEnum.MonitorTypeEnum.CVK.value()), HostMonitorEntity.class);
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
+                            reHostId = updateHost(host, view, operationMonitorEntity.getUuid(), oldHost);
+
                         } else {
                             //添加cvk
-                            if (null != host.getClusterId()) {
-                                reHostId = addHost(host, view, operationMonitorEntity, clusterIdMap.get(host.getClusterId()));
-                            } else {
-                                reHostId = addHost(host, view, operationMonitorEntity, operationMonitorEntity.getUuid());
-                            }
+                            reHostId = addHost(host, view, operationMonitorEntity.getUuid());
                         }
                         if (!reHostId.equals("")) {
                             String finalInserthostt = reHostId;
                             host.getVirtualMachineList().forEach(vm -> {
                                 if (vm.isBeenAdd()) {
                                     //修改vm
-                                    OperationMonitorEntity oldVm = dao.getMonitorRecordByUuid(vm.getUuid());
-                                    updateVm(vm, host, operationMonitorEntity, view, finalInserthostt, oldVm);
+                                    VmMonitorEntity oldVm = null;
+                                    try {
+                                        oldVm = objectMapper.readValue(dao.getMonitorRecordByUuid(vm.getUuid(), MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value()), VmMonitorEntity.class);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    updateVm(vm, host, view, finalInserthostt, oldVm);
                                 } else {
-                                    addVm(vm, host, operationMonitorEntity, view, finalInserthostt);
+                                    addVm(vm, view, finalInserthostt);
                                 }
                             });
                         }
@@ -851,19 +846,17 @@ public class MonitorServiceImpl implements MonitorService {
                             if (optHost.get().isBeenAdd()) {
                                 //修改cvk
                                 //修改cvk
-                                OperationMonitorEntity oldHost = dao.getMonitorRecordByUuid(optHost.get().getUuid());
-                                if (null != optHost.get().getClusterId()) {
-                                    reHostId3 = updateHost(optHost.get(), view, operationMonitorEntity, clusterIdMap.get(optHost.get().getClusterId()), oldHost);
-                                } else {
-                                    reHostId3 = updateHost(optHost.get(), view, operationMonitorEntity, operationMonitorEntity.getUuid(), oldHost);
+                                HostMonitorEntity oldHost = null;
+                                try {
+                                    oldHost = objectMapper.readValue(dao.getMonitorRecordByUuid(optHost.get().getUuid(), MonitorEnum.LightTypeEnum.CVK.value()), HostMonitorEntity.class);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
+                                reHostId3 = updateHost(optHost.get(), view, operationMonitorEntity.getUuid(), oldHost);
+
                             } else {
                                 //添加cvk
-                                if (null != optHost.get().getClusterId()) {
-                                    reHostId3 = addHost(optHost.get(), view, operationMonitorEntity, clusterIdMap.get(optHost.get().getClusterId()));
-                                } else {
-                                    reHostId3 = addHost(optHost.get(), view, operationMonitorEntity, operationMonitorEntity.getUuid());
-                                }
+                                reHostId3 = addHost(optHost.get(), view, operationMonitorEntity.getUuid());
                             }
 
                             if (!reHostId3.equals("")) {
@@ -875,10 +868,15 @@ public class MonitorServiceImpl implements MonitorService {
                                 virtualMachines.forEach(vm -> {
                                     if (vm.isBeenAdd()) {
                                         //修改vm
-                                        OperationMonitorEntity oldVm = dao.getMonitorRecordByUuid(vm.getUuid());
-                                        updateVm(vm, optHost.get(), operationMonitorEntity, view, finalInsertCvkt3, oldVm);
+                                        VmMonitorEntity oldVm = null;
+                                        try {
+                                            oldVm = objectMapper.readValue(dao.getMonitorRecordByUuid(vm.getUuid(), MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value()),VmMonitorEntity.class);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                        updateVm(vm, optHost.get(), view, finalInsertCvkt3, oldVm);
                                     } else {
-                                        addVm(vm, optHost.get(), operationMonitorEntity, view, finalInsertCvkt3);
+                                        addVm(vm, view, finalInsertCvkt3);
                                     }
                                 });
                             }
@@ -887,32 +885,39 @@ public class MonitorServiceImpl implements MonitorService {
                     break;
             }
         }
-        return null;
+        msg.setCode(HttpStatus.OK.value());
+        msg.setMsg(CommonEnum.MSG_SUCCESS.value());
+        return msg;
     }
 
-    private void updateVm(VirtualMachine vm, Host host, OperationMonitorEntity operationMonitorEntity, OperationMonitorView view, String parentUuid, OperationMonitorEntity oldVm) {
-        OperationMonitorEntity vmMonitor = null;
-        Map<String, String> vmExtra = new HashMap<>();
-        vmExtra.put("parentId", parentUuid);
-        vmExtra.put("parentName", host.getName());
-        vmExtra.put("rootId", operationMonitorEntity.getUuid());
-        vmExtra.put("rootName", view.getName());
+    private CasMonitorEntity updateCasCommonField(OperationMonitorView view, CasMonitorEntity oldEntity) {
+        CasMonitorEntity entity = new CasMonitorEntity();
+        entity.setUuid(oldEntity.getUuid());
+        entity.setIp(view.getIp());
+        entity.setMonitorType(oldEntity.getMonitorType());
+        entity.setName(view.getName());
+        entity.setScrapeInterval(view.getTimeinterval());
+        entity.setScrapeTimeout(view.getTimeout());
+        entity.setTemplateId(view.getCasTemplate());
+        entity.setPort(view.getPort());
+        entity.setUsername(view.getUserName());
+        entity.setPassword(view.getPassword());
+        return entity;
+    }
+
+    private void updateVm(VirtualMachine vm, Host host, OperationMonitorView view, String cvkUuid, VmMonitorEntity oldVm) {
+        VmMonitorEntity vmMonitor = null;
 
         try {
 
-            if (null != host.getClusterId()) {
-                vmMonitor = updateVmMonitorField(vm, view, host.getHostpoolId(), host.getClusterId(), host.getId(), oldVm);
-                vmMonitor.setExtra(objectMapper.writeValueAsString(vmExtra));
-            } else {
-                vmMonitor = updateVmMonitorField(vm, view, host.getHostpoolId(), "", host.getId(), oldVm);
-                vmMonitor.setExtra(objectMapper.writeValueAsString(vmExtra));
-            }
-            boolean updateVm = dao.insertMonitorRecord(vmMonitor);
+            vmMonitor = updateVmMonitorField(vm, view, oldVm);
+            vmMonitor.setCvkUuid(cvkUuid);
+            boolean updateVm = dao.insertMonitorRecord(vmMonitor, MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value());
             if (updateVm) {
                 //更新告警模板
                 RuleMonitorEntity updateVmAlertRule = configService.updateMonitorRecordAlertRule(vmMonitor.getUuid(), vmMonitor.getTemplateId());
                 if (null != updateVmAlertRule) {
-                    configService.addAlertTemplateToEtcd(vmMonitor.getLightTypeId(), vmMonitor.getTemplateId(), updateVmAlertRule);
+                    configService.addAlertTemplateToEtcd(MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value(), vmMonitor.getTemplateId(), updateVmAlertRule);
                 }
             }
         } catch (JsonProcessingException e) {
@@ -920,48 +925,29 @@ public class MonitorServiceImpl implements MonitorService {
         }
     }
 
-    private OperationMonitorEntity updateVmMonitorField(VirtualMachine vm, OperationMonitorView view, String hostpoolId, String clusterId, String hostId, OperationMonitorEntity oldVm) throws JsonProcessingException {
-        OperationMonitorEntity operationMonitorEntity = new OperationMonitorEntity();
-        operationMonitorEntity.setUuid(oldVm.getUuid());
-        operationMonitorEntity.setName(vm.getName());
-        operationMonitorEntity.setMonitorType(oldVm.getMonitorType());
-        operationMonitorEntity.setLightTypeId(oldVm.getLightTypeId());
-        operationMonitorEntity.setTemplateId(view.getVmTemplate());
-        operationMonitorEntity.setScrapeInterval(view.getTimeinterval());
-        operationMonitorEntity.setScrapeTimeout(view.getTimeout());
-        operationMonitorEntity.setCreateTime(oldVm.getCreateTime());
-        operationMonitorEntity.setUpdateTime(new Date());
-        operationMonitorEntity.setDeleted(0);
-        CasMonitorInfo monitorInfo = new CasMonitorInfo();
-        monitorInfo.setIp(view.getIp());
-        monitorInfo.setPort(view.getPort());
-        monitorInfo.setUserName(view.getUserName());
-        monitorInfo.setPassWord(view.getPassword());
-        if (!clusterId.equals("")) {
-            monitorInfo.setClusterId(clusterId);
-        }
-        monitorInfo.setHostId(hostId);
-        monitorInfo.setHostpoolId(hostpoolId);
-        monitorInfo.setVmId(vm.getId());
-        operationMonitorEntity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
-
-        return operationMonitorEntity;
+    private VmMonitorEntity updateVmMonitorField(VirtualMachine vm, OperationMonitorView view, VmMonitorEntity oldVm) throws JsonProcessingException {
+        VmMonitorEntity vmoperationMonitorEntity = new VmMonitorEntity();
+        vmoperationMonitorEntity.setUuid(oldVm.getUuid());
+        vmoperationMonitorEntity.setIp(vm.getIp());
+        vmoperationMonitorEntity.setName(vm.getName());
+        vmoperationMonitorEntity.setMonitorType(oldVm.getMonitorType());
+        vmoperationMonitorEntity.setTemplateId(view.getVmTemplate());
+        vmoperationMonitorEntity.setScrapeInterval(view.getTimeinterval());
+        vmoperationMonitorEntity.setScrapeTimeout(view.getTimeout());
+        vmoperationMonitorEntity.setVmId(vm.getId());
+        return vmoperationMonitorEntity;
     }
 
-    private String updateHost(Host host, OperationMonitorView view, OperationMonitorEntity casMonitor, String parentId, OperationMonitorEntity oldHost) {
+    private String updateHost(Host host, OperationMonitorView view, String casuuid, HostMonitorEntity oldHost) {
         try {
-            OperationMonitorEntity hostMonitor = updateCvkMonitorFiled(host, view, oldHost);
-            Map<String, String> extra = new HashMap<>();
-            extra.put("parentId", parentId);
-            extra.put("rootId", casMonitor.getUuid());
-            extra.put("rootName", view.getName());
-            hostMonitor.setExtra(objectMapper.writeValueAsString(extra));
-            boolean updateCvkres = dao.insertMonitorRecord(hostMonitor);
+            HostMonitorEntity hostMonitor = updateCvkMonitorFiled(host, view, oldHost);
+            hostMonitor.setCasUuid(casuuid);
+            boolean updateCvkres = dao.insertMonitorRecord(hostMonitor, MonitorEnum.LightTypeEnum.CVK.value());
             if (updateCvkres) {
                 //更新告警模板
                 RuleMonitorEntity updateCvkAlertRule = configService.updateMonitorRecordAlertRule(hostMonitor.getUuid(), hostMonitor.getTemplateId());
                 if (null != updateCvkAlertRule) {
-                    configService.addAlertTemplateToEtcd(hostMonitor.getLightTypeId(), hostMonitor.getTemplateId(), updateCvkAlertRule);
+                    configService.addAlertTemplateToEtcd(MonitorEnum.LightTypeEnum.CVK.value(), hostMonitor.getTemplateId(), updateCvkAlertRule);
                     return hostMonitor.getUuid();
                 }
             }
@@ -971,80 +957,58 @@ public class MonitorServiceImpl implements MonitorService {
         return "";
     }
 
-    private OperationMonitorEntity updateCvkMonitorFiled(Host host, OperationMonitorView view, OperationMonitorEntity oldHost) throws JsonProcessingException {
-        OperationMonitorEntity operationMonitorEntity = new OperationMonitorEntity();
-        operationMonitorEntity.setUuid(oldHost.getUuid());
-        operationMonitorEntity.setName(host.getName());
-        operationMonitorEntity.setIp(host.getIp());
-        operationMonitorEntity.setMonitorType(oldHost.getMonitorType());
-        operationMonitorEntity.setLightTypeId(oldHost.getLightTypeId());
-        operationMonitorEntity.setTemplateId(view.getCvkTemplate());
-        operationMonitorEntity.setScrapeInterval(view.getTimeinterval());
-        operationMonitorEntity.setScrapeTimeout(view.getTimeout());
-        operationMonitorEntity.setCreateTime(oldHost.getCreateTime());
-        operationMonitorEntity.setUpdateTime(new Date());
-        operationMonitorEntity.setDeleted(0);
-        CasMonitorInfo monitorInfo = new CasMonitorInfo();
-        monitorInfo.setIp(view.getIp());
-        monitorInfo.setPort(view.getPort());
-        monitorInfo.setUserName(view.getUserName());
-        monitorInfo.setPassWord(view.getPassword());
-        if (null != host.getClusterId()) {
-            monitorInfo.setClusterId(host.getClusterId());
-        }
-        monitorInfo.setHostId(host.getId());
-        monitorInfo.setHostpoolId(host.getHostpoolId());
-        operationMonitorEntity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
-
-        return operationMonitorEntity;
+    private HostMonitorEntity updateCvkMonitorFiled(Host host, OperationMonitorView view, HostMonitorEntity oldHost) throws JsonProcessingException {
+        HostMonitorEntity hostMonitorEntity = new HostMonitorEntity();
+        hostMonitorEntity.setUuid(oldHost.getUuid());
+        hostMonitorEntity.setName(host.getName());
+        hostMonitorEntity.setIp(host.getIp());
+        hostMonitorEntity.setMonitorType(oldHost.getMonitorType());
+        hostMonitorEntity.setTemplateId(view.getCvkTemplate());
+        hostMonitorEntity.setScrapeInterval(view.getTimeinterval());
+        hostMonitorEntity.setScrapeTimeout(view.getTimeout());
+        hostMonitorEntity.setHostId(host.getId());
+        hostMonitorEntity.setHostpoolId(host.getHostpoolId());
+        return hostMonitorEntity;
     }
 
     @Override
-    public ResultMsg updateContainerMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
-        OperationMonitorEntity oldK8s = dao.getMonitorRecordByUuid(view.getUuid());
-        OperationMonitorEntity operationMonitorEntity = updateCommonField(view, oldK8s);
-        operationMonitorEntity.setTemplateId(view.getK8sTemplate());
-        operationMonitorEntity.setMonitorType(MonitorEnum.MonitorTypeEnum.K8S.value());
-        K8sMonitorInfo monitorInfo = new K8sMonitorInfo();
-        monitorInfo.setMasterIp(view.getIp());
-        monitorInfo.setApiPort(view.getApiPort());
-        monitorInfo.setCadvisorPort(view.getCAdvisorPort());
-        operationMonitorEntity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
-        boolean updateK8s = dao.insertMonitorRecord(operationMonitorEntity);
+    public ResultMsg updateContainerMonitorRecord(OperationMonitorView view) throws IOException {
+        ResultMsg msg = new ResultMsg();
+        K8sMonitorEntity oldK8s = objectMapper.readValue(dao.getMonitorRecordByUuid(view.getUuid(),MonitorEnum.LightTypeEnum.K8S.value()),K8sMonitorEntity.class);
+        K8sMonitorEntity operationMonitorEntity = updateK8sCommonField(view, oldK8s);
+        boolean updateK8s = dao.insertMonitorRecord(operationMonitorEntity,MonitorEnum.LightTypeEnum.K8S.value());
         if (updateK8s) {
             RuleMonitorEntity updateAlertRule = configService.updateMonitorRecordAlertRule(operationMonitorEntity.getUuid(), operationMonitorEntity.getTemplateId());
             if (null != updateAlertRule) {
-                configService.addAlertTemplateToEtcd(operationMonitorEntity.getLightTypeId(), operationMonitorEntity.getTemplateId(), updateAlertRule);
+                configService.addAlertTemplateToEtcd(MonitorEnum.LightTypeEnum.K8S.value(), operationMonitorEntity.getTemplateId(), updateAlertRule);
             }
         }
         List<Node> allNode = dao.getNodeListByExporter(view.getIp(), view.getApiPort());
         //node默认添加全部的
         Map<String, String> nodeMap = new HashMap<>();
-        Map<String, String> k8snExtra = new HashMap<>();
-        k8snExtra.put("parentId", operationMonitorEntity.getUuid());
-        k8snExtra.put("rootId", operationMonitorEntity.getUuid());
+
         allNode.forEach(node -> {
             if (node.isBeenAdd()) {
                 //修改 node
                 try {
-                    OperationMonitorEntity oldK8sNode = dao.getMonitorRecordByUuid(node.getUuid());
-                    OperationMonitorEntity k8snNode = updateNodeMonitorField(view, node, oldK8sNode);
-                    k8snNode.setExtra(objectMapper.writeValueAsString(k8snExtra));
-                    boolean updateK8sn = dao.insertMonitorRecord(k8snNode);
+                    K8snodeMonitorEntity oldK8sNode = objectMapper.readValue(dao.getMonitorRecordByUuid(node.getUuid(),MonitorEnum.LightTypeEnum.K8SNODE.value()),K8snodeMonitorEntity.class);
+                    K8snodeMonitorEntity k8snNode = updateNodeMonitorField(view, node, oldK8sNode);
+                    k8snNode.setK8sUuid(operationMonitorEntity.getUuid());
+                    boolean updateK8sn = dao.insertMonitorRecord(k8snNode,MonitorEnum.LightTypeEnum.K8SNODE.value());
                     nodeMap.put(node.getNodeIp(), k8snNode.getUuid());
                     if (updateK8sn) {
                         //更新告警模板
                         RuleMonitorEntity updateClusterAlertRule = configService.updateMonitorRecordAlertRule(k8snNode.getUuid(), k8snNode.getTemplateId());
                         if (null != updateClusterAlertRule) {
-                            configService.addAlertTemplateToEtcd(k8snNode.getLightTypeId(), k8snNode.getTemplateId(), updateClusterAlertRule);
+                            configService.addAlertTemplateToEtcd(MonitorEnum.LightTypeEnum.K8SNODE.value(), k8snNode.getTemplateId(), updateClusterAlertRule);
                         }
                     }
-                } catch (JsonProcessingException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
                 //添加node
-                addK8sNode(view, node, k8snExtra, nodeMap);
+                addK8sNode(view, node, operationMonitorEntity.getUuid(), nodeMap);
             }
         });
         List<Container> myContainerList = new ArrayList<>();
@@ -1063,11 +1027,16 @@ public class MonitorServiceImpl implements MonitorService {
                 myContainerList.forEach(container -> {
                     if (container.isBeenAdd()) {
                         //修改container
-                        OperationMonitorEntity oldContainer = dao.getMonitorRecordByUuid(container.getUuid());
-                        updateContainer(view, container, operationMonitorEntity, nodeMap, oldContainer);
+                        K8scontainerMonitorEntity oldContainer = null;
+                        try {
+                            oldContainer = objectMapper.readValue(dao.getMonitorRecordByUuid(container.getUuid(), MonitorEnum.LightTypeEnum.K8SCONTAINER.value()),K8scontainerMonitorEntity.class);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        updateContainer(view, container, nodeMap, oldContainer);
                     } else {
                         //添加container
-                        addContainer(view, container, operationMonitorEntity, nodeMap);
+                        addContainer(view, container,  nodeMap);
                     }
                 });
 
@@ -1079,39 +1048,87 @@ public class MonitorServiceImpl implements MonitorService {
                     if (optCon.isPresent()) {
                         if (optCon.get().isBeenAdd()) {
                             //修改container
-                            OperationMonitorEntity oldContainer = dao.getMonitorRecordByUuid(optCon.get().getUuid());
-                            updateContainer(view, optCon.get(), operationMonitorEntity, nodeMap, oldContainer);
+                            K8scontainerMonitorEntity oldContainer = null;
+                            try {
+                                oldContainer = objectMapper.readValue(dao.getMonitorRecordByUuid(optCon.get().getUuid(), MonitorEnum.LightTypeEnum.K8SCONTAINER.value()),K8scontainerMonitorEntity.class);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            updateContainer(view, optCon.get(),  nodeMap, oldContainer);
                         } else {
                             //添加container
-                            addContainer(view, optCon.get(), operationMonitorEntity, nodeMap);
+                            addContainer(view, optCon.get(),  nodeMap);
                         }
                     }
                 });
                 break;
         }
+        msg.setCode(HttpStatus.OK.value());
+        msg.setMsg(CommonEnum.MSG_SUCCESS.value());
+        return msg;
+    }
 
-        return null;
+    private K8sMonitorEntity updateK8sCommonField(OperationMonitorView view, K8sMonitorEntity oldK8s) {
+        K8sMonitorEntity k8sMonitorEntity = new K8sMonitorEntity();
+        k8sMonitorEntity.setUuid(oldK8s.getUuid());
+        k8sMonitorEntity.setName(view.getName());
+        k8sMonitorEntity.setIp(view.getIp());
+        k8sMonitorEntity.setMonitorType(oldK8s.getMonitorType());
+        k8sMonitorEntity.setTemplateId(view.getK8sTemplate());
+        k8sMonitorEntity.setScrapeInterval(view.getTimeinterval());
+        k8sMonitorEntity.setScrapeTimeout(view.getTimeout());
+        k8sMonitorEntity.setApiPort(view.getApiPort());
+        k8sMonitorEntity.setCadvisorPort(view.getCAdvisorPort());
+
+        return k8sMonitorEntity;
+
     }
 
     @Override
-    public int getMonitorCountByTemplateId(String uuid) {
-        List<OperationMonitorEntity> list = dao.getMonitorRecordByTemplateId(uuid);
-        return list.size();
+    public int getMonitorCountByTemplateId(String uuid,String lightType) throws IOException {
+        String response = dao.getMonitorRecordByTemplateId(uuid,lightType);
+        if (lightType.equals(MonitorEnum.LightTypeEnum.SWITCH.value()) || lightType.equals(MonitorEnum.LightTypeEnum.ROUTER.value())
+                || lightType.equals(MonitorEnum.LightTypeEnum.LB.value()) || lightType.equals(MonitorEnum.LightTypeEnum.FIREWALL.value())) {
+             List<NetworkMonitorEntity> list = objectMapper.readValue(response,new TypeReference<List<NetworkMonitorEntity>>(){});
+             return list.size();
+        } else if (lightType.equals(MonitorEnum.LightTypeEnum.MYSQL.value())) {
+            List<DBMonitorEntity> list = objectMapper.readValue(response,new TypeReference<List<DBMonitorEntity>>(){});
+            return list.size();
+        } else if (lightType.equals(MonitorEnum.LightTypeEnum.TOMCAT.value())) {
+            List<TomcatMonitorEntity> list = objectMapper.readValue(response,new TypeReference<List<TomcatMonitorEntity>>(){});
+            return list.size();
+        } else if (lightType.equals(MonitorEnum.LightTypeEnum.CAS.value())) {
+            List<CasMonitorEntity> list = objectMapper.readValue(response,new TypeReference<List<CasMonitorEntity>>(){});
+            return list.size();
+        } else if (lightType.equals(MonitorEnum.LightTypeEnum.CVK.value())) {
+            List<HostMonitorEntity> list = objectMapper.readValue(response,new TypeReference<List<HostMonitorEntity>>(){});
+            return list.size();
+        } else if (lightType.equals(MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value())) {
+            List<VmMonitorEntity> list = objectMapper.readValue(response,new TypeReference<List<VmMonitorEntity>>(){});
+            return list.size();
+        } else if (lightType.equals(MonitorEnum.LightTypeEnum.K8S.value())) {
+            List<K8sMonitorEntity> list = objectMapper.readValue(response,new TypeReference<List<K8sMonitorEntity>>(){});
+            return list.size();
+        } else if (lightType.equals(MonitorEnum.LightTypeEnum.K8SNODE.value())) {
+            List<K8snodeMonitorEntity> list = objectMapper.readValue(response,new TypeReference<List<K8snodeMonitorEntity>>(){});
+            return list.size();
+        } else if (lightType.equals(MonitorEnum.LightTypeEnum.K8SCONTAINER.value())) {
+            List<K8scontainerMonitorEntity> list = objectMapper.readValue(response,new TypeReference<List<K8scontainerMonitorEntity>>(){});
+            return list.size();
+        }
+        return 1;
     }
 
-    private void updateContainer(OperationMonitorView view, Container container, OperationMonitorEntity operationMonitorEntity, Map<String, String> nodeMap, OperationMonitorEntity oldContainer) {
+    private void updateContainer(OperationMonitorView view, Container container,  Map<String, String> nodeMap, K8scontainerMonitorEntity oldContainer) {
 
         try {
-            OperationMonitorEntity monitorContainer = updateContainerMonitorField(view, container, oldContainer);
-            Map<String, String> cExtra = new HashMap<>();
-            cExtra.put("rootId", operationMonitorEntity.getUuid());
-            cExtra.put("parentId", nodeMap.getOrDefault(container.getNodeIp(), ""));
-            monitorContainer.setExtra(objectMapper.writeValueAsString(cExtra));
-            boolean updateK8sc = dao.insertMonitorRecord(monitorContainer);
+            K8scontainerMonitorEntity monitorContainer = updateContainerMonitorField(view, container, oldContainer);
+            monitorContainer.setK8snodeUuid(nodeMap.getOrDefault(container.getNodeIp(), ""));
+            boolean updateK8sc = dao.insertMonitorRecord(monitorContainer,MonitorEnum.LightTypeEnum.K8SCONTAINER.value());
             if (updateK8sc) {
                 RuleMonitorEntity updateContainerAlertRule = configService.updateMonitorRecordAlertRule(monitorContainer.getUuid(), monitorContainer.getTemplateId());
                 if (null != updateContainerAlertRule) {
-                    configService.addAlertTemplateToEtcd(monitorContainer.getLightTypeId(), monitorContainer.getTemplateId(), updateContainerAlertRule);
+                    configService.addAlertTemplateToEtcd(MonitorEnum.LightTypeEnum.K8SCONTAINER.value(), monitorContainer.getTemplateId(), updateContainerAlertRule);
                 }
             }
         } catch (JsonProcessingException e) {
@@ -1119,29 +1136,18 @@ public class MonitorServiceImpl implements MonitorService {
         }
     }
 
-    private OperationMonitorEntity updateContainerMonitorField(OperationMonitorView view, Container container, OperationMonitorEntity oldContainer) throws JsonProcessingException {
-        OperationMonitorEntity operationMonitorEntity = new OperationMonitorEntity();
-        operationMonitorEntity.setUuid(oldContainer.getUuid());
-        operationMonitorEntity.setName(container.getContainerName());
-        operationMonitorEntity.setIp(container.getNodeIp());
-        operationMonitorEntity.setMonitorType(oldContainer.getMonitorType());
-        operationMonitorEntity.setLightTypeId(oldContainer.getLightTypeId());
-        operationMonitorEntity.setTemplateId(view.getK8sContainerTemplate());
-        operationMonitorEntity.setScrapeInterval(view.getTimeinterval());
-        operationMonitorEntity.setScrapeTimeout(view.getTimeout());
-        operationMonitorEntity.setCreateTime(oldContainer.getCreateTime());
-        operationMonitorEntity.setUpdateTime(new Date());
-        operationMonitorEntity.setDeleted(0);
-        K8scMonitorInfo monitorInfo = new K8scMonitorInfo();
-        monitorInfo.setMasterIp(view.getIp());
-        monitorInfo.setApiPort(view.getApiPort());
-        monitorInfo.setCadvisorPort(view.getCAdvisorPort());
-        monitorInfo.setNodeIp(container.getNodeIp());
-        monitorInfo.setPodName(container.getPodName());
-        monitorInfo.setPodNamespace(container.getPodNamespace());
-        monitorInfo.setContainerId(container.getContainerId());
-        operationMonitorEntity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
-        return operationMonitorEntity;
+    private K8scontainerMonitorEntity updateContainerMonitorField(OperationMonitorView view, Container container, K8scontainerMonitorEntity oldContainer) throws JsonProcessingException {
+        K8scontainerMonitorEntity k8scMonitorEntity = new K8scontainerMonitorEntity();
+        k8scMonitorEntity.setUuid(oldContainer.getUuid());
+        k8scMonitorEntity.setName(container.getContainerName());
+        k8scMonitorEntity.setMonitorType(oldContainer.getMonitorType());
+        k8scMonitorEntity.setTemplateId(view.getK8sContainerTemplate());
+        k8scMonitorEntity.setScrapeInterval(view.getTimeinterval());
+        k8scMonitorEntity.setScrapeTimeout(view.getTimeout());
+        k8scMonitorEntity.setPod_name(container.getPodName());
+        k8scMonitorEntity.setPod_namespace(container.getPodNamespace());
+        k8scMonitorEntity.setContainer_id(container.getContainerId());
+        return k8scMonitorEntity;
     }
 
     private void addK8sNode(OperationMonitorView view, Node node, String k8sUuid, Map<String, String> nodeMap) {
@@ -1160,27 +1166,16 @@ public class MonitorServiceImpl implements MonitorService {
         }
     }
 
-    private OperationMonitorEntity updateNodeMonitorField(OperationMonitorView view, Node node, OperationMonitorEntity oldK8sNode) throws JsonProcessingException {
-        OperationMonitorEntity operationMonitorEntity = new OperationMonitorEntity();
-        operationMonitorEntity.setUuid(oldK8sNode.getUuid());
-        operationMonitorEntity.setName(node.getNodeName());
-        operationMonitorEntity.setIp(node.getNodeIp());
-        operationMonitorEntity.setMonitorType(oldK8sNode.getMonitorType());
-        operationMonitorEntity.setLightTypeId(oldK8sNode.getLightTypeId());
-        operationMonitorEntity.setTemplateId(view.getK8sNodeTemplate());
-        operationMonitorEntity.setScrapeInterval(view.getTimeinterval());
-        operationMonitorEntity.setScrapeTimeout(view.getTimeout());
-        operationMonitorEntity.setCreateTime(oldK8sNode.getCreateTime());
-        operationMonitorEntity.setUpdateTime(new Date());
-        operationMonitorEntity.setDeleted(0);
-        K8snMonitorInfo monitorInfo = new K8snMonitorInfo();
-        monitorInfo.setMasterIp(view.getIp());
-        monitorInfo.setApiPort(view.getApiPort());
-        monitorInfo.setCadvisorPort(view.getCAdvisorPort());
-        monitorInfo.setNodeIp(node.getNodeIp());
-        monitorInfo.setNodeName(node.getNodeName());
-        operationMonitorEntity.setMonitorInfo(objectMapper.writeValueAsString(monitorInfo));
-        return operationMonitorEntity;
+    private K8snodeMonitorEntity updateNodeMonitorField(OperationMonitorView view, Node node, K8snodeMonitorEntity oldK8sNode) throws JsonProcessingException {
+        K8snodeMonitorEntity k8snMonitorEntity = new K8snodeMonitorEntity();
+        k8snMonitorEntity.setUuid(oldK8sNode.getUuid());
+        k8snMonitorEntity.setName(node.getNodeName());
+        k8snMonitorEntity.setIp(node.getNodeIp());
+        k8snMonitorEntity.setMonitorType(oldK8sNode.getMonitorType());
+        k8snMonitorEntity.setTemplateId(view.getK8sNodeTemplate());
+        k8snMonitorEntity.setScrapeInterval(view.getTimeinterval());
+        k8snMonitorEntity.setScrapeTimeout(view.getTimeout());
+        return k8snMonitorEntity;
     }
 
     private OperationMonitorEntity updateCasClusterField(OperationMonitorView view, OperationMonitorEntity oldEntity, Cluster cluster) throws JsonProcessingException {
@@ -1293,37 +1288,37 @@ public class MonitorServiceImpl implements MonitorService {
         List<OperationMonitorEntity> allMonitor = new ArrayList<>();
 
         List<TomcatMonitorEntity> tomcatMonitor = dao.getAllTomcatMonitorEntity();
-        tomcatMonitor.forEach(x->{
+        tomcatMonitor.forEach(x -> {
             OperationMonitorEntity entity = new OperationMonitorEntity();
             BeanUtils.copyProperties(x, entity);
             allMonitor.add(entity);
         });
         List<DBMonitorEntity> dbMonitor = dao.getAllDbMonitorEntity();
-        dbMonitor.forEach(x->{
+        dbMonitor.forEach(x -> {
             OperationMonitorEntity entity = new OperationMonitorEntity();
             BeanUtils.copyProperties(x, entity);
             allMonitor.add(entity);
         });
         List<HostMonitorEntity> hostMonitor = dao.getAllHostMonitorEntity();
-        hostMonitor.forEach(x->{
+        hostMonitor.forEach(x -> {
             OperationMonitorEntity entity = new OperationMonitorEntity();
             BeanUtils.copyProperties(x, entity);
             allMonitor.add(entity);
         });
         List<VmMonitorEntity> vmMonitor = dao.getAllVmMonitorEntity();
-        vmMonitor.forEach(x->{
+        vmMonitor.forEach(x -> {
             OperationMonitorEntity entity = new OperationMonitorEntity();
             BeanUtils.copyProperties(x, entity);
             allMonitor.add(entity);
         });
         List<K8snodeMonitorEntity> k8snodeMonitor = dao.getAllK8snodeMonitorEntity();
-        k8snodeMonitor.forEach(x->{
+        k8snodeMonitor.forEach(x -> {
             OperationMonitorEntity entity = new OperationMonitorEntity();
             BeanUtils.copyProperties(x, entity);
             allMonitor.add(entity);
         });
         List<K8scontainerMonitorEntity> k8scontainerMOnitor = dao.getAllK8sContainerMonitorEntity();
-        k8scontainerMOnitor.forEach(x->{
+        k8scontainerMOnitor.forEach(x -> {
             OperationMonitorEntity entity = new OperationMonitorEntity();
             BeanUtils.copyProperties(x, entity);
             allMonitor.add(entity);
@@ -1399,7 +1394,7 @@ public class MonitorServiceImpl implements MonitorService {
     @Override
     public NetworkMonitorEntity getNetworkMonitorEntity(String uuid) {
         //lightype 网络设备中随便一个lightype都可以
-        String response = dao.getMonitorRecordByUuid(uuid,MonitorEnum.LightTypeEnum.FIREWALL.value());
+        String response = dao.getMonitorRecordByUuid(uuid, MonitorEnum.LightTypeEnum.FIREWALL.value());
         try {
             return objectMapper.readValue(response, NetworkMonitorEntity.class);
         } catch (IOException e) {
@@ -1410,7 +1405,7 @@ public class MonitorServiceImpl implements MonitorService {
 
     @Override
     public TomcatMonitorEntity getTomcatMonitorEntity(String uuid) {
-        String response = dao.getMonitorRecordByUuid(uuid,MonitorEnum.LightTypeEnum.TOMCAT.value());
+        String response = dao.getMonitorRecordByUuid(uuid, MonitorEnum.LightTypeEnum.TOMCAT.value());
         try {
             return objectMapper.readValue(response, TomcatMonitorEntity.class);
         } catch (IOException e) {
@@ -1421,7 +1416,7 @@ public class MonitorServiceImpl implements MonitorService {
 
     @Override
     public DBMonitorEntity getDbMonitorEntity(String uuid) {
-        String response = dao.getMonitorRecordByUuid(uuid,MonitorEnum.LightTypeEnum.MYSQL.value());
+        String response = dao.getMonitorRecordByUuid(uuid, MonitorEnum.LightTypeEnum.MYSQL.value());
         try {
             return objectMapper.readValue(response, DBMonitorEntity.class);
         } catch (IOException e) {
@@ -1432,7 +1427,7 @@ public class MonitorServiceImpl implements MonitorService {
 
     @Override
     public CasMonitorEntity getCasMonitorEntity(String uuid) {
-        String response = dao.getMonitorRecordByUuid(uuid,MonitorEnum.LightTypeEnum.CAS.value());
+        String response = dao.getMonitorRecordByUuid(uuid, MonitorEnum.LightTypeEnum.CAS.value());
         try {
             return objectMapper.readValue(response, CasMonitorEntity.class);
         } catch (IOException e) {
@@ -1443,7 +1438,7 @@ public class MonitorServiceImpl implements MonitorService {
 
     @Override
     public HostMonitorEntity getHostMonitorEntity(String uuid) {
-        String response = dao.getMonitorRecordByUuid(uuid,MonitorEnum.LightTypeEnum.CVK.value());
+        String response = dao.getMonitorRecordByUuid(uuid, MonitorEnum.LightTypeEnum.CVK.value());
         try {
             return objectMapper.readValue(response, HostMonitorEntity.class);
         } catch (IOException e) {
@@ -1454,7 +1449,7 @@ public class MonitorServiceImpl implements MonitorService {
 
     @Override
     public VmMonitorEntity getVmMonitorEntity(String uuid) {
-        String response = dao.getMonitorRecordByUuid(uuid,MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value());
+        String response = dao.getMonitorRecordByUuid(uuid, MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value());
         try {
             return objectMapper.readValue(response, VmMonitorEntity.class);
         } catch (IOException e) {
@@ -1465,7 +1460,7 @@ public class MonitorServiceImpl implements MonitorService {
 
     @Override
     public K8sMonitorEntity getK8sMonitorEntity(String uuid) {
-        String response = dao.getMonitorRecordByUuid(uuid,MonitorEnum.LightTypeEnum.K8S.value());
+        String response = dao.getMonitorRecordByUuid(uuid, MonitorEnum.LightTypeEnum.K8S.value());
         try {
             return objectMapper.readValue(response, K8sMonitorEntity.class);
         } catch (IOException e) {
@@ -1476,7 +1471,7 @@ public class MonitorServiceImpl implements MonitorService {
 
     @Override
     public K8snodeMonitorEntity getK8snodeMonitorEntity(String uuid) {
-        String response = dao.getMonitorRecordByUuid(uuid,MonitorEnum.LightTypeEnum.K8SNODE.value());
+        String response = dao.getMonitorRecordByUuid(uuid, MonitorEnum.LightTypeEnum.K8SNODE.value());
         try {
             return objectMapper.readValue(response, K8snodeMonitorEntity.class);
         } catch (IOException e) {
@@ -1487,7 +1482,7 @@ public class MonitorServiceImpl implements MonitorService {
 
     @Override
     public K8scontainerMonitorEntity getK8sContainerMonitorEntity(String uuid) {
-        String response = dao.getMonitorRecordByUuid(uuid,MonitorEnum.LightTypeEnum.K8SCONTAINER.value());
+        String response = dao.getMonitorRecordByUuid(uuid, MonitorEnum.LightTypeEnum.K8SCONTAINER.value());
         try {
             return objectMapper.readValue(response, K8scontainerMonitorEntity.class);
         } catch (IOException e) {
