@@ -31,9 +31,9 @@ public interface MonitorEnum {
 
         CASCLUSTER("cascluster"),
 
-        CVK("cvk"),
+        CVK("cas_cvk"),
 
-        VIRTUALMACHINE("virtualmachine"),
+        VIRTUALMACHINE("cas_vm"),
 
         K8S("k8s"),
 

@@ -1,13 +1,17 @@
 package alert.service.impl;
 
 import alert.dao.AlertDao;
+import alert.entity.AlertAlarmInfo;
 import alert.service.AlertService;
 import business.dao.BusinessDao;
 import business.service.BusinessService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.service.MonitorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by gy on 2018/3/31.
@@ -30,4 +34,8 @@ public class AlertServiceImpl implements AlertService {
     AlertDao dao;
 
 
- }
+    @Override
+    public List<AlertAlarmInfo> getAlertInfoByMonitorUuids(List<String> monitorUuids) throws JsonProcessingException {
+        return dao.getAlertInfoByMonitorUuids(monitorUuids);
+    }
+}

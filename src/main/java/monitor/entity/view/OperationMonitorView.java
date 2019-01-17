@@ -70,7 +70,7 @@ public class OperationMonitorView {
     /**
      * 需要添加的cvkId vmId
      */
-    private List<CvkId> cvkIds;
+    private String cvkIds;
 
 
     /**
@@ -83,7 +83,7 @@ public class OperationMonitorView {
     /**
      * 需要添加的k8s容器
      */
-    private List<String> containerIds;
+    private String containerIds;
 
 
 }

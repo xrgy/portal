@@ -1,8 +1,7 @@
 package topo.dao;
 
 
-import topo.entity.TopoBusinessLinkEntity;
-import topo.entity.TopoBusinessNodeEntity;
+import topo.entity.*;
 
 import java.util.List;
 
@@ -16,4 +15,11 @@ public interface TopoDao {
 
     List<TopoBusinessLinkEntity> getAllWeaveTopoLink();
 
+    List<TopoNodeEntity> getTopoNodeByCanvasId(String canvasId);
+
+    List<TopoLinkEntity> getTopoLinkByCanvasId(String canvasId);
+
+    List<TopoCanvasEntity> getCanvasByType(String name);
+
+    List<TopoPortEntity> getAllPorts();
 }

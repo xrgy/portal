@@ -25,4 +25,38 @@ public interface TopoService {
      */
     public ResultMsg getAllWeaveTopoLink();
 
+    /**
+     * 获取网络拓扑的所有节点
+     * @param canvasId
+     * @return
+     */
+    ResultMsg getTopoNodeByCanvasId(String canvasId);
+
+    /**
+     * 获取网络拓扑的所有链路
+     * @param canvasId
+     * @return
+     */
+    ResultMsg getTopoLinkByCanvasId(String canvasId);
+
+    /**
+     * 获取自定义拓扑
+     * @return
+     */
+    ResultMsg getCustomCanvas();
+
+
+    /**
+     * 获取所有端口
+     * @return
+     */
+    ResultMsg getAllPorts();
+
+
+    /**
+     * 获取画布告警信息
+     * @param canvasId
+     * @return
+     */
+    ResultMsg getCanvasAlarmInfo(String canvasId) throws JsonProcessingException;
 }

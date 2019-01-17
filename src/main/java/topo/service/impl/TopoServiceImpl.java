@@ -1,5 +1,7 @@
 package topo.service.impl;
 
+import alert.service.AlertService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.common.CommonEnum;
 import monitor.common.ResultMsg;
@@ -9,11 +11,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import topo.common.TopoEnum;
 import topo.dao.TopoDao;
 import topo.entity.TopoBusinessLinkEntity;
 import topo.entity.TopoBusinessNodeEntity;
+import topo.entity.TopoNodeEntity;
 import topo.service.TopoService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -37,6 +42,9 @@ public class TopoServiceImpl implements TopoService {
     @Autowired
     TopoDao dao;
 
+    @Autowired
+    AlertService alertService;
+
 
     @Bean
     public RestTemplate rest(){
@@ -53,6 +61,37 @@ public class TopoServiceImpl implements TopoService {
     public ResultMsg getAllWeaveTopoLink() {
         List<TopoBusinessLinkEntity> nodes = dao.getAllWeaveTopoLink();
         return getCommonResultMsg(nodes);
+    }
+
+    @Override
+    public ResultMsg getTopoNodeByCanvasId(String canvasId) {
+        return getCommonResultMsg(dao.getTopoNodeByCanvasId(canvasId));
+    }
+
+    @Override
+    public ResultMsg getTopoLinkByCanvasId(String canvasId) {
+        return getCommonResultMsg(dao.getTopoLinkByCanvasId(canvasId));
+    }
+
+    @Override
+    public ResultMsg getCustomCanvas() {
+        return getCommonResultMsg(dao.getCanvasByType(TopoEnum.CanvasType.CANVAS_CUSTOM_TOPO.value()));
+    }
+
+    @Override
+    public ResultMsg getAllPorts() {
+        return getCommonResultMsg(dao.getAllPorts());
+    }
+
+    @Override
+    public ResultMsg getCanvasAlarmInfo(String canvasId) throws JsonProcessingException {
+        List<TopoNodeEntity> nodeEntityList = dao.getTopoNodeByCanvasId(canvasId);
+        List<String> monitorUuids = new ArrayList<>();
+        nodeEntityList.forEach(x->{
+            monitorUuids.add(x.getMonitorUuid());
+        });
+
+        return getCommonResultMsg(alertService.getAlertInfoByMonitorUuids(monitorUuids));
     }
 
     private ResultMsg getCommonResultMsg(Object o){

@@ -8,8 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 import topo.dao.TopoDao;
-import topo.entity.TopoBusinessLinkEntity;
-import topo.entity.TopoBusinessNodeEntity;
+import topo.entity.*;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -28,6 +28,11 @@ public class TopoDaoImpl implements TopoDao {
     private static final String MONITOR_PREFIX = "topo";
     private static final String PATH_GET_WEAVE_NODES = "getAllWeaveTopoNode";
     private static final String PATH_GET_WEAVE_LINKS = "getAllWeaveTopoLink";
+
+    private static final String PATH_GET_NET_TOPO_NODES = "getAllNetTopoNode";
+    private static final String PATH_GET_NET_TOPO_LINKS = "getAllNetTopoLink";
+    private static final String PATH_GET_CANVAS_BY_TYPE = "getCanvasByType";
+    private static final String PATH_GET_NET_TOPO_PORT = "getAllNetTopoPort";
 
 
 
@@ -71,6 +76,50 @@ public class TopoDaoImpl implements TopoDao {
         ResponseEntity<String> response = rest().getForEntity(topoPrefix()+PATH_GET_WEAVE_LINKS,String.class);
         try {
             return objectMapper.readValue(response.getBody(),new TypeReference<List<TopoBusinessLinkEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<TopoNodeEntity> getTopoNodeByCanvasId(String canvasId) {
+        ResponseEntity<String> response = rest().getForEntity(topoPrefix()+PATH_GET_NET_TOPO_NODES,String.class);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<TopoNodeEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<TopoLinkEntity> getTopoLinkByCanvasId(String canvasId) {
+        ResponseEntity<String> response = rest().getForEntity(topoPrefix()+PATH_GET_NET_TOPO_LINKS,String.class);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<TopoLinkEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<TopoCanvasEntity> getCanvasByType(String name) {
+        ResponseEntity<String> response = rest().getForEntity(topoPrefix()+PATH_GET_CANVAS_BY_TYPE+"?name={1}",String.class,name);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<TopoCanvasEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<TopoPortEntity> getAllPorts() {
+        ResponseEntity<String> response = rest().getForEntity(topoPrefix()+PATH_GET_NET_TOPO_PORT,String.class);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<TopoPortEntity>>(){});
         } catch (IOException e) {
             e.printStackTrace();
         }

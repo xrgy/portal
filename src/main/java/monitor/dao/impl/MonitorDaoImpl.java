@@ -65,6 +65,7 @@ public class MonitorDaoImpl implements MonitorDao {
     private static final String PATH_GET_ALL_CONTAINER_BY_K8SNODE="getAllContainerByK8sNodeuuid";
     private static final String PATH_GET_ALL_CVK_AND_VM_BY_CAS="getAllCvkAndVmByCasuuid";
     private static final String PATH_GET_ALL_VM_BY_CVK="getAllVmByCvkuuid";
+    private static final String PATH_IS_IP_DUPLICATE="isMonitorRecordIpDup";
 
 
 
@@ -343,6 +344,11 @@ public class MonitorDaoImpl implements MonitorDao {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public boolean isMonitorRecordIpDup(String ip, String lightType) {
+        return rest().getForObject(monitorPrefix() + PATH_IS_IP_DUPLICATE+ "?ip={1}&lightType={2}", boolean.class, ip,lightType);
     }
 
 

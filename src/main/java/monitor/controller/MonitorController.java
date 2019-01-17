@@ -29,6 +29,12 @@ public class MonitorController {
     @Autowired
     private ObjectMapper mapper;
 
+    @RequestMapping("/isMonitorRecordIpDup")
+    @ResponseBody
+    public boolean isMonitorRecordIpDup(String ip,String lightType){
+        //返回true 未重复
+        return service.isMonitorRecordIpDup(ip,lightType);
+    }
 
     @RequestMapping("/addNetworkMonitorRecord")
     @ResponseBody
@@ -42,7 +48,7 @@ public class MonitorController {
     }
     @RequestMapping("/addVirtualMonitorRecord")
     @ResponseBody
-    public ResultMsg addVirtualMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
+    public ResultMsg addVirtualMonitorRecord(OperationMonitorView view) throws IOException {
         return service.addVirtualMonitorRecord(view);
     }
     @RequestMapping("/addMiddleWareMonitorRecord")
@@ -52,7 +58,7 @@ public class MonitorController {
     }
     @RequestMapping("/addContainerMonitorRecord")
     @ResponseBody
-    public ResultMsg addContainerMonitorRecord(OperationMonitorView view) throws JsonProcessingException {
+    public ResultMsg addContainerMonitorRecord(OperationMonitorView view) throws IOException {
         return service.addContainerMonitorRecord(view);
     }
 

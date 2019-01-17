@@ -20,11 +20,11 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     infoCasMonitortemplate: '',
                     infoCvkMonitortemplate: '',
                     infoVmMonitortemplate: '',
-                    radioType:"1",
-                    cvkList:[],
-                    cvkvmMap:{},
-                    chosecvkList:{},
-                    vmList:[],
+                    radioType: "1",
+                    cvkList: [],
+                    cvkvmMap: {},
+                    chosecvkList: {},
+                    vmList: [],
                     path: {
                         getTemplateByLightType: "/monitorConfig/getTemplateByLightType",
                         addVirtualMonitorRecord: "/monitor/addVirtualMonitorRecord",
@@ -41,16 +41,21 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     this.tabSelected = light;
                 },
                 methods: {
-                    clearCvkAndVm:function () {
-                        this.cvkList=[];
-                        this.cvkvmMap={};
-                        this.chosecvkList={};
-                        this.vmList=[];
+                    clearCvkAndVm: function () {
+                        this.cvkList = [];
+                        this.cvkvmMap = {};
+                        this.chosecvkList = {};
+                        this.vmList = [];
                     },
-                    getCvkAndVm:function () {
-                        var _self=this;
+                    getCvkAndVm: function () {
+                        var _self = this;
                         $.ajax({
-                            data: {ip: _self.infoIp,port:_self.infoPort,username:_self.infoUsername,password:_self.infoPassword},
+                            data: {
+                                ip: _self.infoIp,
+                                port: _self.infoPort,
+                                username: _self.infoUsername,
+                                password: _self.infoPassword
+                            },
                             url: _self.path.getCvkAndVmList,
                             success: function (data) {
                                 if (data.msg == "SUCCESS") {
@@ -59,7 +64,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                                         _self.cvkList.push(x);
                                     });
                                     for (var i = 0; i < data.length; i++) {
-                                        _self.cvkvmMap[data[i].id]=data[i].vm;
+                                        _self.cvkvmMap[data[i].id] = data[i].vm;
                                     }
 
                                 }
@@ -70,41 +75,41 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
 
                         })
                     },
-                    addVm:function (event, vm) {
+                    addVm: function (event, vm) {
                         var _self = this;
                         var e = event.target;
                         //closet从当前元素开始向上查找，包括当前元素
                         var tr = $(e).closest('tr');
                         var cvkid = vm.cvkId;
-                        if ($(tr).hasClass("tr-background")){
+                        if ($(tr).hasClass("tr-background")) {
                             //已选中 则删除选中 并从准备提交的vm列表中删除vmid
                             var l = _self.chosecvkList[cvkid];
-                            for(var i=0;i<l.length;i++){
-                                if (vm.id === l[i]){
+                            for (var i = 0; i < l.length; i++) {
+                                if (vm.id === l[i]) {
                                     _self.vmList.splice(i, 1);
                                     break;
                                 }
                             }
                             $(tr).removeClass("tr-background");
-                        }else {
+                        } else {
                             $(tr).addClass("tr-background");
                             _self.chosecvkList[cvkid].push(vm.id);
                         }
                     },
-                    choseHost:function (event, hostid) {
+                    choseHost: function (event, hostid) {
                         var _self = this;
                         var e = event.target;
                         //closet从当前元素开始向上查找，包括当前元素
                         var tr = $(e).closest('tr');
                         var tmpVm = _self.cvkvmMap[hostid];
-                        if ($(tr).hasClass("tr-background")){
+                        if ($(tr).hasClass("tr-background")) {
                             //如果有某个class 行背景颜色 则是取消选中
                             //从vmList中去除这个map  hostId的vm
-                             //并remove这个class
+                            //并remove这个class
                             $(tr).removeClass("tr-background");
                             tmpVm.forEach(function (x) {
-                                for(var i=0;i<_self.vmList.length;i++){
-                                    if (x.id === _self.vmList[i].id){
+                                for (var i = 0; i < _self.vmList.length; i++) {
+                                    if (x.id === _self.vmList[i].id) {
                                         _self.vmList.splice(i, 1);
                                         break;
                                     }
@@ -112,14 +117,14 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
 
                             });
                             delete _self.chosecvkList[hostid];
-                        }else {
+                        } else {
                             //如果没有这个class 则添加这个host的vm 到vmList中
                             //并且添加这个class
                             tmpVm.forEach(function (x) {
                                 _self.vmList.push(x);
                             });
                             $(tr).addClass("tr-background");
-                            _self.chosecvkList[hostid]=[];
+                            _self.chosecvkList[hostid] = [];
                         }
                     },
                     initForm: function () {
@@ -133,11 +138,11 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                             this.infoPort = '8080',
                             this.infoTimeinterval = '180',
                             this.infoTimeout = '175',
-                            this.radioType="1",
-                            this.cvkList=[],
-                            this.cvkvmMap={},
-                            this.chosecvkList={},
-                            this.vmList=[],
+                            this.radioType = "1",
+                            this.cvkList = [],
+                            this.cvkvmMap = {},
+                            this.chosecvkList = {},
+                            this.vmList = [],
                             this.infoCasMonitortemplate = '',
                             this.infoCvkMonitortemplate = '',
                             this.infoVmMonitortemplate = '',
@@ -158,15 +163,22 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                             success: function (data) {
                                 if (data.msg == "SUCCESS") {
                                     var data = data.data;
-                                    data.cas.forEach(function (x) {
-                                        _self.casTemplateList.push(x);
-                                    });
-                                    data.cvk.forEach(function (x) {
-                                        _self.cvkTemplateList.push(x);
-                                    });
-                                    data.virtualMachine.forEach(function (x) {
-                                        _self.vmTemplateList.push(x);
-                                    });
+                                    if (data.cas !== null) {
+                                        data.cas.forEach(function (x) {
+                                            _self.casTemplateList.push(x);
+                                        });
+                                    }
+                                    if (data.cvk !== null) {
+                                        data.cvk.forEach(function (x) {
+                                            _self.cvkTemplateList.push(x);
+                                        });
+                                    }
+                                    if (data.virtualMachine !== null) {
+                                        data.virtualMachine.forEach(function (x) {
+                                            _self.vmTemplateList.push(x);
+                                        });
+                                    }
+
                                 }
                             },
                             error: function () {
@@ -186,7 +198,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                         var _self = this;
                         var formdata = new FormData($('#add-cas')[0]);
                         formdata.append("lightType", _self.lightType);
-                        formdata.append("cvkIds", _self.chosecvkList);
+                        formdata.append("cvkIds", JSON.stringify(_self.chosecvkList));
                         $.ajax({
                             type: "post",
                             data: formdata,
@@ -232,7 +244,22 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                 rules: {
                     ip: {
                         required: true,
-                        isIP: true
+                        isIP: true,
+                        //remote接受的返回值只要true和false即可
+                        remote: {
+                            //验证ip是否重复
+                            type: "get",
+                            url: "/monitor/isMonitorRecordIpDup",
+                            timeout: 6000,
+                            data: {
+                                ip: function () {
+                                    return $('#casip').val();
+                                },
+                                lightType: function () {
+                                    return addCas.lightType;
+                                }
+                            }
+                        },
                     },
                     name: {
                         required: true
@@ -240,11 +267,11 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     port: {
                         required: true
                     },
-                    userName:{
-                        required:true
+                    userName: {
+                        required: true
                     },
-                    password:{
-                        required:true
+                    password: {
+                        required: true
                     },
                     timeinterval: {
                         required: true
@@ -265,7 +292,8 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                 messages: {
                     ip: {
                         required: commonModule.i18n("validate.inputNotEmpty"),
-                        isIP: commonModule.i18n("validate.pleaseInputIPAddress")
+                        isIP: commonModule.i18n("validate.pleaseInputIPAddress"),
+                        remote: commonModule.i18n("validate.ipDuplicate")
                     },
                     name: {
                         required: commonModule.i18n("validate.inputNotEmpty")
@@ -273,10 +301,10 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     port: {
                         required: commonModule.i18n("validate.inputNotEmpty")
                     },
-                    userName:{
+                    userName: {
                         required: commonModule.i18n("validate.inputNotEmpty")
                     },
-                    password:{
+                    password: {
                         required: commonModule.i18n("validate.inputNotEmpty")
                     },
                     timeinterval: {

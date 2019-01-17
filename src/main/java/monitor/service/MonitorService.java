@@ -39,14 +39,14 @@ public interface MonitorService {
      * 插入虚拟化监控记录
      * @return
      */
-    public ResultMsg addVirtualMonitorRecord(OperationMonitorView view) throws JsonProcessingException;
+    public ResultMsg addVirtualMonitorRecord(OperationMonitorView view) throws IOException;
 
 
     /**
      * 插入容器监控记录
      * @return
      */
-    public ResultMsg addContainerMonitorRecord(OperationMonitorView view) throws JsonProcessingException;
+    public ResultMsg addContainerMonitorRecord(OperationMonitorView view) throws IOException;
 
     /**
      * 删除监控记录
@@ -199,4 +199,10 @@ public interface MonitorService {
      */
     public K8scontainerMonitorEntity getK8sContainerMonitorEntity(String uuid);
 
+    /**
+     * 网络设备的ip是否重复
+     * @param ip
+     * @return
+     */
+    boolean isMonitorRecordIpDup(String ip,String lightType);
 }

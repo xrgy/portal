@@ -215,4 +215,11 @@ public interface MonitorDao {
      */
     public List<VmMonitorEntity> getAllVmByCvkuuid(String uuid);
 
+    /**
+     * 判断ip是否重复
+     * @param ip
+     * @param lightType
+     * @return
+     */
+    boolean isMonitorRecordIpDup(String ip, String lightType);
 }

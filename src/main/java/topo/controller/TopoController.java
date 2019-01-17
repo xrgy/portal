@@ -41,4 +41,35 @@ public class TopoController {
     public ResultMsg getAllWeaveTopoLink() throws JsonProcessingException {
         return service.getAllWeaveTopoLink();
     }
+
+
+    @RequestMapping("getAllNetTopoNode")
+    @ResponseBody
+    public ResultMsg getTopoNodeByCanvasId(String canvasId) throws JsonProcessingException {
+        return service.getTopoNodeByCanvasId(canvasId);
+    }
+
+    @RequestMapping("getAllNetTopoLink")
+    @ResponseBody
+    public ResultMsg getTopoLinkByCanvasId(String canvasId) throws JsonProcessingException {
+        return service.getTopoLinkByCanvasId(canvasId);
+    }
+
+    @RequestMapping("getCustomCanvas")
+    @ResponseBody
+    public ResultMsg getCustomCanvas() {
+        return service.getCustomCanvas();
+    }
+
+    @RequestMapping("getAllNetTopoPort")
+    @ResponseBody
+    public ResultMsg getAllPorts(){
+        return service.getAllPorts();
+    }
+
+    @RequestMapping("getCanvasAlarmInfo")
+    @ResponseBody
+    public ResultMsg getCanvasAlarmInfo(String canvasId) throws JsonProcessingException {
+        return service.getCanvasAlarmInfo(canvasId);
+    }
 }

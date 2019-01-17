@@ -36,7 +36,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'bootstrap-table'], 
                 },
                 methods: {
 
-                    clearTable:function () {
+                    clearTable: function () {
                         $('#tabdiv')[0].innerHTML = "<table id='mycontainertab' class='table table-hover'></table>";
                     },
                     initForm: function () {
@@ -76,15 +76,21 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'bootstrap-table'], 
                             success: function (data) {
                                 if (data.msg == "SUCCESS") {
                                     var data = data.data;
-                                    data.k8s.forEach(function (x) {
-                                        _self.k8sTemplateList.push(x);
-                                    });
-                                    data.k8sn.forEach(function (x) {
-                                        _self.k8snTemplateList.push(x);
-                                    });
-                                    data.k8sc.forEach(function (x) {
-                                        _self.k8scTemplateList.push(x);
-                                    });
+                                    if (data.k8s !== null) {
+                                        data.k8s.forEach(function (x) {
+                                            _self.k8sTemplateList.push(x);
+                                        });
+                                    }
+                                    if (data.k8sn !== null) {
+                                        data.k8sn.forEach(function (x) {
+                                            _self.k8snTemplateList.push(x);
+                                        });
+                                    }
+                                    if (data.k8sc !== null) {
+                                        data.k8sc.forEach(function (x) {
+                                            _self.k8scTemplateList.push(x);
+                                        });
+                                    }
                                 }
                             },
                             error: function () {
@@ -124,7 +130,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'bootstrap-table'], 
                                     checkbox: true,
                                     // checked:true,没用选不选中根据filed有没有值
                                     // width: 25,
-                                    class:'mycheck',
+                                    class: 'mycheck',
                                     align: 'center',
                                     valign: 'middle',
                                 },
@@ -174,7 +180,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'bootstrap-table'], 
                         }
                         var formdata = new FormData($('#add-k8s')[0]);
                         formdata.append("lightType", _self.lightType);
-                        formdata.append("containerIds", ids);
+                        formdata.append("containerIds", JSON.stringify(ids));
                         $.ajax({
                             type: "post",
                             data: formdata,
@@ -220,7 +226,22 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'bootstrap-table'], 
                 rules: {
                     ip: {
                         required: true,
-                        isIP: true
+                        isIP: true,
+                        //remote接受的返回值只要true和false即可
+                        remote: {
+                            //验证ip是否重复
+                            type: "get",
+                            url: "/monitor/isMonitorRecordIpDup",
+                            timeout: 6000,
+                            data: {
+                                ip: function () {
+                                    return $('#k8sip').val();
+                                },
+                                lightType: function () {
+                                    return addK8s.lightType;
+                                }
+                            }
+                        },
                     },
                     name: {
                         required: true
@@ -250,7 +271,8 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'bootstrap-table'], 
                 messages: {
                     ip: {
                         required: commonModule.i18n("validate.inputNotEmpty"),
-                        isIP: commonModule.i18n("validate.pleaseInputIPAddress")
+                        isIP: commonModule.i18n("validate.pleaseInputIPAddress"),
+                        remote: commonModule.i18n("validate.ipDuplicate")
                     },
                     name: {
                         required: commonModule.i18n("validate.inputNotEmpty")

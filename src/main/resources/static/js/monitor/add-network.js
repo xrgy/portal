@@ -140,7 +140,22 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                 rules: {
                     ip: {
                         required: true,
-                        isIP: true
+                        isIP: true,
+                        //remote接受的返回值只要true和false即可
+                        remote: {
+                            //验证ip是否重复
+                            type: "get",
+                            url: "/monitor/isMonitorRecordIpDup",
+                            timeout: 6000,
+                            data: {
+                                ip: function () {
+                                    return $('#ip').val();
+                                },
+                                lightType: function () {
+                                    return addNetwork.lightType;
+                                }
+                            }
+                        },
                     },
                     name: {
                         required: true
@@ -164,7 +179,8 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                 messages: {
                     ip: {
                         required: commonModule.i18n("validate.inputNotEmpty"),
-                        isIP: commonModule.i18n("validate.pleaseInputIPAddress")
+                        isIP: commonModule.i18n("validate.pleaseInputIPAddress"),
+                        remote: commonModule.i18n("validate.ipDuplicate")
                     },
                     name: {
                         required: commonModule.i18n("validate.inputNotEmpty")

@@ -59,7 +59,7 @@
                                        v-on:click="clearTable"/>
                                 <label class="" for="allk8sc" data-i18n="monitor.baseinfo.radio.allk8scontainer"></label>
                             </div>
-                            <div class="myradio">
+                            <div  class="myradio">
                                 <input type='radio' class='type-radio'  id="pointk8sc" name="radioType" v-model="radioType" value="3"
                                        v-on:click="initTable"/>
                                 <label class="" for="pointk8sc" data-i18n="monitor.baseinfo.radio.pointk8scontainer"></label>
@@ -98,7 +98,7 @@
                                 <option v-for="template in k8snTemplateList" :value="template.uuid">{{template.templateName}}</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div v-show="radioType=='2' || radioType=='3'"  class="form-group">
                             <label for="k8scmonitortemplate" data-i18n="monitor.baseinfo.k8scMonitortemplate"></label>
                             <i class="required">*</i>
                             <select class="form-control input-sm def-input-sm"  name="k8sContainerTemplate" id="k8scmonitortemplate"
