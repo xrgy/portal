@@ -21,4 +21,11 @@ public class RuleTemplate {
 //    private String monitorMode;
 
     private String lightType;
+
+
+    /**
+     * 使用的个数
+     */
+    private int usedCount;
+
 }

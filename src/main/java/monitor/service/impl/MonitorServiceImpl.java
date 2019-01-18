@@ -1,5 +1,6 @@
 package monitor.service.impl;
 
+import alert.service.AlertService;
 import business.service.BusinessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -27,6 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import sun.nio.ch.Net;
+import topo.service.TopoService;
 
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -56,6 +58,12 @@ public class MonitorServiceImpl implements MonitorService {
 
     @Autowired
     BusinessService businessService;
+
+    @Autowired
+    TopoService topoService;
+
+    @Autowired
+    AlertService alertService;
 
     @Bean
     public RestTemplate rest() {
@@ -552,7 +560,7 @@ public class MonitorServiceImpl implements MonitorService {
     }
 
     boolean delCommonOper(String uuid, String lightype) throws IOException {
-        // TODO: 2018/10/25 加入业务监控的设备不能删除
+        //  2018/10/25 加入业务监控的设备不能删除
         if (businessService.isJoinBusinessMonitor(uuid)) {
             return false;
         }
@@ -561,22 +569,28 @@ public class MonitorServiceImpl implements MonitorService {
             //根据这个uuid获取所有的node和container extra uuid
             boolean delk8s = dao.delMonitorRecord(uuid, lightype);
             if (delk8s) {
-                // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除k8s
-                // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除k8s
+                //  2018/10/22 调用拓扑的deleteBymonitoruuid 删除k8s
+                    topoService.deleteTopoResourceBymonitoruuid(uuid);
+                // : 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除k8s
+                    alertService.deleteAlertResourceBymonitoruuid(uuid);
 
                 List<K8sNodeAndContainerView> view = dao.getAllNodeAndContainerByK8suuid(uuid);
                 view.forEach(x -> {
                     K8snodeMonitorEntity node = x.getK8snode();
                     boolean delk8snorc = dao.delMonitorRecord(node.getUuid(), MonitorEnum.LightTypeEnum.K8SNODE.value());
                     if (delk8snorc) {
-                        // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除node
-                        // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除node
+                        // 2018/10/22 调用拓扑的deleteBymonitoruuid 删除node
+                        topoService.deleteTopoResourceBymonitoruuid(node.getUuid());
+                        // : 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除node
+                        alertService.deleteAlertResourceBymonitoruuid(node.getUuid());
 
                         x.getK8sContainerList().forEach(y -> {
                             boolean delk8scrc = dao.delMonitorRecord(y.getUuid(), MonitorEnum.LightTypeEnum.K8SCONTAINER.value());
                             if (delk8scrc) {
-                                // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除container
-                                // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除container
+                                //: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除container
+                                topoService.deleteTopoResourceBymonitoruuid(y.getUuid());
+                                // : 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除container
+                                alertService.deleteAlertResourceBymonitoruuid(y.getUuid());
                             }
                         });
 
@@ -587,14 +601,18 @@ public class MonitorServiceImpl implements MonitorService {
         } else if (lightype.equals(MonitorEnum.LightTypeEnum.K8SNODE.value())) {
             boolean delk8sn = dao.delMonitorRecord(uuid, lightype);
             if (delk8sn) {
-                // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除node
-                // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除node
+                // : 2018/10/22 调用拓扑的deleteBymonitoruuid 删除node
+                topoService.deleteTopoResourceBymonitoruuid(uuid);
+                // : 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除node
+                alertService.deleteAlertResourceBymonitoruuid(uuid);
                 List<K8scontainerMonitorEntity> k8scList = dao.getAllContainerByK8sNodeuuid(uuid);
                 k8scList.forEach(y -> {
                     boolean delk8scrc = dao.delMonitorRecord(y.getUuid(), MonitorEnum.LightTypeEnum.K8SCONTAINER.value());
                     if (delk8scrc) {
-                        // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除container
-                        // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除container
+                        //  2018/10/22 调用拓扑的deleteBymonitoruuid 删除container
+                        topoService.deleteTopoResourceBymonitoruuid(y.getUuid());
+                        // : 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除container
+                        alertService.deleteAlertResourceBymonitoruuid(y.getUuid());
 
                     }
                 });
@@ -604,22 +622,28 @@ public class MonitorServiceImpl implements MonitorService {
         } else if (lightype.equals(MonitorEnum.LightTypeEnum.CAS.value())) {
             boolean delcas = dao.delMonitorRecord(uuid, lightype);
             if (delcas) {
-                // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除cas
-                // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除cas
+                //  2018/10/22 调用拓扑的deleteBymonitoruuid 删除cas
+                topoService.deleteTopoResourceBymonitoruuid(uuid);
+                // : 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除cas
+                alertService.deleteAlertResourceBymonitoruuid(uuid);
 
                 List<CvkAndVmView> view = dao.getAllCvkAndVmByCasuuid(uuid);
                 view.forEach(x -> {
                     HostMonitorEntity host = x.getHostMonitor();
                     boolean delk8snorc = dao.delMonitorRecord(host.getUuid(), MonitorEnum.LightTypeEnum.CVK.value());
                     if (delk8snorc) {
-                        // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除cvk
-                        // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除cvk
+                        // : 2018/10/22 调用拓扑的deleteBymonitoruuid 删除cvk
+                        topoService.deleteTopoResourceBymonitoruuid(host.getUuid());
+                        // : 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除cvk
+                        alertService.deleteAlertResourceBymonitoruuid(host.getUuid());
 
                         x.getVmMonitorList().forEach(y -> {
                             boolean delk8scrc = dao.delMonitorRecord(y.getUuid(), MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value());
                             if (delk8scrc) {
-                                // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除vm
-                                // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除vm
+                                // : 2018/10/22 调用拓扑的deleteBymonitoruuid 删除vm
+                                topoService.deleteTopoResourceBymonitoruuid(y.getUuid());
+                                // : 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除vm
+                                alertService.deleteAlertResourceBymonitoruuid(y.getUuid());
 
 
                             }
@@ -633,15 +657,19 @@ public class MonitorServiceImpl implements MonitorService {
 
             boolean dekcvk = dao.delMonitorRecord(uuid, lightype);
             if (dekcvk) {
-                // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除cvk
-                // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除cvk
+                // : 2018/10/22 调用拓扑的deleteBymonitoruuid 删除cvk
+                topoService.deleteTopoResourceBymonitoruuid(uuid);
+                // : 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除cvk
+                alertService.deleteAlertResourceBymonitoruuid(uuid);
 
                 List<VmMonitorEntity> vmList = dao.getAllVmByCvkuuid(uuid);
                 vmList.forEach(y -> {
                     boolean delvmrc = dao.delMonitorRecord(y.getUuid(), MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value());
                     if (delvmrc) {
-                        // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid 删除vm
-                        // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除vm
+                        // : 2018/10/22 调用拓扑的deleteBymonitoruuid 删除vm
+                        topoService.deleteTopoResourceBymonitoruuid(y.getUuid());
+                        // : 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除vm
+                        alertService.deleteAlertResourceBymonitoruuid(y.getUuid());
 
                     }
                 });
@@ -651,8 +679,10 @@ public class MonitorServiceImpl implements MonitorService {
             //其他设备
             boolean delres = dao.delMonitorRecord(uuid, lightype);
             if (delres) {
-                // TODO: 2018/10/22 调用拓扑的deleteBymonitoruuid
-                // TODO: 2018/10/22 调用告警记录的deleteByMOnitorUuid
+                // : 2018/10/22 调用拓扑的deleteBymonitoruuid
+                topoService.deleteTopoResourceBymonitoruuid(uuid);
+                // : 2018/10/22 调用告警记录的deleteByMOnitorUuid
+                alertService.deleteAlertResourceBymonitoruuid(uuid);
 
                 return true;
             }

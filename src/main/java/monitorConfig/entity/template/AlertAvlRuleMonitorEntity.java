@@ -1,5 +1,6 @@
 package monitorConfig.entity.template;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

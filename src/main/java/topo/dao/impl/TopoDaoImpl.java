@@ -33,6 +33,8 @@ public class TopoDaoImpl implements TopoDao {
     private static final String PATH_GET_NET_TOPO_LINKS = "getAllNetTopoLink";
     private static final String PATH_GET_CANVAS_BY_TYPE = "getCanvasByType";
     private static final String PATH_GET_NET_TOPO_PORT = "getAllNetTopoPort";
+    private static final String PATH_DELETE_NET_TOPO_RESOURCE_MONITOR = "deleteTopoResourceBymonitoruuid";
+
 
 
 
@@ -124,6 +126,11 @@ public class TopoDaoImpl implements TopoDao {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public boolean deleteTopoResourceBymonitoruuid(String monitorUuid) {
+        return rest().getForObject(topoPrefix()+PATH_DELETE_NET_TOPO_RESOURCE_MONITOR+"?monitorUuid={1}",boolean.class,monitorUuid);
     }
 
 

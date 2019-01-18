@@ -1,8 +1,8 @@
 package monitorConfig.entity.template;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-
 
 /**
  * Created by gy on 2018/5/31.
@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AlertRuleTemplateMonitorEntity {
+
 
     private String uuid;
 

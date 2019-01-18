@@ -13,4 +13,5 @@ public interface AlertDao {
     List<AlertAlarmInfo> getAlertInfoByMonitorUuids(List<String> monitorUuids) throws JsonProcessingException;
 
 
+    boolean deleteAlertResourceBymonitoruuid(String monitorUuid);
 }

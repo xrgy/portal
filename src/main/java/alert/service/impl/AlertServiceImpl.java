@@ -38,4 +38,9 @@ public class AlertServiceImpl implements AlertService {
     public List<AlertAlarmInfo> getAlertInfoByMonitorUuids(List<String> monitorUuids) throws JsonProcessingException {
         return dao.getAlertInfoByMonitorUuids(monitorUuids);
     }
+
+    @Override
+    public boolean deleteAlertResourceBymonitoruuid(String monitorUuid) {
+        return dao.deleteAlertResourceBymonitoruuid(monitorUuid);
+    }
 }

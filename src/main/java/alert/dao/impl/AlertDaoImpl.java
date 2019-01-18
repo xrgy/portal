@@ -28,6 +28,8 @@ public class AlertDaoImpl implements AlertDao {
     private static final String CONFIG_PORT = "8095";
     private static final String ALERT_PREFIX = "alerts";
     private static final String PATH_GET_ALARM_INFO_MONITOR_UUID = "getAlertInfoByMonitorUuids";
+    private static final String PATH_DELTE_ALERT_BY_MONITOR = "deleteAlertResourceBymonitoruuid";
+
 
     private static final String HTTP="http://";
 
@@ -60,5 +62,10 @@ public class AlertDaoImpl implements AlertDao {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public boolean deleteAlertResourceBymonitoruuid(String monitorUuid) {
+        return rest().getForObject(alertPrefix()+PATH_DELTE_ALERT_BY_MONITOR+"?monitorUuid={1}",boolean.class,monitorUuid);
     }
 }

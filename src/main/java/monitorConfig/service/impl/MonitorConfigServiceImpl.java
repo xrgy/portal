@@ -179,7 +179,7 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
         templateUuids.forEach(x->{
             boolean res = dao.delTemplate(x);
         });
-        return null;
+        return ResCommon.genSimpleResByBool(true);
     }
 
     @Override
@@ -198,6 +198,21 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
         templateView.setUsedCount(count);
 
         return ResCommon.getCommonResultMsg(templateView);
+    }
+
+    @Override
+    public ResultMsg getAllTemplate() {
+        List<RuleTemplate>  view = dao.getAllTemplate();
+        view.forEach(x->{
+            int count = 0;
+            try {
+                count = monitorService.getMonitorCountByTemplateId(x.getUuid(),x.getLightType());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            x.setUsedCount(count);
+        });
+        return ResCommon.getCommonResultMsg(view);
     }
 
 

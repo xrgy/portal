@@ -22,4 +22,6 @@ public interface TopoDao {
     List<TopoCanvasEntity> getCanvasByType(String name);
 
     List<TopoPortEntity> getAllPorts();
+
+    boolean deleteTopoResourceBymonitoruuid(String monitorUuid);
 }

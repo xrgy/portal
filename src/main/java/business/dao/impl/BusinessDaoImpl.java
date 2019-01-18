@@ -29,6 +29,7 @@ public class BusinessDaoImpl implements BusinessDao {
     private static final String BUSINESS_PREFIX = "business";
     private static final String PATH_BUSINESS_LIST = "getBusinessList";
     private static final String PATH_ADD_BUSINESS_RESOURCE_LIST = "addBusinessResourceList";
+    private static final String PATH_ADD_BUSINESS_RESOURCE_LIST_BY_MONITOR = "getBusinessResourceByMonitorUuid";
     private static final String HTTP = "http://";
 
     private String businessPrefix() {
@@ -64,5 +65,16 @@ public class BusinessDaoImpl implements BusinessDao {
     @Override
     public boolean insertBusinessResourceList(List<BusinessResourceEntity> resourceList) throws JsonProcessingException {
         return rest().postForObject(businessPrefix() + PATH_ADD_BUSINESS_RESOURCE_LIST, objectMapper.writeValueAsString(resourceList), boolean.class);
+    }
+
+    @Override
+    public List<BusinessResourceEntity> getBusinessResourceByMonitorUuid(String monitorUuid) {
+        ResponseEntity<String> response = rest().getForEntity(businessPrefix()+PATH_ADD_BUSINESS_RESOURCE_LIST_BY_MONITOR+"?monitorUuid={1}",String.class,monitorUuid);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<BusinessResourceEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

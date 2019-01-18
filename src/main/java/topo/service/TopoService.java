@@ -59,4 +59,13 @@ public interface TopoService {
      * @return
      */
     ResultMsg getCanvasAlarmInfo(String canvasId) throws JsonProcessingException;
+
+
+
+    /**
+     * 删除监控记录时候需要级联删除拓扑中的设备
+     * @param monitorUuid
+     * @return
+     */
+    boolean deleteTopoResourceBymonitoruuid(String monitorUuid);
 }

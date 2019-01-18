@@ -96,4 +96,10 @@ public interface MonitorConfigService {
      * @return
      */
     ResultMsg OpenTemplate(String uuid) throws IOException;
+
+    /**
+     * 获取监控模板列表，这里面要绑定每个模板被使用的监控记录数量，前端直接如果大于0，则删除按钮是灰色的
+     * @return
+     */
+    ResultMsg getAllTemplate();
 }

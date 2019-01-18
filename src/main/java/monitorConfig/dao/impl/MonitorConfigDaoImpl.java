@@ -50,6 +50,8 @@ public class MonitorConfigDaoImpl implements MonitorConfigDao {
     private static final String PATH_DEL_ALERT_MONITOR_RULE = "delAlertMonitorRule";
     private static final String PATH_GET_OPEN_TEMPLATE_DATA = "getOpenTemplateData";
     private static final String PATH_UPDATE_TEMPLATE = "updateTemplate";
+    private static final String PATH_GET_ALL_TEMPLATE = "getAllTemplate";
+
     private static final String HTTP="http://";
 
 
@@ -227,6 +229,18 @@ public class MonitorConfigDaoImpl implements MonitorConfigDao {
         ResponseEntity<String> response = rest().getForEntity(monitorConfigPrefix() + PATH_GET_OPEN_TEMPLATE_DATA + "?uuid={1}", String.class, uuid);
         try {
             return objectMapper.readValue(response.getBody(), UpTemplateView.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<RuleTemplate> getAllTemplate() {
+        ResponseEntity<String> response = rest().getForEntity(monitorConfigPrefix() + PATH_GET_ALL_TEMPLATE, String.class);
+        try {
+            return objectMapper.readValue(response.getBody(), new TypeReference<List<RuleTemplate>>() {
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }

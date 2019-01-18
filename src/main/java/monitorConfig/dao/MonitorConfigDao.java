@@ -119,4 +119,11 @@ public interface MonitorConfigDao {
      * @return
      */
     UpTemplateView getOpenTemplateData(String uuid);
+
+    /**
+     * 获取所有的监控模板列表
+     * @return
+     */
+    List<RuleTemplate> getAllTemplate();
+
 }

@@ -15,4 +15,13 @@ public interface BusinessDao {
     List<BusinessEntity> getBusinessList();
 
     boolean insertBusinessResourceList(List<BusinessResourceEntity> resourceList) throws JsonProcessingException;
+
+
+
+    /**
+     * 根据资源uuid获取业务资源实体
+     * @param monitorUuid
+     * @return
+     */
+    List<BusinessResourceEntity> getBusinessResourceByMonitorUuid(String monitorUuid);
 }

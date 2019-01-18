@@ -82,4 +82,11 @@ public class MonitorConfigController {
     public ResultMsg delTemplate(List<String> templateUuids){
         return service.delTemplate(templateUuids);
     }
+
+
+    @RequestMapping("getAllTemplate")
+    @ResponseBody
+    public ResultMsg getAllTemplate(){
+        return service.getAllTemplate();
+    }
 }

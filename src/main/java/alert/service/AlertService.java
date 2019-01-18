@@ -14,4 +14,10 @@ public interface AlertService {
     List<AlertAlarmInfo> getAlertInfoByMonitorUuids(List<String> monitorUuids) throws JsonProcessingException;
 
 
+    /**
+     * 删除监控记录级联告警删除该monitor的告警记录
+     * @param monitorUuid
+     * @return
+     */
+    boolean deleteAlertResourceBymonitoruuid(String monitorUuid);
 }

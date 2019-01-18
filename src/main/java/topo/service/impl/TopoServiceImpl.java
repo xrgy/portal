@@ -94,6 +94,11 @@ public class TopoServiceImpl implements TopoService {
         return getCommonResultMsg(alertService.getAlertInfoByMonitorUuids(monitorUuids));
     }
 
+    @Override
+    public boolean deleteTopoResourceBymonitoruuid(String monitorUuid) {
+        return dao.deleteTopoResourceBymonitoruuid(monitorUuid);
+    }
+
     private ResultMsg getCommonResultMsg(Object o){
         ResultMsg msg = new ResultMsg();
         if (null != o) {
