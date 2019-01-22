@@ -5,10 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.common.ResultMsg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import topo.entity.TwaverBox;
 import topo.service.TopoService;
+
+import java.io.IOException;
 
 
 /**
@@ -28,6 +32,11 @@ public class TopoController {
     @RequestMapping("showWeaveTopo")
     public String showWeaveTopo(){
         return "topo/topoMain";
+    }
+
+    @RequestMapping("showNetTopo")
+    public String showNetTopo(){
+        return "topo/editTopo";
     }
 
     @RequestMapping("getAllWeaveTopoNode")
@@ -55,10 +64,16 @@ public class TopoController {
         return service.getTopoLinkByCanvasId(canvasId);
     }
 
-    @RequestMapping("getCustomCanvas")
+    @RequestMapping("getTopoCanvasData")
     @ResponseBody
-    public ResultMsg getCustomCanvas() {
-        return service.getCustomCanvas();
+    public ResultMsg getTopoCanvasData(){
+        return service.getTopoCanvasData();
+    }
+
+    @RequestMapping("getCanvasByType")
+    @ResponseBody
+    public ResultMsg getCanvasByType(String type) {
+        return service.getCustomCanvas(type);
     }
 
     @RequestMapping("getAllNetTopoPort")
@@ -71,5 +86,17 @@ public class TopoController {
     @ResponseBody
     public ResultMsg getCanvasAlarmInfo(String canvasId) throws JsonProcessingException {
         return service.getCanvasAlarmInfo(canvasId);
+    }
+
+    @RequestMapping("getTopoLinkRate")
+    @ResponseBody
+    public ResultMsg getTopoLinkRate(String canvasId,String linkRate) throws JsonProcessingException {
+        return service.getInterfaceRate(canvasId,linkRate);
+    }
+    @RequestMapping("saveTopo")
+    @ResponseBody
+    public ResultMsg saveTopo(String topojson) throws IOException {
+        TwaverBox twaverBox = mapper.readValue(topojson,TwaverBox.class);
+        return service.saveTopo(twaverBox);
     }
 }

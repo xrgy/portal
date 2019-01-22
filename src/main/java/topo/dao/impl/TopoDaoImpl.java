@@ -1,5 +1,6 @@
 package topo.dao.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,8 @@ public class TopoDaoImpl implements TopoDao {
     private static final String PATH_GET_CANVAS_BY_TYPE = "getCanvasByType";
     private static final String PATH_GET_NET_TOPO_PORT = "getAllNetTopoPort";
     private static final String PATH_DELETE_NET_TOPO_RESOURCE_MONITOR = "deleteTopoResourceBymonitoruuid";
-
+    private static final String PATH_GET_TOPO_NET_LINK_RATE = "getInterfaceRate";
+    private static final String PATH_SAVE_TOPO_NODES = "insertTopoNodeList";
 
 
 
@@ -86,7 +88,7 @@ public class TopoDaoImpl implements TopoDao {
 
     @Override
     public List<TopoNodeEntity> getTopoNodeByCanvasId(String canvasId) {
-        ResponseEntity<String> response = rest().getForEntity(topoPrefix()+PATH_GET_NET_TOPO_NODES,String.class);
+        ResponseEntity<String> response = rest().getForEntity(topoPrefix()+PATH_GET_NET_TOPO_NODES+"?canvasId={1}",String.class,canvasId);
         try {
             return objectMapper.readValue(response.getBody(),new TypeReference<List<TopoNodeEntity>>(){});
         } catch (IOException e) {
@@ -97,7 +99,7 @@ public class TopoDaoImpl implements TopoDao {
 
     @Override
     public List<TopoLinkEntity> getTopoLinkByCanvasId(String canvasId) {
-        ResponseEntity<String> response = rest().getForEntity(topoPrefix()+PATH_GET_NET_TOPO_LINKS,String.class);
+        ResponseEntity<String> response = rest().getForEntity(topoPrefix()+PATH_GET_NET_TOPO_LINKS+"?canvasId={1}",String.class,canvasId);
         try {
             return objectMapper.readValue(response.getBody(),new TypeReference<List<TopoLinkEntity>>(){});
         } catch (IOException e) {
@@ -131,6 +133,23 @@ public class TopoDaoImpl implements TopoDao {
     @Override
     public boolean deleteTopoResourceBymonitoruuid(String monitorUuid) {
         return rest().getForObject(topoPrefix()+PATH_DELETE_NET_TOPO_RESOURCE_MONITOR+"?monitorUuid={1}",boolean.class,monitorUuid);
+    }
+
+    @Override
+    public List<TopoLinkRateView> getInterfaceRate(String monitorUuid, String quotaName) {
+        ResponseEntity<String> response = rest().getForEntity(topoPrefix()+PATH_GET_TOPO_NET_LINK_RATE,String.class);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<TopoLinkRateView>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean insertTopoNodeList(List<TopoNodeEntity> nodes) throws JsonProcessingException {
+        return rest().postForObject(topoPrefix() + PATH_SAVE_TOPO_NODES, objectMapper.writeValueAsString(nodes), boolean.class);
+
     }
 
 

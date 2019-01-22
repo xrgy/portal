@@ -2,7 +2,7 @@
  * Created by gy on 2018/3/24.
  */
 'use strict'
-define(['jquery','bootstrap', 'vue','commonModule','topoMain'], function ($,bootstrap, Vue,commonModule,topoMain) {
+define(['jquery','bootstrap', 'vue','commonModule','topoMain','editTopo'], function ($,bootstrap, Vue,commonModule,topoMain,editTopo) {
     var confList = function () {
         if ($('#configList')[0]) {
             var monitorList = new Vue({
@@ -67,7 +67,13 @@ define(['jquery','bootstrap', 'vue','commonModule','topoMain'], function ($,boot
                         window.open("/topo/showWeaveTopo",'_parent');
                         topoMain.startTopo();
 
-                    }
+                    },
+                    loadNetTopo:function () {
+                        window.open("/topo/showNetTopo",'_parent');
+                        editTopo.netTopo();
+
+                    },
+
                 }
             })
         }

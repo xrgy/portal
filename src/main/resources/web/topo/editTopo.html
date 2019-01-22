@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>画布</title>
+
+</head>
+<body>
+<div id="pjax-header">
+    <div th:replace="common::common"></div>
+</div>
+<div id="mynetcanvas">
+    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" id="netTopo">
+
+    </div>
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+        <div class="btn btn-primary">
+            <span data-i18n="topo.layout" v-on:click="clickLayout($event)"></span></div>
+        <div class="btn btn-primary">
+            <span data-i18n="topo.save" v-on:click="saveTopo($event)"></span></div>
+    </div>
+</div>
+</body>
+</html>

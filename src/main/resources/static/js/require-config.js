@@ -28,7 +28,8 @@ require.config({
         'addTomcat':'./monitor/add-tomcat',
         'addCas':'./monitor/add-cas',
         'addK8s':'./monitor/add-k8s',
-        'topoMain':'./topo/topo-main'
+        'topoMain':'./topo/topo-main',
+        'editTopo':'./topo/edit-topo'
     },
     shim:{
         'jquery-i18n':['jquery'],

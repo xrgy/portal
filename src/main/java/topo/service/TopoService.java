@@ -2,10 +2,7 @@ package topo.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import monitor.common.ResultMsg;
-import topo.entity.TopoBusinessLinkEntity;
-import topo.entity.TopoBusinessNodeEntity;
-
-import java.util.List;
+import topo.entity.TwaverBox;
 
 
 /**
@@ -40,11 +37,18 @@ public interface TopoService {
     ResultMsg getTopoLinkByCanvasId(String canvasId);
 
     /**
-     * 获取自定义拓扑
+     * 获取拓扑画布
+     * @return
+     * @param type
+     */
+    ResultMsg getCustomCanvas(String type);
+
+    /**
+     *
+     * @param
      * @return
      */
-    ResultMsg getCustomCanvas();
-
+    ResultMsg getTopoCanvasData();
 
     /**
      * 获取所有端口
@@ -68,4 +72,14 @@ public interface TopoService {
      * @return
      */
     boolean deleteTopoResourceBymonitoruuid(String monitorUuid);
+
+    /**
+     * 获取画布链路流量
+     * @param monitorUuid
+     * @param linkRate
+     * @return
+     */
+    ResultMsg getInterfaceRate(String monitorUuid, String linkRate);
+
+    ResultMsg saveTopo(TwaverBox twaverBox) throws JsonProcessingException;
 }
