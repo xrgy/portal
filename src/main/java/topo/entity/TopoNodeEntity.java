@@ -16,6 +16,8 @@ public class TopoNodeEntity {
 
     String canvasId;
 
+    String ip;
+
     String nodeName;
 
     String monitorUuid;

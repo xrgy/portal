@@ -72,3 +72,60 @@
 #add-cas .no-part-border {
     border-right: 1px solid transparent !important;
 }
+
+#tipNodeMsg{
+    position: absolute;
+}
+#tipLinkMsg{
+    position: absolute;
+}
+#mycanvas .topotip,
+#mynetcanvas .topotip{
+    width: 230px;
+    height: 170px;
+    opacity: 1.0;
+    background: #fff;
+    border: solid 1px #ccc;
+}
+#mycanvas .topotip{
+    height: 110px;
+}
+#mycanvas .topoLinktip{
+    height: 70px;
+}
+#mycanvas .topotip .tip-node-name{
+    padding-left: 30px;
+    padding-top: 10px;
+}
+#mycanvas .topotip .tip-node-others{
+    padding-left: 30px;
+}
+#mycanvas .topotip .tip-link-others{
+    padding-left: 20px;
+}
+#mynetcanvas .topotip fieldset{
+    padding: 0 10px;
+    border: 1px solid silver;
+    margin: 0 10px;
+}
+#mynetcanvas .topotip fieldset legend{
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 0 !important;
+    border-bottom: 0;
+    width: 20%;
+}
+#mynetcanvas .topotip .alertspan{
+    width: 60px;
+    display: inline-block;
+}
+#mynetcanvas .topotip .tip-node-type{
+    padding-top: 8px;
+    padding-left: 5px;
+}
+#mynetcanvas .topotip .tip-node-others{
+    margin-left: 30px;
+}
+#mynetcanvas .topotip .tip-link-type{
+    padding-left: 15px;
+}

@@ -82,4 +82,11 @@ public interface TopoService {
     ResultMsg getInterfaceRate(String monitorUuid, String linkRate);
 
     ResultMsg saveTopo(TwaverBox twaverBox) throws JsonProcessingException;
+
+    /**
+     * 获取业务节点信息
+     * @param uuid
+     * @return
+     */
+    ResultMsg getBusinessNode(String uuid);
 }

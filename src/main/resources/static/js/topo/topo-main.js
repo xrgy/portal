@@ -17,11 +17,21 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                     path: {
                         getWeaveNode: "/topo/getAllWeaveTopoNode",
                         getWeaveLink: "/topo/getAllWeaveTopoLink",
+                        getBusinessNode: "/topo/getBusinessNode",
+
                     },
+                    selectname:"",
+                    selectHealthscore:"",
+                    selectBusyscore:"",
+                    selectAvailablescore:"",
+                    selectLinkLeftName:"",
+                    selectLinkRightName:"",
 
                 },
                 mounted: function () {
                     this.initBox();
+                    this.initDataBox();
+                    this.initListener();
                     this.registerImage('../image/cupcake.jpg','node');
                     this.getData();
                 },
@@ -55,7 +65,11 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                         });
 
                     },
-                    
+                    initDataBox: function () {
+                        twaver.SerializationSettings.setClientType('uuid', 'string');
+                        twaver.SerializationSettings.setClientType("fromNode", 'string');
+                        twaver.SerializationSettings.setClientType("toNode", 'string');
+                    },
                     getData:function () {
                         var _self = this;
                         $.ajax({
@@ -111,11 +125,68 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                     createNode: function (mynode) {
                         var _self = this;
                         var node = new twaver.Node(mynode.uuid);
+                        node.setClient("uuid",mynode.uuid);
                         node.setName(mynode.nodeName);
                         node.setImage("node");
                         _self.nodeList.push(node);
                         _self.box.add(node);
 
+                    },
+                    initListener: function () {
+                        var _self = this;
+                        var selectionModel = _self.box.getSelectionModel();
+                        selectionModel.setSelectionMode('singleSelection');
+                        selectionModel.addSelectionChangeListener(function (e) {
+                            console.log(e);
+                            console.log('kind:' + e.kind + ',datas:' + e.datas.toString());
+
+                        });
+                        _self.network.addInteractionListener(function (e) {
+                            var el = e.element;
+                            window.onmouseup = function () {
+                                if (e.kind == 'clickElement' && el) {
+                                    if (el.getClassName() == 'twaver.Node') {
+                                        $("#tipNodeMsg").removeClass('hidden');
+                                        $("#tipNodeMsg").css('left', e.event.clientX + 10);
+                                        $("#tipNodeMsg").css('top', e.event.clientY + 10);
+                                        _self.initSelectNode(el);
+                                    } else if (el.getClassName() == 'twaver.Link') {
+                                        $("#tipLinkMsg").removeClass('hidden');
+                                        $("#tipLinkMsg").css('left', e.event.clientX + 10);
+                                        $("#tipLinkMsg").css('top', e.event.clientY + 10);
+                                        _self.initSelectLink(el);
+                                    }
+                                } else if (e.kind == 'clickBackground') {
+                                    $("#tipNodeMsg").addClass('hidden');
+                                    $("#tipLinkMsg").addClass('hidden');
+                                }
+                            }
+                        })
+                    },
+                    initSelectNode: function (el) {
+                        var _self = this;
+                        _self.selectname = el.getName();
+                        var uuid = el.getClient("uuid");
+                        var _self = this;
+                        $.ajax({
+                            data: {"uuid": uuid},
+                            url: _self.path.getBusinessNode,
+                            success: function (data) {
+                                if (data.msg === "SUCCESS") {
+                                    var node = data.data;
+                                    _self.selectHealthscore = node.health_score;
+                                    _self.selectBusyscore = node.busy_score;
+                                    _self.selectAvailablescore = node.available_score;
+                                }
+                            },
+                            error: function () {
+                            }
+                        })
+                    },
+                    initSelectLink: function (el) {
+                        var _self = this;
+                        _self.selectLinkLeftName = el.getClient('fromNode');
+                        _self.selectLinkRightName = el.getClient('toNode');
                     },
                     // registerImage:function (){
                     // this.registerNormalImage('../images/bg.png','bg');
@@ -134,6 +205,8 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                     createLink:function (uuid,node1,node2) {
                         var _self = this;
                         var link = new twaver.Link(uuid,node1,node2);
+                        link.setClient("fromNode", node1.getName());
+                        link.setClient("toNode", node2.getName());
                         _self.linkList.push(link);
                         _self.box.add(link);
                     },

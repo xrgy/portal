@@ -24,4 +24,11 @@ public interface BusinessDao {
      * @return
      */
     List<BusinessResourceEntity> getBusinessResourceByMonitorUuid(String monitorUuid);
+
+    /**
+     * 通过业务id获取业务实体
+     * @param uuid
+     * @return
+     */
+    BusinessEntity getBusinessNode(String uuid);
 }

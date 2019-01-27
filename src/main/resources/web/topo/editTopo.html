@@ -19,6 +19,35 @@
         <div class="btn btn-primary">
             <span data-i18n="topo.save" v-on:click="saveTopo($event)"></span></div>
     </div>
+    <div id="tipNodeMsg" class="topotip hidden">
+        <div id="devicetype" class="tip-node-type">{{selectType|convertType}}</div>
+        <div id="devicename" class="tip-node-others">
+            <label data-i18n="topo.baseinfo.name"></label>
+            <label>{{selectname}}</label>
+        </div>
+        <div id="deviceip" class="tip-node-others">
+            <label data-i18n="topo.baseinfo.ip"></label>
+            <label>{{selectIp}}</label>
+        </div>
+        <fieldset class="tip-node-others">
+            <legend data-i18n="monitor.baseinfo.alarm"></legend>
+            <span class="critical alertspan"><label data-i18n="alertLevel.critical"></label><label>{{selectcricital|convertAlertNum}}</label></span>
+            <span class="major alertspan"><label data-i18n="alertLevel.major"></label><label>{{selectmajor|convertAlertNum}}</label></span>
+            <span class="minor alertspan"><label data-i18n="alertLevel.minor"></label><label>{{selectminor|convertAlertNum}}</label></span>
+            <span class="warn alertspan"><label data-i18n="alertLevel.warning"></label><label>{{selectwarning|convertAlertNum}}</label></span>
+            <span class="notice alertspan"><label data-i18n="alertLevel.notice"></label><label>{{selectnotice|convertAlertNum}}</label></span>
+        </fieldset>
+    </div>
+    <div id="tipLinkMsg" class="topotip hidden">
+        <div id="linkstatus" class="tip-node-type tip-link-type"><label data-i18n="topo.baseinfo.linkstatus"></label><label>{{selectLinkStatus|convertLinkStatus}}</label></div>
+        <div id="fromname" class="tip-link-type"><label data-i18n="topo.baseinfo.leftdevicename"></label><label>{{selectLinkLeftName}}</label></div>
+        <div id="toname" class="tip-link-type"><label data-i18n="topo.baseinfo.rightdevicename"></label><label>{{selectLinkRightName}}</label></div>
+        <div id="fromport" class="tip-link-type"><label data-i18n="topo.baseinfo.leftdeviceport"></label><label>{{selectLinkLeftPort}}</label></div>
+        <div id="toport" class="tip-link-type"><label data-i18n="topo.baseinfo.rightdeviceport"></label><label>{{selectLinkRightPort}}</label></div>
+        <div id="fromrate" class="tip-link-type"><label data-i18n="topo.baseinfo.leftportrate"></label><label>{{selectLinkLeftRate}}</label></div>
+        <div id="torate" class="tip-link-type"><label data-i18n="topo.baseinfo.rightportrate"></label><label>{{selectLinkRightRate}}</label></div>
+    </div>
+
 </div>
 </body>
 </html>

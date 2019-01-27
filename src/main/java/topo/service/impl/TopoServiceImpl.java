@@ -1,11 +1,15 @@
 package topo.service.impl;
 
 import alert.service.AlertService;
+import business.entity.BusinessEntity;
+import business.service.BusinessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.common.CommonEnum;
 import monitor.common.ResCommon;
 import monitor.common.ResultMsg;
+import monitor.entity.NetworkMonitorEntity;
+import monitor.service.MonitorService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -44,6 +48,12 @@ public class TopoServiceImpl implements TopoService {
     AlertService alertService;
 
 
+    @Autowired
+    MonitorService monitorService;
+
+    @Autowired
+    BusinessService businessService;
+
     @Bean
     public RestTemplate rest() {
         return new RestTemplate();
@@ -76,7 +86,12 @@ public class TopoServiceImpl implements TopoService {
         List<TopoCanvasEntity> canvasList = dao.getCanvasByType(TopoEnum.CanvasType.CANVAS_WHOLE_TOPO.value());
         if (canvasList.size() == 1) {
             TopoCanvasEntity canvas = canvasList.get(0);
+            List<NetworkMonitorEntity> monitorList = monitorService.getAllNetworkMonitorEntity();
             List<TopoNodeEntity> nodes = dao.getTopoNodeByCanvasId(canvas.getUuid());
+            nodes.forEach(x->{
+                Optional<NetworkMonitorEntity> monitor = monitorList.stream().filter(y->y.getUuid().equals(x.getMonitorUuid())).findFirst();
+                monitor.ifPresent(networkMonitorEntity -> x.setIp(networkMonitorEntity.getIp()));
+            });
             List<TopoLinkEntity> links =dao.getTopoLinkByCanvasId(canvas.getUuid());
             List<TopoPortEntity> ports = dao.getAllPorts();
             TopoCanvasData data = new TopoCanvasData();
@@ -155,6 +170,12 @@ public class TopoServiceImpl implements TopoService {
             dao.insertTopoNodeList(newNodeList);
         }
         return ResCommon.genSimpleResByBool(true);
+    }
+
+    @Override
+    public ResultMsg getBusinessNode(String uuid) {
+        BusinessEntity node =businessService.getBusinessNode(uuid);
+        return ResCommon.getCommonResultMsg(node);
     }
 
     private ResultMsg getCommonResultMsg(Object o) {

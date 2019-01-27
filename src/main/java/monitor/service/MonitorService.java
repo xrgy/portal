@@ -205,4 +205,6 @@ public interface MonitorService {
      * @return
      */
     boolean isMonitorRecordIpDup(String ip,String lightType);
+
+    List<NetworkMonitorEntity> getAllNetworkMonitorEntity();
 }

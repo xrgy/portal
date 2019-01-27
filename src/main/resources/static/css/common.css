@@ -324,3 +324,19 @@ table{
     overflow-y: auto;
     overflow-x: hidden;
 }
+.critical{
+    color: #c11212;
+}
+.major{
+    color: #ec670b;
+}
+
+.minor{
+    color: #ffc267;
+}
+.warn{
+    color: #22a5df;
+}
+.notice{
+    color: #3e3e3e;
+}

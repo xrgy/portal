@@ -44,6 +44,11 @@ public class TopoController {
     public ResultMsg getAllWeaveTopoNode() throws JsonProcessingException {
         return service.getAllWeaveTopoNode();
     }
+    @RequestMapping("getBusinessNode")
+    @ResponseBody
+    public ResultMsg getBusinessNode(String uuid) throws JsonProcessingException {
+        return service.getBusinessNode(uuid);
+    }
 
     @RequestMapping("getAllWeaveTopoLink")
     @ResponseBody

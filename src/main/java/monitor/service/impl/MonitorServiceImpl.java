@@ -1574,4 +1574,9 @@ public class MonitorServiceImpl implements MonitorService {
         return dao.isMonitorRecordIpDup(ip,lightType);
     }
 
+    @Override
+    public List<NetworkMonitorEntity> getAllNetworkMonitorEntity() {
+        return dao.getAllNetworkMonitorEntity();
+    }
+
 }

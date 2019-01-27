@@ -30,6 +30,7 @@ public class BusinessDaoImpl implements BusinessDao {
     private static final String PATH_BUSINESS_LIST = "getBusinessList";
     private static final String PATH_ADD_BUSINESS_RESOURCE_LIST = "addBusinessResourceList";
     private static final String PATH_ADD_BUSINESS_RESOURCE_LIST_BY_MONITOR = "getBusinessResourceByMonitorUuid";
+    private static final String PATH_GET_BUSINESS_NODE = "getBusinessNode";
     private static final String HTTP = "http://";
 
     private String businessPrefix() {
@@ -72,6 +73,17 @@ public class BusinessDaoImpl implements BusinessDao {
         ResponseEntity<String> response = rest().getForEntity(businessPrefix()+PATH_ADD_BUSINESS_RESOURCE_LIST_BY_MONITOR+"?monitorUuid={1}",String.class,monitorUuid);
         try {
             return objectMapper.readValue(response.getBody(),new TypeReference<List<BusinessResourceEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public BusinessEntity getBusinessNode(String uuid) {
+        ResponseEntity<String> response = rest().getForEntity(businessPrefix() + PATH_GET_BUSINESS_NODE + "?uuid={1}", String.class, uuid);
+        try {
+            return objectMapper.readValue(response.getBody(), BusinessEntity.class);
         } catch (IOException e) {
             e.printStackTrace();
         }

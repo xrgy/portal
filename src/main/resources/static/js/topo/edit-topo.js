@@ -34,13 +34,53 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                         fillAlpha: 0.9
                     },
                     canvasId: "",
-
+                    selectType: "",
+                    selectname: "",
+                    selectIp: "",
+                    selectcricital: "",
+                    selectmajor: "",
+                    selectminor: "",
+                    selectwarning: "",
+                    selectnotice: "",
+                    selectLinkStatus: "",
+                    selectLinkLeftName: "",
+                    selectLinkRightName: "",
+                    selectLinkLeftPort: "",
+                    selectLinkRightPort: "",
+                    selectLinkLeftRate: "",
+                    selectLinkRightRate: "",
                 },
                 mounted: function () {
                     this.initBox();
                     this.initDataBox();
+                    this.initListener();
                     // this.registerImage('../image/cupcake.svg', 'node');
                     this.getData();
+                },
+                filters: {
+                    convertType: function (type) {
+                        if (type != null && type != "") {
+                            return commonModule.i18n("monitor.networkdevice." + type);
+                        } else {
+                            return "";
+                        }
+                    },
+                    convertAlertNum: function (num) {
+                        if (num == undefined) {
+                            num = 0;
+                        }
+                        return "(" + num + ")"
+
+                    },
+                    convertLinkStatus: function (status) {
+                        if (status == "1") {
+                            return commonModule.i18n("topo.linkstatus.normal");
+
+                        } else {
+                            return commonModule.i18n("topo.linkstatus.unnormal");
+
+                        }
+                    },
                 },
                 methods: {
                     initDataBox: function () {
@@ -68,14 +108,23 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                             }
                         }
 
-                        twaver.SerializationSettings.setClientType('uuid','string');
-                        twaver.SerializationSettings.setClientType('monitorUuid','string');
-                        twaver.SerializationSettings.setClientType('canvasId','string');
-                        twaver.SerializationSettings.setClientType('fromNodeId','string');
-                        twaver.SerializationSettings.setClientType('fromPortId','string');
-                        twaver.SerializationSettings.setClientType('toNodeId','string');
-                        twaver.SerializationSettings.setClientType('toPortId','string');
-                        twaver.SerializationSettings.setClientType('timeInterval','string');
+                        twaver.SerializationSettings.setClientType('uuid', 'string');
+                        twaver.SerializationSettings.setClientType('monitorUuid', 'string');
+                        twaver.SerializationSettings.setClientType('canvasId', 'string');
+                        twaver.SerializationSettings.setClientType('fromNodeId', 'string');
+                        twaver.SerializationSettings.setClientType('fromPortId', 'string');
+                        twaver.SerializationSettings.setClientType('toNodeId', 'string');
+                        twaver.SerializationSettings.setClientType('toPortId', 'string');
+                        twaver.SerializationSettings.setClientType('timeInterval', 'string');
+                        twaver.SerializationSettings.setClientType("nodeType", 'string');
+                        twaver.SerializationSettings.setClientType("ip", 'string');
+                        twaver.SerializationSettings.setClientType("alarmNotice", 'string');
+                        twaver.SerializationSettings.setClientType("linkStatus", 'string');
+                        twaver.SerializationSettings.setClientType("fromNode", 'string');
+                        twaver.SerializationSettings.setClientType("toNode", 'string');
+                        twaver.SerializationSettings.setClientType("fromPort", 'string');
+                        twaver.SerializationSettings.setClientType("toPort", 'string');
+
 
                     },
                     initBox: function () {
@@ -117,7 +166,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                                         var canvas = data.canvas;
                                         if (canvas) {
                                             _self.canvasId = canvas.uuid;
-                                            _self.box.setClient("uuid",_self.canvasId);
+                                            _self.box.setClient("uuid", _self.canvasId);
                                         }
                                         var nodelist = data.nodes;
                                         if (nodelist) {
@@ -129,7 +178,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                                         if (portlist) {
                                             for (var index in portlist) {
                                                 _self.portList.push(portlist[index]);
-                                                _self.portToNode[portlist[index].uuid] = portlist[index].nodeUuid;
+                                                _self.portToNode[portlist[index].uuid] = portlist[index];
                                             }
                                         }
                                         var linklist = data.links;
@@ -139,8 +188,8 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                                                     toPortId = linklist[i].toPortId,
                                                     canvasId = linklist[i].canvasId,
                                                     uuid = linklist[i].uuid;
-                                                var fromNodeId = _self.portToNode[fromPortId];
-                                                var toNodeId = _self.portToNode[toPortId];
+                                                var fromNodeId = _self.portToNode[fromPortId].nodeUuid;
+                                                var toNodeId = _self.portToNode[toPortId].nodeUuid;
                                                 if (fromNodeId && toNodeId) {
                                                     var node1 = null, node2 = null;
                                                     for (var j in _self.nodeList) {
@@ -155,7 +204,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                                                         }
                                                     }
                                                     if (node1 && node2) {
-                                                        _self.createLink(uuid, node1, node2, fromPortId, toPortId);
+                                                        _self.createLink(uuid, node1, node2, _self.portToNode[fromPortId], _self.portToNode[toPortId]);
                                                     }
                                                 }
                                             }
@@ -179,7 +228,9 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                         node.setClient("uuid", mynode.uuid);
                         node.setClient("monitorUuid", mynode.monitorUuid);
                         node.setClient("canvasId", _self.canvasId);
-                        node.setSize(40,40);
+                        node.setClient("nodeType", mynode.nodeType);
+                        node.setClient("ip", mynode.ip);
+                        node.setSize(40, 40);
                         // var imageUrl = _self.setImageSrc(mynode.nodeType);
                         // node.setImageUrl(imageUrl);
                         _self.nodeList.push(node);
@@ -194,6 +245,60 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                             image.onload = null;
                             _self.network.invalidateElementUIs();
                         };
+                    },
+                    initListener: function () {
+                        var _self = this;
+                        var selectionModel = _self.box.getSelectionModel();
+                        selectionModel.setSelectionMode('singleSelection');
+                        selectionModel.addSelectionChangeListener(function (e) {
+                            console.log(e);
+                            console.log('kind:' + e.kind + ',datas:' + e.datas.toString());
+
+                        });
+                        _self.network.addInteractionListener(function (e) {
+                            var el = e.element;
+                            window.onmouseup = function () {
+                                if (e.kind == 'clickElement' && el) {
+                                    if (el.getClassName() == 'twaver.Node') {
+                                        $("#tipNodeMsg").removeClass('hidden');
+                                        $("#tipNodeMsg").css('left', e.event.clientX + 10);
+                                        $("#tipNodeMsg").css('top', e.event.clientY + 10);
+                                        _self.initSelectNode(el);
+                                    } else if (el.getClassName() == 'twaver.Link') {
+                                        $("#tipLinkMsg").removeClass('hidden');
+                                        $("#tipLinkMsg").css('left', e.event.clientX + 10);
+                                        $("#tipLinkMsg").css('top', e.event.clientY + 10);
+                                        _self.initSelectLink(el);
+                                    }
+                                } else if (e.kind == 'clickBackground') {
+                                    $("#tipNodeMsg").addClass('hidden');
+                                    $("#tipLinkMsg").addClass('hidden');
+                                }
+                            }
+                        })
+                    },
+                    initSelectNode: function (el) {
+                        var _self = this;
+                        _self.selectType = el.getClient("nodeType");
+                        _self.selectname = el.getName();
+                        _self.selectIp = el.getClient("ip");
+                        _self.selectcricital = el.getAlarmState().getNewAlarmCount(twaver.AlarmSeverity.Emergency);
+                        _self.selectmajor = el.getAlarmState().getNewAlarmCount(twaver.AlarmSeverity.FIRST_IMPORTANT);
+                        _self.selectminor = el.getAlarmState().getNewAlarmCount(twaver.AlarmSeverity.SECOND_IMPORTANT);
+                        _self.selectwarning = el.getAlarmState().getNewAlarmCount(twaver.AlarmSeverity.WARN);
+                        _self.selectnotice = el.getClient('alarmNotice');
+                    },
+                    initSelectLink: function (el) {
+                        var _self = this;
+                        _self.selectLinkStatus = el.getClient('linkStatus');
+                        _self.selectLinkLeftName = el.getClient('fromNode');
+                        _self.selectLinkRightName = el.getClient('toNode');
+                        _self.selectLinkLeftPort = el.getClient('fromPort');
+                        _self.selectLinkRightPort = el.getClient('toPort');
+                        // _self.selectLinkLeftRate=el.getName();
+                        // _self.selectLinkRightRate=el.getName2();
+                        _self.selectLinkLeftRate = "11.34Kbps";
+                        _self.selectLinkRightRate = "32.87Kbps";
                     },
                     setImageSrc: function (nodeType) {
                         var imgSrc = '';
@@ -249,7 +354,8 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                                     recordList.forEach(function (item) {
                                         var link = box._dataMap[item.uuid];
                                         if (link) {
-                                            if (link.linkStatus == "1") {
+                                            if (item.linkStatus == "1") {
+                                                link.setClient('linkStatus', item.linkStatus);
                                                 link.setName(item.formNodeRate);
                                                 link.setStyle('label.position', "from");
                                                 link.setStyle('label.xoffset', 80);
@@ -295,9 +401,10 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                                                     node.getAlarmState().setNewAlarmCount(twaver.AlarmSeverity.FIRST_IMPORTANT, record.alarm[1]);
                                                     node.getAlarmState().setNewAlarmCount(twaver.AlarmSeverity.SECOND_IMPORTANT, record.alarm[2]);
                                                     node.getAlarmState().setNewAlarmCount(twaver.AlarmSeverity.WARN, record.alarm[3]);
+                                                    node.setClient('alarmNotice', record.alarm[4]);
                                                     for (var k = 0; k < 4; k++) {
                                                         if (record.alarm[k] > 0) {
-                                                            _self.setTick(_self.paramObj,node, _self.alarmColor[k]);
+                                                            _self.setTick(_self.paramObj, node, _self.alarmColor[k]);
                                                             break;
                                                         }
                                                     }
@@ -319,10 +426,14 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                         link.setStyle('link.color', '#1db163');
                         link.setClient('uuid', uuid);
                         link.setClient('canvasId', _self.canvasId);
+                        link.setClient("fromNode", node1.getName());
+                        link.setClient("toNode", node2.getName());
                         link.setClient('fromNodeId', node1.getClient("uuid"));
                         link.setClient('toNodeId', node2.getClient("uuid"));
-                        link.setClient('fromPortId', port1);
-                        link.setClient('toPortId', port2);
+                        link.setClient('fromPortId', port1.uuid);
+                        link.setClient('toPortId', port2.uuid);
+                        link.setClient('fromPort', port1.port);
+                        link.setClient('toPort', port2.port);
                         _self.linkList.push(link);
                         _self.box.add(link);
 
@@ -335,7 +446,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                     },
 
                     //设置透明度来实现闪烁效果
-                    tickModel: function (paramObj,node, nodeSelectColor) {
+                    tickModel: function (paramObj, node, nodeSelectColor) {
                         if (paramObj.inCrease) {
                             paramObj.fillAlpha += 0.13;
                             if (paramObj.fillAlpha >= 0.9) {
@@ -359,10 +470,10 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                         node.setStyle('vector.fill.color', color);
                     },
 
-                    setTick: function (paramObj,node, nodeSelectColor) {
+                    setTick: function (paramObj, node, nodeSelectColor) {
                         var _self = this;
                         var nodeInterval = setInterval(function () {
-                            _self.tickModel(paramObj,node, nodeSelectColor);
+                            _self.tickModel(paramObj, node, nodeSelectColor);
                         }, 1200);
                         console.log(nodeInterval);
                         node.setClient("timeInterval", nodeInterval);
@@ -394,7 +505,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                         var b = rgb & 0xFF;
                         return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha.toFixed(3) + ')';
                     },
-                    saveTopo:function (event) {
+                    saveTopo: function (event) {
                         var _self = this;
                         var boxvalue = new twaver.JsonSerializer(_self.box).serialize();
                         var _self = this;
@@ -402,14 +513,14 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                             type: "POST",
                             // contentType: false,
                             // contentType: "application/json;charset=utf-8",
-                            data: {"topojson":boxvalue},
+                            data: {"topojson": boxvalue},
                             url: _self.path.saveTopo,
                             success: function (data) {
                                 if (data.msg === "SUCCESS") {
-                                    commonModule.prompt("prompt.saveSuccess",data.msg);
-                                }else {
+                                    commonModule.prompt("prompt.saveSuccess", data.msg);
+                                } else {
                                     //弹出框 新建失败
-                                    commonModule.prompt("prompt.saveError","alert");
+                                    commonModule.prompt("prompt.saveError", "alert");
                                 }
                             },
                             error: function () {

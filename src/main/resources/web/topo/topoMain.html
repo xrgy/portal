@@ -17,6 +17,29 @@
         <div class="btn btn-primary">
             <span data-i18n="topo.layout" v-on:click="clickLayout($event)"></span></div>
     </div>
+    <div id="tipNodeMsg" class="topotip hidden">
+        <div id="businessname" class="tip-node-name">
+            <label data-i18n="topo.baseinfo.name"></label>
+            <label>{{selectname}}</label>
+        </div>
+        <div id="healthscore" class="tip-node-others">
+            <label data-i18n="topo.baseinfo.health"></label>
+            <label>{{selectHealthscore}}</label>
+        </div>
+        <div id="busyscore" class="tip-node-others">
+            <label data-i18n="topo.baseinfo.busy"></label>
+            <label>{{selectBusyscore}}</label>
+        </div>
+        <div id="availablescore" class="tip-node-others">
+            <label data-i18n="topo.baseinfo.available"></label>
+            <label>{{selectAvailablescore}}</label>
+        </div>
+
+    </div>
+    <div id="tipLinkMsg" class="topotip topoLinktip hidden">
+        <div id="fromname" class="tip-node-name tip-link-others"><label data-i18n="topo.baseinfo.leftdevicename"></label><label>{{selectLinkLeftName}}</label></div>
+        <div id="toname" class="tip-link-others"><label data-i18n="topo.baseinfo.rightdevicename"></label><label>{{selectLinkRightName}}</label></div>
+    </div>
 </div>
 </body>
 </html>

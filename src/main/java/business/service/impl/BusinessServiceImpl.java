@@ -1,6 +1,7 @@
 package business.service.impl;
 
 import business.dao.BusinessDao;
+import business.entity.BusinessEntity;
 import business.entity.BusinessResourceEntity;
 import business.service.BusinessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -64,5 +65,10 @@ public class BusinessServiceImpl implements BusinessService {
         });
         boolean res = dao.insertBusinessResourceList(resourceList);
         return ResCommon.genSimpleResByBool(res);
+    }
+
+    @Override
+    public BusinessEntity getBusinessNode(String uuid) {
+        return dao.getBusinessNode(uuid);
     }
 }
