@@ -27,6 +27,11 @@ public class BusinessController {
     @Autowired
     private ObjectMapper mapper;
 
+    @RequestMapping("showBusinessList")
+    public String showBusinessList(){
+        return "business/businessList";
+    }
+
     @RequestMapping("/getBusinessList")
     @ResponseBody
     public ResultMsg getBusinessList() throws JsonProcessingException {
@@ -38,4 +43,6 @@ public class BusinessController {
     public ResultMsg addBusinessResource(String businessId,List<DelMonitorRecordView> view) throws JsonProcessingException {
         return service.addBusinessResource(businessId,view);
     }
+
+
 }

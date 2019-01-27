@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>业务列表</title>
+
+</head>
+<body>
+<div id="pjax-header">
+    <div th:replace="common::common"></div>
+</div>
+<div id="myBusiness">
+
+    <img class="breadDisplay" src="../image/breadline2.png"/>
+    <div class="wrapper " id="businessList">
+
+        <div v-for="(i,j) in businessList">
+            <div>
+                <label>{{i.name}}</label>
+            </div>
+            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+            <div>
+                <label data-i18n="business.list.health"></label>
+            </div>
+            <div>
+                <label>{{i.health_score}}</label>
+            </div>
+            </div>
+
+
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div>
+                <label data-i18n="business.list.busy"></label>
+            </div>
+            <div>
+                <label>{{i.busy_score}}</label>
+            </div>
+
+            <div>
+                <label data-i18n="business.list.available"></label>
+            </div>
+            <div>
+                <label>{{i.available_score}}</label>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="pull-left">
+        <ul class="pagination pagination-sm">
+            <li v-on:click="previous()" class="prev"><a href="#">&laquo;</a>
+            </li>
+            <div id="page" style="float:left;">
+                <select id="pageNum" onchange="search()"
+                        style="width:50PX;margin-right:1px;" aria-controls="DataTables_Table_0" size="1"
+                        name="DataTables_Table_0_length">
+                    <option selected="selected" value="1">1</option>
+                </select>
+            </div>
+            <li class="next" v-on:click="next()"><a href="#">&raquo;</a>
+            </li>
+        </ul>
+    </div>
+    <div class="dataTables_length" id="DataTables_Table_0_length">
+        <label>
+            每页
+            <select id="pageSize" onchange="research()"
+                    aria-controls="DataTables_Table_0" size="1" name="DataTables_Table_0_length">
+                <option selected="selected" value="15">15</option>
+                <option value="30">30</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+            条记录
+        </label>
+    </div>
+</div>
+</body>
+</html>

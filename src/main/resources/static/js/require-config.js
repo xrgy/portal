@@ -29,7 +29,9 @@ require.config({
         'addCas':'./monitor/add-cas',
         'addK8s':'./monitor/add-k8s',
         'topoMain':'./topo/topo-main',
-        'editTopo':'./topo/edit-topo'
+        'editTopo':'./topo/edit-topo',
+        'showBusiness':'./business/business-list'
+
     },
     shim:{
         'jquery-i18n':['jquery'],
