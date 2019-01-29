@@ -216,14 +216,15 @@ ul:not(.pagination) {
     list-style: none;
     padding:0;
 }
-li:not(.page-item) {
+li:not(.page-item):not(.prev):not(.next) {
     height: 50px;
     text-align: left;
     padding: 12px;
     cursor: pointer;
 }
-li:hover:not(.page-item),
-li.active:not(.page-item) {
+
+li:hover:not(.page-item):not(.prev):not(.next),
+li.active:not(.page-item):not(.prev):not(.next){
     border-left: 10px solid #ec670b;
     color: #ec670b;
     background: -webkit-linear-gradient(left, rgb(249, 203, 164), rgb(245, 237, 229));

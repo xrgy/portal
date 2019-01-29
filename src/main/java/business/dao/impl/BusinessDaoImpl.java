@@ -3,6 +3,7 @@ package business.dao.impl;
 import business.dao.BusinessDao;
 import business.entity.BusinessEntity;
 import business.entity.BusinessResourceEntity;
+import business.entity.PageBean;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
+import business.entity.PageData;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,6 +32,7 @@ public class BusinessDaoImpl implements BusinessDao {
     private static final String PATH_BUSINESS_LIST = "getBusinessList";
     private static final String PATH_ADD_BUSINESS_RESOURCE_LIST = "addBusinessResourceList";
     private static final String PATH_ADD_BUSINESS_RESOURCE_LIST_BY_MONITOR = "getBusinessResourceByMonitorUuid";
+    private static final String PATH_GET_BUSINESS_BY_PAGE = "getBusinessByPage";
     private static final String PATH_GET_BUSINESS_NODE = "getBusinessNode";
     private static final String HTTP = "http://";
 
@@ -84,6 +87,17 @@ public class BusinessDaoImpl implements BusinessDao {
         ResponseEntity<String> response = rest().getForEntity(businessPrefix() + PATH_GET_BUSINESS_NODE + "?uuid={1}", String.class, uuid);
         try {
             return objectMapper.readValue(response.getBody(), BusinessEntity.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public PageBean getBusinessListByPage(PageData page) throws JsonProcessingException {
+        String response = rest().postForObject(businessPrefix()+PATH_GET_BUSINESS_BY_PAGE,objectMapper.writeValueAsString(page),String.class);
+        try {
+            return objectMapper.readValue(response,PageBean.class);
         } catch (IOException e) {
             e.printStackTrace();
         }

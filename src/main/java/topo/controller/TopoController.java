@@ -39,10 +39,10 @@ public class TopoController {
         return "topo/editTopo";
     }
 
-    @RequestMapping("getAllWeaveTopoNode")
+    @RequestMapping("getAllWeaveTopoData")
     @ResponseBody
-    public ResultMsg getAllWeaveTopoNode() throws JsonProcessingException {
-        return service.getAllWeaveTopoNode();
+    public ResultMsg getAllWeaveTopoData(String relUuid) throws JsonProcessingException {
+        return service.getAllWeaveTopoData(relUuid);
     }
     @RequestMapping("getBusinessNode")
     @ResponseBody
@@ -52,8 +52,8 @@ public class TopoController {
 
     @RequestMapping("getAllWeaveTopoLink")
     @ResponseBody
-    public ResultMsg getAllWeaveTopoLink() throws JsonProcessingException {
-        return service.getAllWeaveTopoLink();
+    public ResultMsg getAllWeaveTopoLink(String relUuid) throws JsonProcessingException {
+        return service.getAllWeaveTopoLink(relUuid);
     }
 
 

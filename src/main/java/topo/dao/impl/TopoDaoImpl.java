@@ -29,6 +29,8 @@ public class TopoDaoImpl implements TopoDao {
     private static final String MONITOR_PREFIX = "topo";
     private static final String PATH_GET_WEAVE_NODES = "getAllWeaveTopoNode";
     private static final String PATH_GET_WEAVE_LINKS = "getAllWeaveTopoLink";
+    private static final String PATH_GET_BUSINESS_TOPO_NODE= "getBusinessNodeByUuid";
+    private static final String PATH_GET_CANVAS_BY_UUID= "getCanvasByUUid";
 
     private static final String PATH_GET_NET_TOPO_NODES = "getAllNetTopoNode";
     private static final String PATH_GET_NET_TOPO_LINKS = "getAllNetTopoLink";
@@ -62,11 +64,31 @@ public class TopoDaoImpl implements TopoDao {
     ObjectMapper objectMapper;
 
 
-
+    @Override
+    public TopoBusinessNodeEntity getBusinessTopoNodeByUuid(String uuid) {
+        ResponseEntity<String> response = rest().getForEntity(topoPrefix()+PATH_GET_BUSINESS_TOPO_NODE+"?uuid={1}",String.class,uuid);
+        try {
+            return objectMapper.readValue(response.getBody(),TopoBusinessNodeEntity.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @Override
-    public List<TopoBusinessNodeEntity> getAllWeaveTopoNode() {
-        ResponseEntity<String> response = rest().getForEntity(topoPrefix()+PATH_GET_WEAVE_NODES,String.class);
+    public TopoCanvasEntity getCanvasByUuid(String uuid) {
+        ResponseEntity<String> response = rest().getForEntity(topoPrefix()+PATH_GET_CANVAS_BY_UUID+"?uuid={1}",String.class,uuid);
+        try {
+            return objectMapper.readValue(response.getBody(),TopoCanvasEntity.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<TopoBusinessNodeEntity> getAllWeaveTopoNode(String canvasId) {
+        ResponseEntity<String> response = rest().getForEntity(topoPrefix()+PATH_GET_WEAVE_NODES+"?canvasId={1}",String.class,canvasId);
         try {
             return objectMapper.readValue(response.getBody(),new TypeReference<List<TopoBusinessNodeEntity>>(){});
         } catch (IOException e) {
@@ -76,8 +98,8 @@ public class TopoDaoImpl implements TopoDao {
     }
 
     @Override
-    public List<TopoBusinessLinkEntity> getAllWeaveTopoLink() {
-        ResponseEntity<String> response = rest().getForEntity(topoPrefix()+PATH_GET_WEAVE_LINKS,String.class);
+    public List<TopoBusinessLinkEntity> getAllWeaveTopoLink(String canvasId) {
+        ResponseEntity<String> response = rest().getForEntity(topoPrefix()+PATH_GET_WEAVE_LINKS+"?canvasId={1}",String.class,canvasId);
         try {
             return objectMapper.readValue(response.getBody(),new TypeReference<List<TopoBusinessLinkEntity>>(){});
         } catch (IOException e) {

@@ -9,9 +9,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.common.ResCommon;
 import monitor.common.ResultMsg;
 import monitor.entity.DelMonitorRecordView;
-import monitor.service.MonitorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import business.entity.PageData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,4 +71,10 @@ public class BusinessServiceImpl implements BusinessService {
     public BusinessEntity getBusinessNode(String uuid) {
         return dao.getBusinessNode(uuid);
     }
+
+    @Override
+    public ResultMsg getBusinessListByPage(PageData page) throws JsonProcessingException {
+        return ResCommon.getCommonResultMsg(dao.getBusinessListByPage(page));
+    }
+
 }

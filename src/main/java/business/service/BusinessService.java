@@ -5,6 +5,7 @@ import business.entity.BusinessEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import monitor.common.ResultMsg;
 import monitor.entity.DelMonitorRecordView;
+import business.entity.PageData;
 
 import java.util.List;
 
@@ -39,4 +40,7 @@ public interface BusinessService {
      * @return
      */
     BusinessEntity getBusinessNode(String uuid);
+
+
+    ResultMsg getBusinessListByPage(PageData page) throws JsonProcessingException;
 }

@@ -135,10 +135,116 @@
 
 #myBusiness {
     height: 100%;
-    background: #fafafa;
+    background: #fafafb;
 }
 #myBusiness .wrapper {
     display: grid;
-    grid-template-columns: 240px 240px 240px 240px 240px;
+    grid-template-columns: 246px 246px 246px 246px 246px;
     grid-template-rows: 150px;
+    padding: 10px;
+}
+#myBusiness #businessList  .singleBusiness{
+    background: #fff;
+    padding: 6px;
+    border: solid 1px #ddd;
+    margin: 5px;
+    height: 150px;
+}
+
+#myBusiness #businessList .businessTitle{
+    text-align: center;
+    background: #f1f1f1;
+}
+#myBusiness .mostBusy {
+    color: #c11212;
+}
+#myBusiness .normalBusy {
+    color: #f08640;
+}
+#myBusiness .notBusy {
+    color: #39ab6c;
+}
+#myBusiness #businessList .healthStyle{
+    text-align: center;
+    padding: 10px 0px;
+    margin: 0 6px;
+}
+#myBusiness #businessList .healthStyle label{
+    /*font-size: 20px;*/
+}
+#myBusiness #businessList .healthStyle #healthScore{
+    padding-top: 10px;
+}
+#myBusiness #businessList .healthStyle #healthScore label{
+    font-size: 18px;
+}
+#myBusiness #businessList .middleline{
+    display: inline-block;
+    /*float: left;*/
+    border: #eae9e9 solid 0.1px;
+    height: 70%;
+    margin: 8px 0 8px -60px;
+}
+#myBusiness #businessList .rightDiv{
+    padding: 8px;
+    margin-left: 6px;
+    text-align: center;
+}
+#myBusiness #businessList .rightDiv .rightValue{
+   margin-top: -2px;
+}
+#myBusiness #businessList .rightDiv .rightBottom{
+    margin-top: 4px;
+}
+#myBusiness #businessList .operBusiness{
+    /* margin-top: -110px; */
+    position: relative;
+    background: #fff;
+    height: 86%;
+    width: 105%;
+    /* margin-left: -5px; */
+    border: solid 1px #ddd;
+    opacity: 0.9;
+    top: -116px;
+    left: -5px;
+}
+#myBusiness #businessList .heartBeat{
+    font-size: 70px;
+}
+/*#myBusiness #businessList .singleBusiness:nth-child(-n+5) .operBusiness{*/
+    /*top:-110px;*/
+/*}*/
+
+/*#myBusiness #businessList .singleBusiness:nth-child(1) .operBusiness,*/
+/*#myBusiness #businessList .singleBusiness:nth-child(2) .operBusiness,*/
+/*#myBusiness #businessList .singleBusiness:nth-child(3) .operBusiness,*/
+/*#myBusiness #businessList .singleBusiness:nth-child(4) .operBusiness,*/
+/*#myBusiness #businessList .singleBusiness:nth-child(5) .operBusiness{*/
+    /*top:-110px*/
+/*}*/
+
+#myBusiness #businessList #seeTopo,
+#myBusiness #businessList #editBus{
+    display: inline-block;
+    width: 30px;
+    text-align: center;
+    padding: 10px 0;
+    margin: 10px 0 0 80px;
+    cursor: pointer;
+}
+#myBusiness #businessList #editBus{
+    margin-left: 2px;
+}
+#myBusiness .prev a,
+#myBusiness .next a{
+    float: none;
+}
+#myBusiness #page{
+    display: inline-block;
+}
+#myBusiness #chosePageSize{
+    width: 150px;
+    float: right;
+    margin-top: 24px;
+    padding: 0 10px;
 }

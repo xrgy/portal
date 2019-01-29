@@ -14,13 +14,13 @@ public interface TopoService {
      * 获取weave节点
      * @return
      */
-    public ResultMsg getAllWeaveTopoNode();
+    public ResultMsg getAllWeaveTopoData(String relUuid);
 
     /**
      * 获取weave链路
      * @return
      */
-    public ResultMsg getAllWeaveTopoLink();
+    public ResultMsg getAllWeaveTopoLink(String relUuid);
 
     /**
      * 获取网络拓扑的所有节点

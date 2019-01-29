@@ -12,9 +12,13 @@ import java.util.List;
 public interface TopoDao {
 
 
-    List<TopoBusinessNodeEntity> getAllWeaveTopoNode();
+    TopoBusinessNodeEntity getBusinessTopoNodeByUuid(String uuid);
 
-    List<TopoBusinessLinkEntity> getAllWeaveTopoLink();
+    TopoCanvasEntity getCanvasByUuid(String uuid);
+
+    List<TopoBusinessNodeEntity> getAllWeaveTopoNode(String canvasId);
+
+    List<TopoBusinessLinkEntity> getAllWeaveTopoLink(String canvasId);
 
     List<TopoNodeEntity> getTopoNodeByCanvasId(String canvasId);
 

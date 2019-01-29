@@ -11,68 +11,81 @@
 </div>
 <div id="myBusiness">
 
+    <!--<img class="breadDisplay" src="../image/业务列表.png"/>-->
     <img class="breadDisplay" src="../image/breadline2.png"/>
+
     <div class="wrapper " id="businessList">
 
-        <div v-for="(i,j) in businessList">
-            <div>
+        <div v-for="(i,j) in businessList" class="singleBusiness" v-on:mouseover="selectStyle($event,j) "
+             v-on:mouseout="outStyle($event,j)">
+            <div class="businessTitle">
                 <label>{{i.name}}</label>
             </div>
-            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-            <div>
-                <label data-i18n="business.list.health"></label>
+            <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 heartBeat">
+                <i class="fa fa-heartbeat" aria-hidden="true"></i>
             </div>
-            <div>
-                <label>{{i.health_score}}</label>
-            </div>
-            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 healthStyle">
 
+                <div>
+                    <label data-i18n="business.list.health"></label>
+                </div>
+                <div id="healthScore">
+                    <label>{{i.health_score}}</label>
+                </div>
+            </div>
+            <div class="middleline"></div>
 
-        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-            <div>
-                <label data-i18n="business.list.busy"></label>
-            </div>
-            <div>
-                <label>{{i.busy_score}}</label>
-            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 rightDiv">
+                <div class="busyStyle">
+                    <label data-i18n="business.list.busy"></label>
+                </div>
+                <div class="rightValue busyStyle">
+                    <label>{{i.busy_score}}</label>
+                </div>
 
-            <div>
-                <label data-i18n="business.list.available"></label>
+                <div class="rightBottom availableStyle">
+                    <label data-i18n="business.list.available"></label>
+                </div>
+                <div class="rightValue availableStyle">
+                    <label>{{i.available_score}}</label>
+                </div>
             </div>
-            <div>
-                <label>{{i.available_score}}</label>
+            <div class="operBusiness" v-show="i.hoverEnable">
+                <div id="seeTopo"> <i class="fa fa-eye" aria-hidden="true" v-on:click="seeRelevantTopo($event,i.uuid)"></i>
+                <label data-i18n="business.list.showTopo"></label></div>
+                <div id="editBus"> <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                <label data-i18n="business.list.etitBus"></label></div>
             </div>
-        </div>
         </div>
     </div>
-    <div class="pull-left">
+    <div class="pull-right">
+        <div id="chosePageSize">
+            <label>
+                每页
+                <select id="pageSize" v-on:change="research()" v-model="pageSize"
+                        aria-controls="DataTables_Table_0" size="1" name="DataTables_Table_0_length">
+                    <option selected="selected" value="15">15</option>
+                    <option value="30">30</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                条记录
+            </label>
+        </div>
         <ul class="pagination pagination-sm">
             <li v-on:click="previous()" class="prev"><a href="#">&laquo;</a>
             </li>
-            <div id="page" style="float:left;">
-                <select id="pageNum" onchange="search()"
-                        style="width:50PX;margin-right:1px;" aria-controls="DataTables_Table_0" size="1"
-                        name="DataTables_Table_0_length">
-                    <option selected="selected" value="1">1</option>
+            <div id="page">
+                <select class="input-sm"  name="monitortemplate" id="pageNum"
+                        v-model="pageNum" v-on:change="search()">
+                    <option v-for="page in pageNumList" :value="page">{{page}}</option>
                 </select>
             </div>
             <li class="next" v-on:click="next()"><a href="#">&raquo;</a>
             </li>
         </ul>
     </div>
-    <div class="dataTables_length" id="DataTables_Table_0_length">
-        <label>
-            每页
-            <select id="pageSize" onchange="research()"
-                    aria-controls="DataTables_Table_0" size="1" name="DataTables_Table_0_length">
-                <option selected="selected" value="15">15</option>
-                <option value="30">30</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-            </select>
-            条记录
-        </label>
-    </div>
+
 </div>
 </body>
 </html>

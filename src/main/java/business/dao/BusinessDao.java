@@ -3,7 +3,9 @@ package business.dao;
 
 import business.entity.BusinessEntity;
 import business.entity.BusinessResourceEntity;
+import business.entity.PageBean;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import business.entity.PageData;
 
 import java.util.List;
 
@@ -31,4 +33,11 @@ public interface BusinessDao {
      * @return
      */
     BusinessEntity getBusinessNode(String uuid);
+
+    /**
+     * 分页获取业务列表
+     * @param page
+     * @return
+     */
+    PageBean getBusinessListByPage(PageData page) throws JsonProcessingException;
 }

@@ -15,8 +15,8 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                     linkList: [],
                     springLayout:null,
                     path: {
-                        getWeaveNode: "/topo/getAllWeaveTopoNode",
-                        getWeaveLink: "/topo/getAllWeaveTopoLink",
+                        getWeaveDta: "/topo/getAllWeaveTopoData",
+                        // getWeaveLink: "/topo/getAllWeaveTopoLink",
                         getBusinessNode: "/topo/getBusinessNode",
 
                     },
@@ -26,9 +26,12 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                     selectAvailablescore:"",
                     selectLinkLeftName:"",
                     selectLinkRightName:"",
+                    busUuid:"",
+                    canvasId:"",
 
                 },
                 mounted: function () {
+                    this.busUuid = sessionStorage.getItem('relevatBusinessUuid');
                     this.initBox();
                     this.initDataBox();
                     this.initListener();
@@ -73,55 +76,81 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                     getData:function () {
                         var _self = this;
                         $.ajax({
-                            // data: {"lightType": _self.lightType, "monitorMode": _self.monitorMode},
-                            url: _self.path.getWeaveNode,
+                            data: {"relUuid": _self.busUuid},
+                            url: _self.path.getWeaveDta,
                             success: function (data) {
                                 if (data.msg === "SUCCESS") {
-                                    var node = data.data;
-                                    for(var index in node) {
-                                        _self.createNode(node[index]);
-                                    };
-
-                                    _self.getLink();
-
-                                }
-                            },
-                            error: function () {
-
-                            }
-                        })
-                    },
-                    getLink:function () {
-                        var _self = this;
-                        $.ajax({
-                            // data: {"lightType": _self.lightType, "monitorMode": _self.monitorMode},
-                            url: _self.path.getWeaveLink,
-                            success: function (data) {
-                                if (data.msg === "SUCCESS") {
-                                    var link = data.data;
-                                    for(var i in link) {
-                                        var fromNodeId = link[i].fromNodeId,
-                                            toNodeId = link[i].toNodeId,
-                                            uuid = link[i].uuid;
-                                        var node1=null,node2=null;
-                                        for (var j in _self.nodeList){
-                                            if (_self.nodeList[j].getId() === fromNodeId){
-                                                node1 = _self.nodeList[j];
-                                            }
-                                            if (_self.nodeList[j].getId() === toNodeId){
-                                                node2 = _self.nodeList[j];
-                                            }
+                                    var data = data.data;
+                                    var canvas = data.canvas;
+                                    if (canvas) {
+                                        _self.canvasId = canvas.uuid;
+                                        _self.box.setClient("uuid", _self.canvasId);
+                                    }
+                                    var nodelist = data.nodes;
+                                    if (nodelist) {
+                                        for (var index in nodelist) {
+                                            _self.createNode(nodelist[index]);
                                         }
-                                        if(node1 && node2){
-                                            _self.createLink(uuid,node1,node2);
+                                    }
+
+                                    var linklist = data.links;
+                                    if (linklist) {
+                                        for(var i in linklist) {
+                                            var fromNodeId = linklist[i].fromNodeId,
+                                                toNodeId = linklist[i].toNodeId,
+                                                uuid = linklist[i].uuid;
+                                            var node1=null,node2=null;
+                                            for (var j in _self.nodeList){
+                                                if (_self.nodeList[j].getId() === fromNodeId){
+                                                    node1 = _self.nodeList[j];
+                                                }
+                                                if (_self.nodeList[j].getId() === toNodeId){
+                                                    node2 = _self.nodeList[j];
+                                                }
+                                            }
+                                            if(node1 && node2){
+                                                _self.createLink(uuid,node1,node2);
+                                            }
                                         }
                                     }
                                 }
                             },
                             error: function () {
+
                             }
                         })
                     },
+                    // getLink:function () {
+                    //     var _self = this;
+                    //     $.ajax({
+                    //         data: {"relUuid": _self.busUuid},
+                    //         url: _self.path.getWeaveLink,
+                    //         success: function (data) {
+                    //             if (data.msg === "SUCCESS") {
+                    //                 var link = data.data;
+                    //                 for(var i in link) {
+                    //                     var fromNodeId = link[i].fromNodeId,
+                    //                         toNodeId = link[i].toNodeId,
+                    //                         uuid = link[i].uuid;
+                    //                     var node1=null,node2=null;
+                    //                     for (var j in _self.nodeList){
+                    //                         if (_self.nodeList[j].getId() === fromNodeId){
+                    //                             node1 = _self.nodeList[j];
+                    //                         }
+                    //                         if (_self.nodeList[j].getId() === toNodeId){
+                    //                             node2 = _self.nodeList[j];
+                    //                         }
+                    //                     }
+                    //                     if(node1 && node2){
+                    //                         _self.createLink(uuid,node1,node2);
+                    //                     }
+                    //                 }
+                    //             }
+                    //         },
+                    //         error: function () {
+                    //         }
+                    //     })
+                    // },
                     createNode: function (mynode) {
                         var _self = this;
                         var node = new twaver.Node(mynode.uuid);

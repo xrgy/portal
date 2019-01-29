@@ -60,14 +60,26 @@ public class TopoServiceImpl implements TopoService {
     }
 
     @Override
-    public ResultMsg getAllWeaveTopoNode() {
-        List<TopoBusinessNodeEntity> nodes = dao.getAllWeaveTopoNode();
-        return getCommonResultMsg(nodes);
+    public ResultMsg getAllWeaveTopoData(String relUuid) {
+
+        BusinessTopoData topoData = new BusinessTopoData();
+        TopoBusinessNodeEntity businessNode = dao.getBusinessTopoNodeByUuid(relUuid);
+        if (null!=businessNode){
+            TopoCanvasEntity canvas = dao.getCanvasByUuid(businessNode.getCanvasId());
+            topoData.setCanvas(canvas);
+            List<TopoBusinessNodeEntity> nodes = dao.getAllWeaveTopoNode(canvas.getUuid());
+            topoData.setNodes(nodes);
+            List<TopoBusinessLinkEntity> links = dao.getAllWeaveTopoLink(canvas.getUuid());
+            topoData.setLinks(links);
+        }
+
+
+        return getCommonResultMsg(topoData);
     }
 
     @Override
-    public ResultMsg getAllWeaveTopoLink() {
-        List<TopoBusinessLinkEntity> nodes = dao.getAllWeaveTopoLink();
+    public ResultMsg getAllWeaveTopoLink(String relUuid) {
+        List<TopoBusinessLinkEntity> nodes = dao.getAllWeaveTopoLink(relUuid);
         return getCommonResultMsg(nodes);
     }
 

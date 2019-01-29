@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import business.entity.PageData;
 
 import java.util.List;
 
@@ -38,11 +39,21 @@ public class BusinessController {
         return service.getBusinessList();
     }
 
+    @RequestMapping("/getBusinessListByPage")
+    @ResponseBody
+    public ResultMsg getBusinessListByPage(PageData page) throws JsonProcessingException {
+        return service.getBusinessListByPage(page);
+    }
+
     @RequestMapping("/addBusinessResource")
     @ResponseBody
     public ResultMsg addBusinessResource(String businessId,List<DelMonitorRecordView> view) throws JsonProcessingException {
         return service.addBusinessResource(businessId,view);
     }
 
+//    @RequestMapping("/getRelevatTopo")
+//    @ResponseBody
+//    public ResultMsg getRelevatTopo(String uuid) throws JsonProcessingException {
+//        return service.getRelevatTopo(uuid);
 
 }
