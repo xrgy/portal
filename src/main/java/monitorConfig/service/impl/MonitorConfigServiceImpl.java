@@ -163,10 +163,10 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
     }
 
     @Override
-    public RuleMonitorEntity updateMonitorRecordAlertRule(String uuid, String templateId) {
+    public RuleMonitorEntity updateMonitorRecordAlertRule(String uuid, String templateId,String oldTemplateId) {
         //删除
         //delAlertRuleByUuid 需要uuid是monitoruuid+templateuuid 去除'-'
-        String tempuuid = (uuid+templateId).replaceAll("-", "");
+        String tempuuid = (uuid+oldTemplateId).replaceAll("-", "");
         boolean res = dao.delAlertRuleByUuid(tempuuid);
         if (res){
             return addMonitorRecordAlertRule(uuid,templateId);

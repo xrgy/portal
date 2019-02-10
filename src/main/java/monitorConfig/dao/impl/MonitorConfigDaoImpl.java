@@ -217,7 +217,7 @@ public class MonitorConfigDaoImpl implements MonitorConfigDao {
     public boolean updateTemplate(UpTemplateView view) {
         boolean t = false;
         try {
-            t = rest().postForObject(monitorConfigPrefix() + PATH_UPDATE_TEMPLATE, objectMapper.writeValueAsString(view), boolean.class);
+             rest().put(monitorConfigPrefix() + PATH_UPDATE_TEMPLATE+"/{1}", objectMapper.writeValueAsString(view), boolean.class,view.getUuid());
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

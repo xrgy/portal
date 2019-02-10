@@ -433,7 +433,6 @@ public class MonitorServiceImpl implements MonitorService {
     @Override
     public ResultMsg addContainerMonitorRecord(OperationMonitorView view) throws IOException {
         ResultMsg msg = new ResultMsg();
-        List<String> containerIds = genk8sconObject(view.getContainerIds());
         K8sMonitorEntity k8sMonitorEntity = setK8sMonitorFiled(view);
         String k8suuid = k8sMonitorEntity.getUuid();
         boolean insertK8s = dao.insertMonitorRecord(k8sMonitorEntity, view.getLightType());
@@ -476,6 +475,7 @@ public class MonitorServiceImpl implements MonitorService {
                 break;
             case MONITOR_3:
                 //监控k8s和指定容器
+                List<String> containerIds = genk8sconObject(view.getContainerIds());
                 containerIds.forEach(cId -> {
                     Optional<Container> optCon = myContainerList.stream().filter(x -> (!x.isBeenAdd()) && x.getContainerId().equals(cId)).findFirst();
                     optCon.ifPresent(container -> addContainer(view, container, nodeMap));
@@ -711,9 +711,9 @@ public class MonitorServiceImpl implements MonitorService {
         NetworkMonitorEntity oldEntity = objectMapper.readValue(dao.getMonitorRecordByUuid(view.getUuid(), MonitorEnum.LightTypeEnum.FIREWALL.value()), NetworkMonitorEntity.class);
         NetworkMonitorEntity entity = updateNetworkCommonField(view, oldEntity);
         boolean flag = dao.insertMonitorRecord(entity, entity.getLightType());
-        if (flag) {
+        if (flag && !oldEntity.getTemplateId().equals(entity.getTemplateId()))  {
             //更新告警模板
-            RuleMonitorEntity updateAlertRule = configService.updateMonitorRecordAlertRule(entity.getUuid(), entity.getTemplateId());
+            RuleMonitorEntity updateAlertRule = configService.updateMonitorRecordAlertRule(entity.getUuid(), entity.getTemplateId(),oldEntity.getTemplateId());
             if (null != updateAlertRule) {
                 configService.addAlertTemplateToEtcd(entity.getLightType(), entity.getTemplateId(), updateAlertRule);
             }
@@ -726,9 +726,9 @@ public class MonitorServiceImpl implements MonitorService {
         TomcatMonitorEntity oldEntity = objectMapper.readValue(dao.getMonitorRecordByUuid(view.getUuid(), MonitorEnum.LightTypeEnum.TOMCAT.value()), TomcatMonitorEntity.class);
         TomcatMonitorEntity entity = updateMiddleCommonField(view, oldEntity);
         boolean flag = dao.insertMonitorRecord(entity, MonitorEnum.LightTypeEnum.TOMCAT.value());
-        if (flag) {
+        if (flag  && !oldEntity.getTemplateId().equals(entity.getTemplateId())) {
             //更新告警模板
-            RuleMonitorEntity updateAlertRule = configService.updateMonitorRecordAlertRule(entity.getUuid(), entity.getTemplateId());
+            RuleMonitorEntity updateAlertRule = configService.updateMonitorRecordAlertRule(entity.getUuid(), entity.getTemplateId(),oldEntity.getTemplateId());
             if (null != updateAlertRule) {
                 configService.addAlertTemplateToEtcd(MonitorEnum.LightTypeEnum.TOMCAT.value(), entity.getTemplateId(), updateAlertRule);
             }
@@ -761,9 +761,9 @@ public class MonitorServiceImpl implements MonitorService {
         DBMonitorEntity oldEntity = objectMapper.readValue(dao.getMonitorRecordByUuid(view.getUuid(), MonitorEnum.LightTypeEnum.MYSQL.value()), DBMonitorEntity.class);
         DBMonitorEntity entity = updateDbCommonField(view, oldEntity);
         boolean flag = dao.insertMonitorRecord(entity, MonitorEnum.LightTypeEnum.MYSQL.value());
-        if (flag) {
+        if (flag  && !oldEntity.getTemplateId().equals(entity.getTemplateId())) {
             //更新告警模板
-            RuleMonitorEntity updateAlertRule = configService.updateMonitorRecordAlertRule(entity.getUuid(), entity.getTemplateId());
+            RuleMonitorEntity updateAlertRule = configService.updateMonitorRecordAlertRule(entity.getUuid(), entity.getTemplateId(),oldEntity.getTemplateId());
             if (null != updateAlertRule) {
                 configService.addAlertTemplateToEtcd(MonitorEnum.LightTypeEnum.MYSQL.value(), entity.getTemplateId(), updateAlertRule);
             }
@@ -795,9 +795,9 @@ public class MonitorServiceImpl implements MonitorService {
         CasMonitorEntity oldEntity = objectMapper.readValue(dao.getMonitorRecordByUuid(view.getUuid(), MonitorEnum.LightTypeEnum.CAS.value()), CasMonitorEntity.class);
         CasMonitorEntity operationMonitorEntity = updateCasCommonField(view, oldEntity);
         boolean updateCas = dao.insertMonitorRecord(operationMonitorEntity, MonitorEnum.LightTypeEnum.CAS.value());
-        if (updateCas) {
+        if (updateCas  && !oldEntity.getTemplateId().equals(operationMonitorEntity.getTemplateId())) {
             //更新告警模板
-            RuleMonitorEntity updateAlertRule = configService.updateMonitorRecordAlertRule(operationMonitorEntity.getUuid(), operationMonitorEntity.getTemplateId());
+            RuleMonitorEntity updateAlertRule = configService.updateMonitorRecordAlertRule(operationMonitorEntity.getUuid(), operationMonitorEntity.getTemplateId(),oldEntity.getTemplateId());
             if (null != updateAlertRule) {
                 configService.addAlertTemplateToEtcd(MonitorEnum.LightTypeEnum.CAS.value(), operationMonitorEntity.getTemplateId(), updateAlertRule);
             }
@@ -843,6 +843,16 @@ public class MonitorServiceImpl implements MonitorService {
 //                }
 //            });
             //更新cvk vm
+            List<CvkAndVmView> cvkVmMonitorList = dao.getAllCvkAndVmByCasuuid(view.getUuid());
+            List<String> cvkMonitroList = new ArrayList<>();
+            List<String> vmMonitorList = new ArrayList<>();
+            cvkVmMonitorList.forEach(x->{
+                cvkMonitroList.add(x.getHostMonitor().getUuid());
+                x.getVmMonitorList().forEach(y->{
+                    vmMonitorList.add(y.getUuid());
+                });
+            });
+
             List<Host> hostList = dao.getCvkAndVmListByExporter(casTransExporterModel);
             switch (view.getRadioType()) {
                 case MONITOR_1:
@@ -850,6 +860,8 @@ public class MonitorServiceImpl implements MonitorService {
                     hostList.forEach(host -> {
                         //如果有集群，则parentId为集群Id，否则为casUuid
                         if (host.isBeenAdd()) {
+                            int index = cvkMonitroList.indexOf(host.getUuid());
+                            cvkMonitroList.remove(index);
                             //修改cvk
                             HostMonitorEntity oldHost = null;
                             try {
@@ -873,6 +885,8 @@ public class MonitorServiceImpl implements MonitorService {
                         String reHostId = "";
                         //如果有集群，则parentId为集群Id，否则为casUuid
                         if (host.isBeenAdd()) {
+                            int index = cvkMonitroList.indexOf(host.getUuid());
+                            cvkMonitroList.remove(index);
                             //修改cvk
                             HostMonitorEntity oldHost = null;
                             try {
@@ -890,6 +904,8 @@ public class MonitorServiceImpl implements MonitorService {
                             String finalInserthostt = reHostId;
                             host.getVirtualMachineList().forEach(vm -> {
                                 if (vm.isBeenAdd()) {
+                                    int index = vmMonitorList.indexOf(vm.getUuid());
+                                    vmMonitorList.remove(index);
                                     //修改vm
                                     VmMonitorEntity oldVm = null;
                                     try {
@@ -912,7 +928,8 @@ public class MonitorServiceImpl implements MonitorService {
                         if (optHost.isPresent()) {
                             String reHostId3 = "";
                             if (optHost.get().isBeenAdd()) {
-                                //修改cvk
+                                int index = cvkMonitroList.indexOf(optHost.get().getUuid());
+                                cvkMonitroList.remove(index);
                                 //修改cvk
                                 HostMonitorEntity oldHost = null;
                                 try {
@@ -935,6 +952,8 @@ public class MonitorServiceImpl implements MonitorService {
 
                                 virtualMachines.forEach(vm -> {
                                     if (vm.isBeenAdd()) {
+                                        int index = vmMonitorList.indexOf(vm.getUuid());
+                                        vmMonitorList.remove(index);
                                         //修改vm
                                         VmMonitorEntity oldVm = null;
                                         try {
@@ -952,7 +971,28 @@ public class MonitorServiceImpl implements MonitorService {
                     });
                     break;
             }
+            List<DelMonitorRecordView> delNodeMonitorRecordViews = new ArrayList<>();
+            if (cvkMonitroList.size()>0){
+                cvkMonitroList.forEach(x->{
+                    DelMonitorRecordView del = new DelMonitorRecordView();
+                    del.setUuid(x);
+                    del.setLightType(MonitorEnum.LightTypeEnum.CVK.value());
+                    delNodeMonitorRecordViews.add(del);
+                });
+
+            }
+            if (vmMonitorList.size()>0){
+                vmMonitorList.forEach(x->{
+                    DelMonitorRecordView del = new DelMonitorRecordView();
+                    del.setUuid(x);
+                    del.setLightType(MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value());
+                    delNodeMonitorRecordViews.add(del);
+                });
+
+            }
+            delNetworkMonitorRecord(delNodeMonitorRecordViews);
         }
+
         msg.setCode(HttpStatus.OK.value());
         msg.setMsg(CommonEnum.MSG_SUCCESS.value());
         return msg;
@@ -981,9 +1021,9 @@ public class MonitorServiceImpl implements MonitorService {
             vmMonitor = updateVmMonitorField(vm, view, oldVm);
             vmMonitor.setCvkUuid(cvkUuid);
             boolean updateVm = dao.insertMonitorRecord(vmMonitor, MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value());
-            if (updateVm) {
+            if (updateVm  && !oldVm.getTemplateId().equals(vmMonitor.getTemplateId())) {
                 //更新告警模板
-                RuleMonitorEntity updateVmAlertRule = configService.updateMonitorRecordAlertRule(vmMonitor.getUuid(), vmMonitor.getTemplateId());
+                RuleMonitorEntity updateVmAlertRule = configService.updateMonitorRecordAlertRule(vmMonitor.getUuid(), vmMonitor.getTemplateId(),oldVm.getTemplateId());
                 if (null != updateVmAlertRule) {
                     configService.addAlertTemplateToEtcd(MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value(), vmMonitor.getTemplateId(), updateVmAlertRule);
                 }
@@ -1011,9 +1051,9 @@ public class MonitorServiceImpl implements MonitorService {
             HostMonitorEntity hostMonitor = updateCvkMonitorFiled(host, view, oldHost);
             hostMonitor.setCasUuid(casuuid);
             boolean updateCvkres = dao.insertMonitorRecord(hostMonitor, MonitorEnum.LightTypeEnum.CVK.value());
-            if (updateCvkres) {
+            if (updateCvkres  && !oldHost.getTemplateId().equals(hostMonitor.getTemplateId())) {
                 //更新告警模板
-                RuleMonitorEntity updateCvkAlertRule = configService.updateMonitorRecordAlertRule(hostMonitor.getUuid(), hostMonitor.getTemplateId());
+                RuleMonitorEntity updateCvkAlertRule = configService.updateMonitorRecordAlertRule(hostMonitor.getUuid(), hostMonitor.getTemplateId(),oldHost.getTemplateId());
                 if (null != updateCvkAlertRule) {
                     configService.addAlertTemplateToEtcd(MonitorEnum.LightTypeEnum.CVK.value(), hostMonitor.getTemplateId(), updateCvkAlertRule);
                     return hostMonitor.getUuid();
@@ -1046,8 +1086,8 @@ public class MonitorServiceImpl implements MonitorService {
         K8sMonitorEntity oldK8s = objectMapper.readValue(dao.getMonitorRecordByUuid(view.getUuid(), MonitorEnum.LightTypeEnum.K8S.value()), K8sMonitorEntity.class);
         K8sMonitorEntity operationMonitorEntity = updateK8sCommonField(view, oldK8s);
         boolean updateK8s = dao.insertMonitorRecord(operationMonitorEntity, MonitorEnum.LightTypeEnum.K8S.value());
-        if (updateK8s) {
-            RuleMonitorEntity updateAlertRule = configService.updateMonitorRecordAlertRule(operationMonitorEntity.getUuid(), operationMonitorEntity.getTemplateId());
+        if (updateK8s  && !oldK8s.getTemplateId().equals(operationMonitorEntity.getTemplateId())) {
+            RuleMonitorEntity updateAlertRule = configService.updateMonitorRecordAlertRule(operationMonitorEntity.getUuid(), operationMonitorEntity.getTemplateId(),oldK8s.getTemplateId());
             if (null != updateAlertRule) {
                 configService.addAlertTemplateToEtcd(MonitorEnum.LightTypeEnum.K8S.value(), operationMonitorEntity.getTemplateId(), updateAlertRule);
             }
@@ -1055,19 +1095,34 @@ public class MonitorServiceImpl implements MonitorService {
         List<Node> allNode = dao.getNodeListByExporter(view.getIp(), view.getApiPort());
         //node默认添加全部的
         Map<String, String> nodeMap = new HashMap<>();
+        List<K8sNodeAndContainerView> k8sNodeAndContainerViewList = dao.getAllNodeAndContainerByK8suuid(view.getUuid());
+        List<String> nodeMonitorList = new ArrayList<>();
+        List<String> containerMonitorList = new ArrayList<>();
+        if (k8sNodeAndContainerViewList.size()>0){
+            k8sNodeAndContainerViewList.forEach(x->{
+                nodeMonitorList.add(x.getK8snode().getUuid());
+                if (null!=x.getK8sContainerList() && x.getK8sContainerList().size()>0){
+                    x.getK8sContainerList().forEach(y->{
+                        containerMonitorList.add(y.getUuid());
+                    });
+                }
+            });
+        }
 
         allNode.forEach(node -> {
             if (node.isBeenAdd()) {
                 //修改 node
+                int index = nodeMonitorList.indexOf(node.getUuid());
+                nodeMonitorList.remove(index);
                 try {
                     K8snodeMonitorEntity oldK8sNode = objectMapper.readValue(dao.getMonitorRecordByUuid(node.getUuid(), MonitorEnum.LightTypeEnum.K8SNODE.value()), K8snodeMonitorEntity.class);
                     K8snodeMonitorEntity k8snNode = updateNodeMonitorField(view, node, oldK8sNode);
                     k8snNode.setK8sUuid(operationMonitorEntity.getUuid());
                     boolean updateK8sn = dao.insertMonitorRecord(k8snNode, MonitorEnum.LightTypeEnum.K8SNODE.value());
                     nodeMap.put(node.getNodeIp(), k8snNode.getUuid());
-                    if (updateK8sn) {
+                    if (updateK8sn  && !oldK8sNode.getTemplateId().equals(k8snNode.getTemplateId())) {
                         //更新告警模板
-                        RuleMonitorEntity updateClusterAlertRule = configService.updateMonitorRecordAlertRule(k8snNode.getUuid(), k8snNode.getTemplateId());
+                        RuleMonitorEntity updateClusterAlertRule = configService.updateMonitorRecordAlertRule(k8snNode.getUuid(), k8snNode.getTemplateId(),oldK8sNode.getTemplateId());
                         if (null != updateClusterAlertRule) {
                             configService.addAlertTemplateToEtcd(MonitorEnum.LightTypeEnum.K8SNODE.value(), k8snNode.getTemplateId(), updateClusterAlertRule);
                         }
@@ -1080,12 +1135,27 @@ public class MonitorServiceImpl implements MonitorService {
                 addK8sNode(view, node, operationMonitorEntity.getUuid(), nodeMap);
             }
         });
+        List<DelMonitorRecordView> delNodeMonitorRecordViews = new ArrayList<>();
+        if (nodeMonitorList.size()>0){
+            nodeMonitorList.forEach(x->{
+                DelMonitorRecordView del = new DelMonitorRecordView();
+                del.setUuid(x);
+                del.setLightType(MonitorEnum.LightTypeEnum.K8SNODE.value());
+                delNodeMonitorRecordViews.add(del);
+            });
+
+        }
+        delNetworkMonitorRecord(delNodeMonitorRecordViews);
+
         List<Container> myContainerList = new ArrayList<>();
         allNode.forEach(node -> {
             node.getPods().forEach(pod -> {
                 myContainerList.addAll(pod.getContainers());
             });
+
         });
+
+
         //添加容器
         switch (view.getRadioType()) {
             case MONITOR_1:
@@ -1095,6 +1165,8 @@ public class MonitorServiceImpl implements MonitorService {
                 //监控k8s和所有容器
                 myContainerList.forEach(container -> {
                     if (container.isBeenAdd()) {
+                        int index = containerMonitorList.indexOf(container.getUuid());
+                        containerMonitorList.remove(index);
                         //修改container
                         K8scontainerMonitorEntity oldContainer = null;
                         try {
@@ -1116,6 +1188,8 @@ public class MonitorServiceImpl implements MonitorService {
                     Optional<Container> optCon = myContainerList.stream().filter(x -> x.getContainerId().equals(cId)).findFirst();
                     if (optCon.isPresent()) {
                         if (optCon.get().isBeenAdd()) {
+                            int index = containerMonitorList.indexOf(optCon.get().getUuid());
+                            containerMonitorList.remove(index);
                             //修改container
                             K8scontainerMonitorEntity oldContainer = null;
                             try {
@@ -1132,6 +1206,16 @@ public class MonitorServiceImpl implements MonitorService {
                 });
                 break;
         }
+        List<DelMonitorRecordView> delMonitorRecordViews = new ArrayList<>();
+        if (containerMonitorList.size()>0){
+            containerMonitorList.forEach(x->{
+                DelMonitorRecordView del = new DelMonitorRecordView();
+                del.setUuid(x);
+                del.setLightType(MonitorEnum.LightTypeEnum.K8SCONTAINER.value());
+                delMonitorRecordViews.add(del);
+            });
+        }
+        delNetworkMonitorRecord(delMonitorRecordViews);
         msg.setCode(HttpStatus.OK.value());
         msg.setMsg(CommonEnum.MSG_SUCCESS.value());
         return msg;
@@ -1203,8 +1287,8 @@ public class MonitorServiceImpl implements MonitorService {
             K8scontainerMonitorEntity monitorContainer = updateContainerMonitorField(view, container, oldContainer);
             monitorContainer.setK8snodeUuid(nodeMap.getOrDefault(container.getNodeIp(), ""));
             boolean updateK8sc = dao.insertMonitorRecord(monitorContainer, MonitorEnum.LightTypeEnum.K8SCONTAINER.value());
-            if (updateK8sc) {
-                RuleMonitorEntity updateContainerAlertRule = configService.updateMonitorRecordAlertRule(monitorContainer.getUuid(), monitorContainer.getTemplateId());
+            if (updateK8sc  && !oldContainer.getTemplateId().equals(monitorContainer.getTemplateId())) {
+                RuleMonitorEntity updateContainerAlertRule = configService.updateMonitorRecordAlertRule(monitorContainer.getUuid(), monitorContainer.getTemplateId(),oldContainer.getTemplateId());
                 if (null != updateContainerAlertRule) {
                     configService.addAlertTemplateToEtcd(MonitorEnum.LightTypeEnum.K8SCONTAINER.value(), monitorContainer.getTemplateId(), updateContainerAlertRule);
                 }

@@ -74,7 +74,7 @@ public interface MonitorConfigService {
      * @param templateId
      * @return
      */
-    RuleMonitorEntity updateMonitorRecordAlertRule(String uuid, String templateId);
+    RuleMonitorEntity updateMonitorRecordAlertRule(String uuid, String templateId,String oldTemplateId);
 
     /**
      * 删除监控模板
