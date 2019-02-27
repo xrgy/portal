@@ -56,14 +56,14 @@ public class MonitorConfigDaoImpl implements MonitorConfigDao {
 
 
     private String monitorConfigPrefix() {
-//        try {
-            String ip= "127.0.0.1";
-//            String ip = EtcdUtil.getClusterIpByServiceName("monitorconfig-core-service");
+        try {
+//            String ip= "127.0.0.1";
+            String ip = EtcdUtil.getClusterIpByServiceName("monitorconfig-core-service");
             return HTTP+ip + ":" + CONFIG_PORT + "/" + MONITOR_PREFIX + "/";
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return "";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     @Bean

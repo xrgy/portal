@@ -3,6 +3,7 @@ package topo.dao.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import common.EtcdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ import java.util.List;
 @Repository
 public class TopoDaoImpl implements TopoDao {
 
-    private static final String ip = "127.0.0.1";
+//    private static final String ip = "127.0.0.1";
     private static final String CONFIG_PORT = "8085";
 //    private static final String IP = "http://172.17.5.135";
 //    private static final String IP = "http://172.31.105.232";
@@ -46,13 +47,13 @@ public class TopoDaoImpl implements TopoDao {
 
 
     private String topoPrefix() {
-//        try {
-//            String ip = EtcdUtil.getClusterIpByServiceName("topo-core-service");
+        try {
+            String ip = EtcdUtil.getClusterIpByServiceName("topo-core-service");
             return HTTP+ip + ":" + CONFIG_PORT + "/" + MONITOR_PREFIX + "/";
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return "";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     @Bean

@@ -40,4 +40,8 @@ public interface BusinessDao {
      * @return
      */
     PageBean getBusinessListByPage(PageData page) throws JsonProcessingException;
+
+    List<BusinessResourceEntity> getBusinessResourcesByBusinessId(String businessId);
+
+    boolean delBusinessResourceList(List<BusinessResourceEntity> needDel) throws JsonProcessingException;
 }

@@ -42,8 +42,9 @@ public class MonitorConfigController {
     }
     @RequestMapping("/isTemplateNameDup")
     @ResponseBody
-    public boolean isTemplateNameDup(String name){
+    public boolean isTemplateNameDup(HttpServletRequest request){
         //返回true 未重复
+        String name = request.getParameter("name");
         return service.isTemplateNameDup(name);
     }
 

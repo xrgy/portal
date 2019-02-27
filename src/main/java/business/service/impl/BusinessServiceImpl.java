@@ -15,6 +15,7 @@ import business.entity.PageData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -55,16 +56,47 @@ public class BusinessServiceImpl implements BusinessService {
     @Override
     public ResultMsg addBusinessResource(String businessId, List<DelMonitorRecordView> view) throws JsonProcessingException {
         List<BusinessResourceEntity> resourceList = new ArrayList<>();
-        view.forEach(x -> {
-            BusinessResourceEntity entity = new BusinessResourceEntity();
-            entity.setUuid(UUID.randomUUID().toString());
-            entity.setBusinessUuid(businessId);
-            entity.setMonitorId(x.getUuid());
-            entity.setLightType(x.getLightType());
-            resourceList.add(entity);
+        //删除这次没有选择的
+        List<BusinessResourceEntity> allResource = dao.getBusinessResourcesByBusinessId(businessId);
+        List<BusinessResourceEntity> needDel = new ArrayList<>();
+        List<BusinessResourceEntity> noChange = new ArrayList<>();
+        allResource.forEach(x->{
+            Optional<DelMonitorRecordView> optView = view.stream().filter(y->y.getUuid().equals(x.getMonitorId())).findFirst();
+            if (optView.isPresent()){
+                //不用变的
+                noChange.add(x);
+            }else {
+                //需要删除的
+                needDel.add(x);
+            }
         });
-        boolean res = dao.insertBusinessResourceList(resourceList);
-        return ResCommon.genSimpleResByBool(res);
+        //需要添加的
+        view.forEach(x->{
+            Optional<BusinessResourceEntity> no = noChange.stream().filter(y->y.getMonitorId().equals(x.getUuid())).findFirst();
+            Optional<BusinessResourceEntity> del = needDel.stream().filter(y->y.getMonitorId().equals(x.getUuid())).findFirst();
+            if (!no.isPresent() && !del.isPresent()){
+                BusinessResourceEntity entity = new BusinessResourceEntity();
+                entity.setUuid(UUID.randomUUID().toString());
+                entity.setBusinessUuid(businessId);
+                entity.setMonitorId(x.getUuid());
+                entity.setLightType(x.getLightType());
+                resourceList.add(entity);
+            }
+        });
+        boolean delres = dao.delBusinessResourceList(needDel);
+//        view.forEach(x -> {
+//            BusinessResourceEntity entity = new BusinessResourceEntity();
+//            entity.setUuid(UUID.randomUUID().toString());
+//            entity.setBusinessUuid(businessId);
+//            entity.setMonitorId(x.getUuid());
+//            entity.setLightType(x.getLightType());
+//            resourceList.add(entity);
+//        });
+        if (delres){
+            boolean res = dao.insertBusinessResourceList(resourceList);
+            return ResCommon.genSimpleResByBool(res);
+        }
+        return ResCommon.genSimpleResByBool(false);
     }
 
     @Override

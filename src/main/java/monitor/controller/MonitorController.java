@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
@@ -31,8 +32,10 @@ public class MonitorController {
 
     @RequestMapping("/isMonitorRecordIpDup")
     @ResponseBody
-    public boolean isMonitorRecordIpDup(String ip,String lightType){
+    public boolean isMonitorRecordIpDup(HttpServletRequest request){
         //返回true 未重复
+        String ip = request.getParameter("ip");
+        String lightType = request.getParameter("lightType");
         return service.isMonitorRecordIpDup(ip,lightType);
     }
 

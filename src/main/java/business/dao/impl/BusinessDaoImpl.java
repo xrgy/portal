@@ -7,6 +7,7 @@ import business.entity.PageBean;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import common.EtcdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
@@ -26,24 +27,26 @@ public class BusinessDaoImpl implements BusinessDao {
 
     //    private static final String IP = "http://127.0.0.1";
 //    private static final String CONFIG_PORT = "8088";
-    private static final String ip = "127.0.0.1";
+//    private static final String ip = "127.0.0.1";
     private static final String CONFIG_PORT = "8088";
     private static final String BUSINESS_PREFIX = "business";
     private static final String PATH_BUSINESS_LIST = "getBusinessList";
     private static final String PATH_ADD_BUSINESS_RESOURCE_LIST = "addBusinessResourceList";
     private static final String PATH_ADD_BUSINESS_RESOURCE_LIST_BY_MONITOR = "getBusinessResourceByMonitorUuid";
+    private static final String PATH_ADD_BUSINESS_RESOURCE_LIST_BY_BUSINESS = "getBusinessResourcesByBusinessId";
     private static final String PATH_GET_BUSINESS_BY_PAGE = "getBusinessByPage";
     private static final String PATH_GET_BUSINESS_NODE = "getBusinessNode";
+    private static final String PATH_DEL_BUSINESS_RESOURCE = "delBusinessResource";
     private static final String HTTP = "http://";
 
     private String businessPrefix() {
-        //        try {
-//            String ip = EtcdUtil.getClusterIpByServiceName("business-core-service");
+                try {
+            String ip = EtcdUtil.getClusterIpByServiceName("business-core-service");
         return HTTP + ip + ":" + CONFIG_PORT + "/" + BUSINESS_PREFIX + "/";
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return "";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     @Bean
@@ -102,5 +105,21 @@ public class BusinessDaoImpl implements BusinessDao {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public List<BusinessResourceEntity> getBusinessResourcesByBusinessId(String businessId) {
+        ResponseEntity<String> response = rest().getForEntity(businessPrefix()+PATH_ADD_BUSINESS_RESOURCE_LIST_BY_BUSINESS+"?businessId={1}",String.class,businessId);
+        try {
+            return objectMapper.readValue(response.getBody(),new TypeReference<List<BusinessResourceEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean delBusinessResourceList(List<BusinessResourceEntity> needDel) throws JsonProcessingException {
+        return rest().postForObject(businessPrefix()+PATH_DEL_BUSINESS_RESOURCE,objectMapper.writeValueAsString(needDel),boolean.class);
     }
 }

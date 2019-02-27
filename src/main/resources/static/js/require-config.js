@@ -41,6 +41,7 @@ require.config({
         'bootstrap':['jquery'],
         'bootstrap-table':['bootstrap'],
         'bootstrap-table-zh-CN':['bootstrap'],
-    }
+    },
+    waitSeconds: 60
 
 });
