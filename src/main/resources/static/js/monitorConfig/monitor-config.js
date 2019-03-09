@@ -2,7 +2,7 @@
  * Created by gy on 2018/3/24.
  */
 'use strict'
-define(['jquery','bootstrap', 'vue','commonModule','topoMain','editTopo','showBusiness'], function ($,bootstrap, Vue,commonModule,topoMain,editTopo,showBusiness) {
+define(['jquery','bootstrap', 'vue','commonModule','topoMain','editTopo','showBusiness','showAlert'], function ($,bootstrap, Vue,commonModule,topoMain,editTopo,showBusiness,showAlert) {
     var confList = function () {
         if ($('#configList')[0]) {
             var monitorList = new Vue({
@@ -76,6 +76,10 @@ define(['jquery','bootstrap', 'vue','commonModule','topoMain','editTopo','showBu
                     loadBusinessList:function () {
                         window.open("/business/showBusinessList",'_parent');
                         showBusiness.showBusiness();
+                    },
+                    loadAlert:function () {
+                        window.open("/alert/showAlert",'_parent');
+                        showAlert.showAlert();
                     }
 
                 }

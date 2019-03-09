@@ -8,6 +8,7 @@ import monitor.common.ResultMsg;
 import monitor.entity.DelMonitorRecordView;
 import monitor.service.MonitorService;
 import monitorConfig.dao.MonitorConfigDao;
+import monitorConfig.entity.metric.Metrics;
 import monitorConfig.entity.metric.NewTemplateView;
 import monitorConfig.entity.TestEntity;
 import monitorConfig.entity.metric.ResMetricInfo;
@@ -213,6 +214,11 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
             x.setUsedCount(count);
         });
         return ResCommon.getCommonResultMsg(view);
+    }
+
+    @Override
+    public Metrics getMetricByRule(String perf, String alertRuleUuid) {
+        return dao.getMetricByRule(perf, alertRuleUuid);
     }
 
 

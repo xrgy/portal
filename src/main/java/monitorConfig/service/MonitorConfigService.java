@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import monitor.entity.DelMonitorRecordView;
 import monitor.entity.OperationMonitorEntity;
 import monitor.common.ResultMsg;
+import monitorConfig.entity.metric.Metrics;
 import monitorConfig.entity.metric.NewTemplateView;
 import monitorConfig.entity.metric.UpTemplateView;
 import monitorConfig.entity.template.RuleMonitorEntity;
@@ -102,4 +103,6 @@ public interface MonitorConfigService {
      * @return
      */
     ResultMsg getAllTemplate();
+
+    Metrics getMetricByRule(String perf, String alertRuleUuid);
 }

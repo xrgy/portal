@@ -126,4 +126,5 @@ public interface MonitorConfigDao {
      */
     List<RuleTemplate> getAllTemplate();
 
+    Metrics getMetricByRule(String perf, String alertRuleUuid);
 }

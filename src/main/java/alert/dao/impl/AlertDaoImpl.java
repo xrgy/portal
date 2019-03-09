@@ -2,6 +2,7 @@ package alert.dao.impl;
 
 import alert.dao.AlertDao;
 import alert.entity.AlertAlarmInfo;
+import alert.entity.AlertEntity;
 import business.dao.BusinessDao;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -30,6 +31,8 @@ public class AlertDaoImpl implements AlertDao {
     private static final String ALERT_PREFIX = "alerts";
     private static final String PATH_GET_ALARM_INFO_MONITOR_UUID = "getAlertInfoByMonitorUuids";
     private static final String PATH_DELTE_ALERT_BY_MONITOR = "deleteAlertResourceBymonitoruuid";
+    private static final String PATH_GET_ALERT_DETAIL = "getAlertDetail";
+
 
 
     private static final String HTTP="http://";
@@ -68,5 +71,16 @@ public class AlertDaoImpl implements AlertDao {
     @Override
     public boolean deleteAlertResourceBymonitoruuid(String monitorUuid) {
         return rest().getForObject(alertPrefix()+PATH_DELTE_ALERT_BY_MONITOR+"?monitorUuid={1}",boolean.class,monitorUuid);
+    }
+
+    @Override
+    public List<AlertEntity> getAlertInfo(int severity, int resolve, String uuid) {
+        String response = rest().getForObject(alertPrefix()+PATH_GET_ALERT_DETAIL+"?severity={1}&resolve={2]&uuid={3}",String.class,severity,resolve,uuid);
+        try {
+            return objectMapper.readValue(response,new TypeReference<List<AlertEntity>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

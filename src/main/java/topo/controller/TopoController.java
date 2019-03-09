@@ -2,6 +2,7 @@ package topo.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import monitor.common.ResCommon;
 import monitor.common.ResultMsg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -104,4 +105,16 @@ public class TopoController {
         TwaverBox twaverBox = mapper.readValue(topojson,TwaverBox.class);
         return service.saveTopo(twaverBox);
     }
+    @RequestMapping("deleteNetTopoNode")
+    @ResponseBody
+    public ResultMsg deleteNetTopoNode(String uuid){
+        return ResCommon.genSimpleResByBool(service.deleteTopoResourceBymonitoruuid(uuid));
+    }
+
+    @RequestMapping("deleteNetTopoLink")
+    @ResponseBody
+    public ResultMsg deleteNetTopoLink(String uuid){
+        return ResCommon.genSimpleResByBool(service.deleteTopoLinkByUuid(uuid));
+    }
+
 }

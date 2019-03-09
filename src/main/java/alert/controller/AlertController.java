@@ -2,10 +2,13 @@ package alert.controller;
 
 import alert.service.AlertService;
 import business.service.BusinessService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import monitor.common.ResultMsg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 
 /**
@@ -22,5 +25,15 @@ public class AlertController {
     @Autowired
     private ObjectMapper mapper;
 
+    @RequestMapping("showAlert")
+    public String showAlert(){
+        return "alert/alertList";
+    }
 
+
+    @RequestMapping("getAlertInfo")
+    @ResponseBody
+    public ResultMsg getAlertInfo(int severity,int resolve, String uuid) throws JsonProcessingException {
+        return service.getAlertInfo(severity,resolve,uuid);
+    }
 }

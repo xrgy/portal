@@ -30,7 +30,9 @@ require.config({
         'addK8s':'./monitor/add-k8s',
         'topoMain':'./topo/topo-main',
         'editTopo':'./topo/edit-topo',
-        'showBusiness':'./business/business-list'
+        'showBusiness':'./business/business-list',
+        'showAlert':'./alert/alert-list'
+
 
     },
     shim:{

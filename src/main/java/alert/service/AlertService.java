@@ -3,6 +3,7 @@ package alert.service;
 
 import alert.entity.AlertAlarmInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import monitor.common.ResultMsg;
 
 import java.util.List;
 
@@ -20,4 +21,6 @@ public interface AlertService {
      * @return
      */
     boolean deleteAlertResourceBymonitoruuid(String monitorUuid);
+
+    ResultMsg getAlertInfo(int severity, int resolve, String uuid);
 }

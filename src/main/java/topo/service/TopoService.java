@@ -89,4 +89,6 @@ public interface TopoService {
      * @return
      */
     ResultMsg getBusinessNode(String uuid);
+
+    boolean deleteTopoLinkByUuid(String uuid);
 }

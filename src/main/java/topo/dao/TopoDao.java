@@ -30,7 +30,7 @@ public interface TopoDao {
 
     boolean deleteTopoResourceBymonitoruuid(String monitorUuid);
 
-
+    boolean deleteTopoLinkByUuid(String uuid);
     /**
      * 获取设备端口流量
      * @param monitorUuid

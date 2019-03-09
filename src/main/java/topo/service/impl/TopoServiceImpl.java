@@ -190,6 +190,11 @@ public class TopoServiceImpl implements TopoService {
         return ResCommon.getCommonResultMsg(node);
     }
 
+    @Override
+    public boolean deleteTopoLinkByUuid(String uuid) {
+        return dao.deleteTopoLinkByUuid(uuid);
+    }
+
     private ResultMsg getCommonResultMsg(Object o) {
         ResultMsg msg = new ResultMsg();
         if (null != o) {
