@@ -16,6 +16,8 @@ import monitorConfig.service.MonitorConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -58,6 +60,7 @@ public class AlertServiceImpl implements AlertService {
         alertList.forEach(x->{
             String description = x.getDescription();
             x.setAlertSource(getNameFromDescription(description));
+            x.setIp(getIpFromDescription(description));
             Metrics metric = null;
             if (description.contains("当前值")){
                 //通过性能表 找指标名
@@ -67,7 +70,10 @@ public class AlertServiceImpl implements AlertService {
                 metric =  monitorConfigService.getMetricByRule("avl",x.getAlertRuleUuid());
             }
             x.setAlertInfo(metric.getName());
-
+            x.setCreateT(formatDate(x.getCreateTime()));
+            if (null!=x.getResolvedTime()) {
+                x.setResolvedT(formatDate(x.getResolvedTime()));
+            }
         });
         return ResCommon.getCommonResultMsg(alertList);
     }
@@ -79,5 +85,19 @@ public class AlertServiceImpl implements AlertService {
         }else {
             return "";
         }
+    }
+
+    public String getIpFromDescription(String description){
+        String[] split = description.split("\\(");
+        if (split.length>1){
+            String str[] = split[1].split("\\)");
+            return str[0];
+        }else {
+            return "";
+        }
+    }
+    public static String formatDate(Date date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        return simpleDateFormat.format(date);
     }
 }

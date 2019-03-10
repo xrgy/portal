@@ -12,13 +12,14 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                         templateName: "cc",
                         businessList: [],
                         path: {
-                            getBusinessList: "/business/getBusinessListByPage",
+                            getAlertList: "/alert/getAlertInfo",
                             // getRelevatTopo:"/business/getRelevatTopo"
                         },
                         pageNum:1,
                         pageSize:15,
                         pageNumList:[],
                         totalPage:0,
+                        alertList:[]
 
                     },
                     filters: {
@@ -28,7 +29,47 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                             } else {
                                 return "";
                             }
+                        },
+                        convertName: function (name) {
+                            if (name != null) {
+                                return commonModule.i18n("metric.name." + name);
+                            } else {
+                                return "";
+                            }
+                        },
+                        convertSeverity:function (severity) {
+                            var str="";
+                            switch (severity){
+                                case 0:
+                                    str = commonModule.i18n("alertLevel.critical");
+                                    break;
+                                case 1:
+                                    str = commonModule.i18n("alertLevel.major");
+                                    break;
+                                case 2:
+                                    str = commonModule.i18n("alertLevel.minor");
+                                    break;
+                                case 3:
+                                    str = commonModule.i18n("alertLevel.warning");
+                                    break;
+                                case 4:
+                                    str = commonModule.i18n("alertLevel.notice");
+                                    break;
+                                default:
+                                    break;
+                            };
+                            return " "+str;
+                        },
+                        convertStatus:function (status) {
+                            if (status==0){
+                                //未恢复
+                                return commonModule.i18n("alertStatus.none");
+                            }else {
+                                    //已恢复
+                                return commonModule.i18n("alertStatus.already");
+                            }
                         }
+
                     },
                     mounted: function () {
                         this.initData();
@@ -39,26 +80,12 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                             _self.businessList=[];
                             _self.pageNumList=[];
                             $.ajax({
-                                data: {"pageIndex": parseInt(_self.pageNum), "pageSize": parseInt(_self.pageSize)},
-                                url: _self.path.getBusinessList,
+                                data: {"severity": 0, "resolve": 0,"uuid":"0b6b3cdf-fbbb-480a-aaa7-41edd38d75a2"},
+                                url: _self.path.getAlertList,
                                 success: function (data) {
                                     if (data.msg == "SUCCESS") {
                                         var data = data.data;
-                                        _self.totalPage= data.totalPage;
-                                        // if(_self.totalPage<_self.pageNum){
-                                        //     _self.pageNum=1;
-                                        // }
-                                            for(var i=1;i<=_self.totalPage;i++){
-                                            _self.pageNumList.push(i);
-                                        }
-
-                                        data.list.forEach(function (x) {
-                                            x.hoverEnable = false;
-                                            _self.businessList.push(x);
-                                        });
-                                        setTimeout(function () {
-                                            _self.initFontColor();
-                                        }, 1000)
+                                       _self.alertList=data;
                                     }
                                 },
                                 error: function () {

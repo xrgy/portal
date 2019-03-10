@@ -11,23 +11,28 @@
 </div>
 <div id="myalert" >
 
+
     <!--<img class="breadDisplay" src="../image/业务列表.png"/>-->
-    <img class="breadDisplay" src="../image/alert4.png"/>
+    <img style="width: 100%;height: 43px;" class="breadDisplay" src="../image/alert6.png"/>
     <!--<img class="breadDisplay" src="../image/alert2.JPG"/>-->
     <!--黄色的-->
     <div id="breadline"></div>
-
     <div id="breadlineTitle">
-        <div>
-            <label>云运维 | 告警 | </label><label style="color: #f08640">告警列表</label>
+        <div style="margin-top: -4px;">
+            <label style="font-family: 宋体;font-weight: 600;">运行监测</label>
+            <div class="middleline"></div>
+            <label style="font-family: 宋体;font-weight: 600;">告警</label>
+            <div class="middleline"></div>
+            <label style="color: #f08640; font-family: 宋体;font-weight: 600;">告警列表</label>
         </div>
     </div>
     <div style="background: #efefef">
         <div id="leftMenu" class="model-tab col-xs-2 col-sm-2 col-md-2 col-lg-2" style="background: #fff">
             <ul style="font-weight: 600;">
-                <li class="active"> <i class="fa fa-th-large" aria-hidden="true"></i>  全部告警</li>
-                <li> <i class="fa fa-gears" aria-hidden="true"></i>  按资源类别<i class="fa fa-angle-down" aria-hidden="true" style="margin-left: 58px;"></i>
-                    <ul style="margin-left: 20px;  color: #928886">
+                <li class="active"><i class="fa fa-th-large" aria-hidden="true"></i> 全部告警</li>
+                <li><i class="fa fa-gears" aria-hidden="true"></i> 按资源类别<i class="fa fa-angle-down" aria-hidden="true"
+                                                                           style="margin-left: 58px;"></i>
+                    <ul style="margin-left: 20px;  color: #928886;font-weight: 500;">
                         <li>网络设备</li>
                         <li style="margin-top: -10px;">数据库</li>
                         <li style="margin-top: -10px;">虚拟化</li>
@@ -38,70 +43,119 @@
             </ul>
 
         </div>
-        <div id="right" class=" col-xs-10 col-sm-10 col-md-10 col-lg-10">
+        <div id="right" class=" col-xs-10 col-sm-10 col-md-10 col-lg-10" style="background: #efefef;height: 540px">
             <!--右上方-->
             <div>
-                <div id="filter"><i class="fa fa-filter" aria-hidden="true"></i> 筛选 <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
-            <label class="labelCondition" style="margin-left: 60px;">级别: 紧急<i class="fa fa-times" aria-hidden="true" style="color: #e56a15"></i></label>
-                <label class="labelCondition" style="  width: 92px;margin-left: 8px;">状态: 未恢复<i class="fa fa-times" aria-hidden="true"  style="color: #e56a15"></i></label>
-                <label class="labelCondition" style="width: 132px;margin-left: 8px;">资源: 172.25.17.253<i class="fa fa-times" aria-hidden="true"  style="color: #e56a15"></i></label>
-                <label style="margin-left: 10px;">清空筛选</label>
+                <div id="filter"><i class="fa fa-filter" aria-hidden="true"></i> 筛选 <i class="fa fa-arrow-circle-right"
+                                                                                       aria-hidden="true"></i>
+                    <label class="labelCondition" style="margin-left: 60px;">级别: 紧急<i class="fa fa-times"
+                                                                                      aria-hidden="true"
+                                                                                      style="color: #e56a15"></i></label>
+                    <label class="labelCondition" style="  width: 92px;margin-left: 8px;">状态: 未恢复<i class="fa fa-times"
+                                                                                                    aria-hidden="true"
+                                                                                                    style="color: #e56a15"></i></label>
+                    <label class="labelCondition" style="width: 132px;margin-left: 8px;">资源: 172.25.17.253<i
+                            class="fa fa-times" aria-hidden="true" style="color: #e56a15"></i></label>
+                    <label style="margin-left: 10px;">清空筛选</label>
                 </div>
-                <div id="oper">
+                <div id="oper" style="margin-bottom: 6px;">
                     <label id="refresh"> <i class="fa fa-refresh" aria-hidden="true"></i> 刷新</label>
                     <!--<img class="" src="../image/alert5.png"/>-->
                     <div id="tworight" style="display: inline-block">
-                    <div id="divselect" style="display: inline-block;">
-                    <!--<label>告警源 <i class="fa fa-angle-down" aria-hidden="true"></i></label>-->
-                        <select style="font-size: 12px;">
-                            <option>告警源</option>
-                        </select>
-                    </div>
+                        <div id="divselect" style="display: inline-block;">
+                            <!--<label>告警源 <i class="fa fa-angle-down" aria-hidden="true"></i></label>-->
+                            <select style="font-size: 12px; background: #efefef">
+                                <option>告警源</option>
+                            </select>
+                        </div>
                         <i class="fa fa-angle-down" aria-hidden="true"></i>
                         <div class="middleline"></div>
-                    <input class="" type="text"  placeholder="请输入查询内容" style="border:none"/>
+                        <input class="" type="text" placeholder="请输入查询内容" style="border:none;background: #efefef"/>
                         <div class="middleline"></div>
-                    <i class="fa fa-search" aria-hidden="true" style="color: #e56a15"></i>
+                        <i class="fa fa-search" aria-hidden="true" style="color: #e56a15"></i>
                     </div>
                 </div>
 
             </div>
             <!--列表-->
-            <div id="alertlist">
-                <table class="table">
+            <div id="alertlist" style="background: #fff;">
+                <table class="table" style="table-layout: fixed;font-size: 12px">
                     <thead>
                     <tr style="color: #6e6e6e">
-                        <th>序号<div class="middleline"></div></th>
-                        <th>告警级别  <i class="fa fa-filter" aria-hidden="true" style="color: #a39a99"></i><div class="middleline"></div></th>
-                        <th>告警信息<div class="middleline"></div></th>
-                        <th>告警源<div class="middleline"></div></th>
-                        <th>IP地址  <i class="fa sort"></i><div class="middleline"></div></th>
-                        <th>恢复状态  <i class="fa fa-filter" aria-hidden="true" style="color: #a39a99"></i><div class="middleline"></div></th>
-                        <th>告警时间  <i class="fa sort"></i><div class="middleline"></div></th>
-                        <th>恢复时间  <i class="fa sort"></i><div class="middleline"></div></th>
+                        <th style="width: 60px">序号
+                            <div class="middleline" style="margin-left: 0px"></div>
+                        </th>
+                        <th style="width: 100px">告警级别 <i class="fa fa-filter" aria-hidden="true" style="color: #a39a99"></i>
+                            <div class="middleline" style="margin-left: 0px"></div>
+                        </th>
+                        <th style="width: 100px">告警信息
+                            <div class="middleline" style="margin-left: 20px"></div>
+                        </th>
+                        <th style="width: 80px">告警源
+                            <div class="middleline" style="margin-left: 10px"></div>
+                        </th>
+                        <th style="width: 100px;">IP地址 <i class="fa sort"></i>
+                            <div class="middleline" style="margin-left: 10px"></div>
+                        </th>
+                        <th style="width: 100px;">恢复状态 <i class="fa fa-filter" aria-hidden="true" style="color: #a39a99"></i>
+                            <div class="middleline" style="margin-left: 0px"></div>
+                        </th>
+                        <th style="width: 100px;">告警时间 <i class="fa sort"></i>
+                            <div class="middleline" style="margin-left: 0px"></div>
+                        </th>
+                        <th style="width: 100px;">恢复时间 <i class="fa sort"></i>
+                            <div class="middleline" style="margin-left: 0px"></div>
+                        </th>
                         <th>告警描述</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>产品1</td>
-                        <td>23/11/2013</td>
-                        <td>待发货</td></tr>
-                    <tr>
-                        <td>产品2</td>
-                        <td>10/11/2013</td>
-                        <td>发货中</td></tr>
-                    <tr>
-                        <td>产品3</td>
-                        <td>20/10/2013</td>
-                        <td>待确认</td></tr>
-                    <tr>
-                        <td>产品4</td>
-                        <td>20/10/2013</td>
-                        <td>已退货</td></tr>
+                    <template v-for="(i,j) in alertList">
+                        <tr :id="'alert'+j">
+                            <td>{{j+1}}</td>
+                            <td><div style="display: inline-block" class="major"></div><span>{{i.severity|convertSeverity}}</span></td>
+                            <td style="color: #e56a15"><span :title="i.alertInfo|convertName">{{i.alertInfo|convertName}}</span></td>
+                            <td style="color: #e56a15"><span :title="i.alertSource">{{i.alertSource}}</span></td>
+                            <td style="color: #e56a15"><span :title="i.ip">{{i.ip}}</span></td>
+                            <td>{{i.resolvedStatus|convertStatus}}</td>
+                            <td><span :title="i.createT">{{i.createT}}</span></td>
+                            <td><span :title="i.resolvedT">{{i.resolvedT}}</span></td>
+                            <td><span :title="i.description">{{i.description}}</span></td>
+                        </tr>
+                    </template>
                     </tbody>
                 </table>
             </div>
+            <div style="display: inline-block"><span style="font-size: 12px">共3条记录 , 当前第1/1页</span></div>
+            <!--右下方的-->
+            <div class="pull-right" style="display: inline-block">
+                <div id="chosePageSize" >
+                    <label>
+                        每页
+                        <select id="pageSize"
+                                aria-controls="DataTables_Table_0" size="1" name="DataTables_Table_0_length">
+                            <option selected="selected" value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                        </select>
+                        条记录
+                    </label>
+                </div>
+                <ul class="pagination pagination-sm">
+                    <li class="prev"><a href="#" style="color: #485664;">&laquo;</a>
+                    </li>
+                    <div id="page">
+                        <select style="font-size: 12px;padding-right: 8px;" name="monitortemplate" id="pageNum">
+                            <option>1</option>
+                        </select>
+                    </div>
+                    <!--<i class="fa fa-angle-down" aria-hidden="true"></i>-->
+                    <li class="next"><a href="#" style="color: #485664;">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+
         </div>
     </div>
 </div>

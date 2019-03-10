@@ -13,6 +13,8 @@ import java.util.Date;
 public class AlertEntity {
 
 
+    private String ip;
+
     private String uuid;
 
     private String alertSource;
@@ -43,5 +45,8 @@ public class AlertEntity {
 
     private Date resolvedTime;
 
+    private String createT;
+
+    private String resolvedT;
 
 }

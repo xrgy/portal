@@ -27,7 +27,7 @@ public class BusinessDaoImpl implements BusinessDao {
 
     //    private static final String IP = "http://127.0.0.1";
 //    private static final String CONFIG_PORT = "8088";
-//    private static final String ip = "127.0.0.1";
+    private static final String ip = "127.0.0.1";
     private static final String CONFIG_PORT = "8088";
     private static final String BUSINESS_PREFIX = "business";
     private static final String PATH_BUSINESS_LIST = "getBusinessList";
@@ -40,13 +40,13 @@ public class BusinessDaoImpl implements BusinessDao {
     private static final String HTTP = "http://";
 
     private String businessPrefix() {
-                try {
-            String ip = EtcdUtil.getClusterIpByServiceName("business-core-service");
+//                try {
+//            String ip = EtcdUtil.getClusterIpByServiceName("business-core-service");
         return HTTP + ip + ":" + CONFIG_PORT + "/" + BUSINESS_PREFIX + "/";
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return "";
     }
 
     @Bean

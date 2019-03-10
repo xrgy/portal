@@ -135,7 +135,8 @@
 
 #myBusiness {
     height: 100%;
-    background: #fafafb;
+    /*background: #fafafb;*/
+    /*background: #efefef;*/
 }
 #myBusiness .wrapper {
     display: grid;
@@ -176,7 +177,7 @@
     padding-top: 10px;
 }
 #myBusiness #businessList .healthStyle #healthScore label{
-    font-size: 18px;
+    font-size: 26px;
 }
 #myBusiness #businessList .middleline{
     display: inline-block;
@@ -204,7 +205,7 @@
     width: 105%;
     /* margin-left: -5px; */
     border: solid 1px #ddd;
-    opacity: 0.9;
+    opacity: 0.8;
     top: -116px;
     left: -5px;
 }
@@ -215,22 +216,27 @@
     /*top:-110px;*/
 /*}*/
 
-/*#myBusiness #businessList .singleBusiness:nth-child(1) .operBusiness,*/
-/*#myBusiness #businessList .singleBusiness:nth-child(2) .operBusiness,*/
-/*#myBusiness #businessList .singleBusiness:nth-child(3) .operBusiness,*/
-/*#myBusiness #businessList .singleBusiness:nth-child(4) .operBusiness,*/
-/*#myBusiness #businessList .singleBusiness:nth-child(5) .operBusiness{*/
-    /*top:-110px*/
-/*}*/
+#myBusiness #businessList .singleBusiness:nth-child(1),
+#myBusiness #businessList .singleBusiness:nth-child(2),
+#myBusiness #businessList .singleBusiness:nth-child(3),
+#myBusiness #businessList .singleBusiness:nth-child(4),
+#myBusiness #businessList .singleBusiness:nth-child(5){
+    margin-top: -5px;
+}
+#myBusiness #businessList #seeTopo{
+    margin-left: 70px;
+}
 
+#myBusiness #businessList #delBus,
 #myBusiness #businessList #seeTopo,
 #myBusiness #businessList #editBus{
     display: inline-block;
     width: 30px;
     text-align: center;
     padding: 10px 0;
-    margin: 10px 0 0 80px;
+    /*margin: 10px 0 0 80px;*/
     cursor: pointer;
+    margin-top: 30px;
 }
 #myBusiness #businessList #editBus{
     margin-left: 2px;
@@ -248,22 +254,26 @@
     margin-top: 24px;
     padding: 0 10px;
 }
+#myBusiness #breadline,
 #myalert #breadline{
     background: #e56a15;
-    width: 60px;
+    width: 74px;
     height: 5px;
     margin-left: 500px;
     position: absolute;
-    top: 2px;
+    top: 46px;
 }
+#myBusiness #breadlineTitle,
+#myBusiness #breadlineTitle,
 #myalert #breadlineTitle{
     width: 100%;
-    height: 36px;
-    box-shadow: 1px 1px 2px 1px #eee;
+    height: 32px;
+    box-shadow: 1px 1px 2px 2px #eee;
     padding-top: 7px;
     padding-left: 40px;
     border-top: solid #e1e2e2;
     margin-top: 6px;
+    border-bottom: solid #e1e2e2;
 }
 
 #myalert #leftMenu{
@@ -287,13 +297,27 @@
 #myalert #filter .labelCondition i{
     margin-left: 7px;
 }
+#myBusiness #oper #refresh{
+
+    background: #928886;
+    color: #fff;
+    /*font-weight: 600;*/
+    padding: 6px;
+    /* padding-left: 10px; */
+    text-align: center;
+    width: 80px;
+    border-radius: 0px;
+    margin-left: 18px;
+    margin-top: 16px;
+    height: 28px;
+}
 #myalert #oper #refresh{
-    width: 90px;
+    width: 86px;
     height: 30px;
     background: #928886;
     color: #fff;
-    font-weight: 600;
-    border-radius: 3px;
+    /*font-weight: 600;*/
+    /*border-radius: 3px;*/
     padding: 6px;
     /* padding-left: 10px; */
     text-align: center;
@@ -331,7 +355,23 @@
   /*//给自定义的图标实现点击下来功能*/
   /*pointer-events: none;*/
   /*}*/
-
+#myBusiness #oper #tworight{
+    display: inline-block;
+    border-bottom: 0.1px solid #ccc;
+    padding-bottom: 1px;
+    width: 290px;
+    margin-left: 800px;
+}
+#myBusiness #oper .middleline{
+    display: inline-block;
+    /* float: left; */
+    background: #ddd;
+    /* border: #eae9e9 solid 1px; */
+    height: 22px;
+    width: 1px;
+    position: relative;
+    top: 4px;
+}
 #myalert #oper #tworight{
     display: inline-block;
     border-bottom: 0.1px solid #ccc;
@@ -342,10 +382,12 @@
 #myalert #oper .middleline{
     display: inline-block;
     /* float: left; */
-    background: #eee;
+    background: #ddd;
     /* border: #eae9e9 solid 1px; */
     height: 22px;
     width: 1px;
+    position: relative;
+    top: 4px;
 }
 input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     color:    #afafb0;
@@ -378,14 +420,84 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     background: #eee;
     height: 24px;
     width: 1.4px;
-    margin-left: 30px;
+    margin-left: 10px;
     position: relative;
     top: 8px;
 }
 /*紧急*/
-.major{
+#myalert .major{
     width: 14px;
     height: 14px;
     border-radius: 14px;
     background: #c11212;
+}
+#myalert  table td {
+    white-space: nowrap;/*控制单行显示*/
+    overflow: hidden;/*超出隐藏*/
+    text-overflow: ellipsis;/*隐藏的字符用省略号表示*/
+}
+#myalert table>tbody>tr>td,
+#myalert table>tbody>tr>th,
+#myalert table>tfoot>tr>td,
+#myalert table>tfoot>tr>th{
+    border-top: 1.4px solid #ddd;
+}
+#myBusiness #chosePageSize,
+#myalert #chosePageSize {
+    width: 150px;
+    float: right;
+    margin-top: 24px;
+    padding: 0 10px;
+}
+#myBusiness #page,
+#myalert #page {
+    display: inline-block;
+    /*width: 60px;*/
+    /*!* border-right: none; *!*/
+    /*height: 20px;*/
+    /*border-radius: 5px;*/
+    /*!* box-shadow: -1px 10px 0px 0.4px #ccc; *!*/
+    /*position: relative;*/
+}
+#myBusiness #page select,
+#myBusiness #chosePageSize select,
+#myalert #page select,
+#myalert #chosePageSize select{
+    /*border: none;*/
+    /*outline: none;*/
+    /*width: 100%;*/
+    /*height: 20px;*/
+    /*line-height: 20px;*/
+    /*appearance: none;*/
+    /*-webkit-appearance: none;*/
+    /*-moz-appearance: none;*/
+    /*!* padding-left: 60px; *!*/
+    /*padding-left: 10px;*/
+    font-size: 12px;
+    height: 20px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+#myBusiness .prev a, #myBusiness .next a,
+#myalert .prev a, #myalert .next a {
+    float: none;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    /* padding: 0; */
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+#myalert .pull-right ul,
+#myalert #chosePageSize{
+    margin-top: 14px;
+}
+#myBusiness #breadlineTitle .middleline,
+#myalert #breadlineTitle .middleline{
+    display: inline-block;
+    background: #eee;
+    height: 14px;
+    width: 1.4px;
+    margin-left: 1px;
+    position: relative;
+    top: 2px;
 }

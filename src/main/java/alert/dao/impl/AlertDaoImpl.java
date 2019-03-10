@@ -24,9 +24,9 @@ import java.util.List;
 @Repository
 public class AlertDaoImpl implements AlertDao {
 
-//    private static final String ip = "127.0.0.1";
+    private static final String ip = "127.0.0.1";
 //    private static final String CONFIG_PORT = "8086";
-    private static final String IP = "http://172.31.105.232";
+//    private static final String IP = "http://172.31.105.232";
     private static final String CONFIG_PORT = "8095";
     private static final String ALERT_PREFIX = "alerts";
     private static final String PATH_GET_ALARM_INFO_MONITOR_UUID = "getAlertInfoByMonitorUuids";
@@ -39,13 +39,13 @@ public class AlertDaoImpl implements AlertDao {
 
 
     private String alertPrefix() {
-                try {
-            String ip = EtcdUtil.getClusterIpByServiceName("alert-coll-service");
+//                try {
+//            String ip = EtcdUtil.getClusterIpByServiceName("alert-coll-service");
         return HTTP+ip + ":" + CONFIG_PORT + "/" + ALERT_PREFIX + "/";
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return "";
     }
 
     @Bean
@@ -75,7 +75,7 @@ public class AlertDaoImpl implements AlertDao {
 
     @Override
     public List<AlertEntity> getAlertInfo(int severity, int resolve, String uuid) {
-        String response = rest().getForObject(alertPrefix()+PATH_GET_ALERT_DETAIL+"?severity={1}&resolve={2]&uuid={3}",String.class,severity,resolve,uuid);
+        String response = rest().getForObject(alertPrefix()+PATH_GET_ALERT_DETAIL+"?severity={1}&resolve={2}&uuid={3}",String.class,severity,resolve,uuid);
         try {
             return objectMapper.readValue(response,new TypeReference<List<AlertEntity>>(){});
         } catch (IOException e) {
