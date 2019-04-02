@@ -44,4 +44,6 @@ public interface BusinessDao {
     List<BusinessResourceEntity> getBusinessResourcesByBusinessId(String businessId);
 
     boolean delBusinessResourceList(List<BusinessResourceEntity> needDel) throws JsonProcessingException;
+
+    boolean delBusinessResourceByBusinessId(String businessId);
 }

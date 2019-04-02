@@ -195,6 +195,39 @@ public class TopoServiceImpl implements TopoService {
         return dao.deleteTopoLinkByUuid(uuid);
     }
 
+    @Override
+    public ResultMsg saveBusinessTopo(TwaverBox twaverBox) throws JsonProcessingException {
+        TwaverDatas[] datas = twaverBox.getDatas();
+        if (null!=datas && datas.length>0){
+            List<TopoBusinessNodeEntity> oldNodeList  = dao.getAllWeaveTopoNode(twaverBox.getDataBox().getTwaverClient().getUuid());
+            List<TopoBusinessNodeEntity> newNodeList = new ArrayList<>();
+            for (TwaverDatas data : datas) {
+                if (data.getClassName().equals("twaver.Node")){
+                    TwaverClient client = data.getTwaverClient();
+                    Map<String,Integer> location = data.getTwaverPosition().getLocation();
+                    Optional<TopoBusinessNodeEntity> oldNode = oldNodeList.stream().filter(x->x.getUuid().equals(client.getUuid())).findFirst();
+                    if (oldNode.isPresent()){
+                        TopoBusinessNodeEntity node = new TopoBusinessNodeEntity();
+                        BeanUtils.copyProperties(oldNode.get(),node);
+                        node.setXPoint(location.get("x"));
+                        node.setYPoint(location.get("y"));
+                        newNodeList.add(node);
+                    }
+                }else if (data.getClassName().equals("twaver.Link")){
+                    //不需要做什么处理
+                }
+            }
+            dao.insertBusinessTopoNodeList(newNodeList);
+        }
+        return ResCommon.genSimpleResByBool(true);
+    }
+
+    @Override
+    public boolean delTopoResourceByBusinessId(String businessId) {
+
+        return dao.delTopoResourceByBusinessId(businessId);
+    }
+
     private ResultMsg getCommonResultMsg(Object o) {
         ResultMsg msg = new ResultMsg();
         if (null != o) {

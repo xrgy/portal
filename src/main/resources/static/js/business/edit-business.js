@@ -3,122 +3,111 @@
  */
 'use strict'
 define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, commonModule,validateExtend) {
-    var monitorConf = function () {
-        if ($('#monitorConfig')[0]) {
-            var monitorConfig = new Vue({
-                el: '#monitorConfig',
+    var businessEdit = function () {
+        if ($('#editBusiness')[0]) {
+            var editBusiness = new Vue({
+                el: '#editBusiness',
                 data: {
-                    moreCondition: commonModule.i18n("monitorConfig.moreCondition"),
-                    templateName: "cc",
-                    dataObj: [{
-                        quotaName: 'm',
-                        quotaDesc: ''
+                    businessId:"",
+                    tabSelected:"",
+                    busRadio:"1",
+                    path:{
+                        getBusinessInfo: "/business/getBusinessInfo",
+                        delBusinessResource: "/business/delBusinessResource",
+
                     },
-                        {
-                            quotaName: 'n',
-                            quotaDesc: ''
-                        }],
-                    typeName: [{
-                        name: '1',
-                        quotaDesc: ''
-                    },
-                        {
-                            name: '2',
-                            quotaDesc: ''
-                        }],
-                    alertLevel: [
-                        {text: commonModule.i18n("alertLevel.critical"), value: '0'},//紧急
-                        {text: commonModule.i18n("alertLevel.major"), value: '1'},//重要
-                        {text: commonModule.i18n("alertLevel.minor"), value: '2'},//次要
-                        {text: commonModule.i18n("alertLevel.warning"), value: '3'},//警告
-                        {text: commonModule.i18n("alertLevel.notice"), value: '4'}],//通知
-                    alertCondition: [
-                        {text: ">", value: '0'},
-                        {text: "=", value: '1'},
-                        {text: "<", value: '2'},
-                        {text: ">=", value: '3'},
-                        {text: "<=", value: '4'},
-                        {text: "!=", value: '5'}],
-                    expressionMore: [
-                        {text: "and", value: 'and'},
-                        {text: "or", value: 'or'}],
-                    path: {
-                        getMetricInfo: "/monitorConfig/getMetricInfo",
-                        addTemplate: "/monitorConfig/addTemplate",
-                    },
-                    monitorMode: "snmp_v1",
-                    lightType: "switch",
-                    lightClass:"network",
-                    availDataObj: null,
-                    perfDataObj: null,
-                    // resourceUuid:"",
+                    businessName:"",
+                    resourceList:null,
                 },
                 filters: {
-                    convertType: function (type) {
+                    convertLightType: function (type) {
                         if (type != null) {
-                            return commonModule.i18n("metric.type." + type);
-                        } else {
-                            return "";
-                        }
-                    },
-                    convertName: function (name) {
-                        if (name != null) {
-                            return commonModule.i18n("metric.name." + name);
-                        } else {
-                            return "";
-                        }
-                    },
-                    convertDesc: function (desc) {
-                        if (desc != null) {
-                            return commonModule.i18n("metric.description." + desc);
+                            if (type === "VirtualMachine"){
+                               return commonModule.i18n("monitor.lightType.VirtualMachine");
+                            }else if (type === "k8sContainer"){
+                               return "Docker";
+                            }else {
+                               return type;
+                            }
                         } else {
                             return "";
                         }
                     }
                 },
                 mounted: function () {
-                    console.log("add monitor display")
+                    console.log("edit business display")
                 },
                 methods: {
-                    initData: function () {
-                        var _self = this;
-                        console.log(commonModule.i18n("monitorConfig.templateName"));
+                    initForm: function () {
+                        $("#edit-business").validate().resetForm();
+                        $('.form-group').removeClass("has-error");
+                        this.title = "",
+                            this.infoIp = '',
+                            this.infoName = '',
+                            this.monitorMode = 'snmp_v1',
+                            this.infoReadcommunity = '',
+                            this.infoWritecommunity = '',
+                            this.infoPort = '161',
+                            this.infoTimeinterval = '180',
+                            this.infoTimeout = '175',
+                            this.infoMonitortemplate = '',
+                            this.templateList = [{
+                                uuid: '',
+                                templateName: commonModule.i18n("form.select.default")
+                            }];
+                    },
+                    clickBaseInfo: function (event) {
+                        var e = event.target;
+                        $('#leftMenu').find('li').removeClass('active');
+                        $(e).closest('li').addClass('active');
+                        this.tabSelected="baseInfo";
+                        this.busRadio="1";
+                    },
+                    delResource:function (event,monitorId) {
+                      var _self = this;
+                      var monitorList = [];
+                      monitorList.push(monitorId);
                         $.ajax({
                             //"MySQL mysql"
-                            data: {"lightType": _self.lightType, "monitorMode": _self.monitorMode},
-                            url: _self.path.getMetricInfo,
+                            data: {"businessId":_self.businessId,"monitorList":JSON.stringify(monitorList)},
+                            url: _self.path.delBusinessResource,
                             success: function (data) {
                                 if (data.msg === "SUCCESS") {
                                     var data = data.data;
-                                    var available = data.available;
-                                    var performance = data.performance;
-                                    var availArray = [], perfArray = [];
-                                    for (var availdata in available) {
-                                        var avail = {};
-                                        avail.type = available[availdata].metric_type;
-                                        avail.data = available[availdata];
-                                        availArray.push(avail);
-                                        // if (_self.resourceUuid === ""){
-                                        //     _self.resourceUuid = available[availdata].metric_light_type_id;
-                                        // }
-                                    }
-                                    _self.availDataObj = _self.groupByType(availArray);
-                                    for (var perfdata in performance) {
-                                        var perf = {};
-                                        perf.type = performance[perfdata].metric_type;
-                                        perf.data = performance[perfdata];
-                                        perfArray.push(perf);
-                                    }
-                                    _self.perfDataObj = _self.groupByType(perfArray);
-                                    _self.initTable();
-                                    // _self.templateName = data.name;
+                                    _self.businessName=data.name;
+                                    _self.resourceList=data.resourceList;
                                 }
                             },
                             error: function () {
-
                             }
                         })
                     },
+                    initBaseInfo:function () {
+                        var _self = this;
+                        $.ajax({
+                            //"MySQL mysql"
+                            data: {"businessId":_self.businessId},
+                            url: _self.path.getBusinessInfo,
+                            success: function (data) {
+                                if (data.msg === "SUCCESS") {
+                                    var data = data.data;
+                                    _self.businessName=data.name;
+                                    _self.resourceList=data.resourceList;
+                                }
+                            },
+                            error: function () {
+                            }
+                        })
+                    },
+                    clickBusResource: function (event) {
+                        var e = event.target;
+                        $('#leftMenu').find('li').removeClass('active');
+                        $(e).closest('li').addClass('active');
+                        editBusiness.tabSelected="resource";
+                        this.busRadio="2";
+                    },
+
+
                     initTable: function () {
                         var _self = this;
                         for(var i in _self.availDataObj){
@@ -299,28 +288,12 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
             });
 
         }
-        $("#monitorConfig").on('show.bs.modal', function () {
-            var light = sessionStorage.getItem('addConfigLightType');
-            monitorConfig.lightType = light;
-            if (light === "switch" || light ==="router" || light ==="firewall" || light ==="LB"){
-                monitorConfig.monitorMode="snmp_v1";
-                monitorConfig.lightClass="network";
-            }else if (light === "Tomcat"){
-                monitorConfig.monitorMode="jmx";
-                monitorConfig.lightClass="";
-            }else if (light === "CVK" || light === "VirtualMachine"){
-                monitorConfig.monitorMode="cas";
-                monitorConfig.lightClass="";
-            }else if (light === "k8sNode" || light === "k8sContainer"){
-                monitorConfig.monitorMode="k8s";
-                monitorConfig.lightClass="";
-            }else {
-                monitorConfig.monitorMode = light.toLowerCase();
-                monitorConfig.lightClass="";
-            }
-            monitorConfig.initData();
+        $("#editBusiness").on('show.bs.modal', function () {
+            editBusiness.businessId = sessionStorage.getItem('editBusinessId');
+            editBusiness.tabSelected="baseInfo";
+            editBusiness.initBaseInfo();
         })
     }
-    monitorConf();
-    return {monitorConf: monitorConf}
+    businessEdit();
+    return {businessEdit: businessEdit}
 })

@@ -91,4 +91,13 @@ public interface TopoService {
     ResultMsg getBusinessNode(String uuid);
 
     boolean deleteTopoLinkByUuid(String uuid);
+
+    ResultMsg saveBusinessTopo(TwaverBox twaverBox) throws JsonProcessingException;
+
+    /**
+     * 删除该业务的节点和链路
+     * @param businessId
+     * @return
+     */
+    boolean delTopoResourceByBusinessId(String businessId);
 }

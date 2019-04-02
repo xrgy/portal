@@ -22,7 +22,7 @@ import java.util.List;
 @Repository
 public class TopoDaoImpl implements TopoDao {
 
-//    private static final String ip = "127.0.0.1";
+    private static final String ip = "127.0.0.1";
     private static final String CONFIG_PORT = "8085";
 //    private static final String IP = "http://172.17.5.135";
 //    private static final String IP = "http://172.31.105.232";
@@ -41,6 +41,9 @@ public class TopoDaoImpl implements TopoDao {
     private static final String PATH_DELETE_NET_TOPO_Link = "deleteTopoLinkByUuid";
     private static final String PATH_GET_TOPO_NET_LINK_RATE = "getInterfaceRate";
     private static final String PATH_SAVE_TOPO_NODES = "insertTopoNodeList";
+    private static final String PATH_SAVE_BUSINESS_TOPO_NODES = "insertBusinessTopoNodeList";
+    private static final String PATH_DEL_BUSINESS_TOPO_RESOURCE = "delBusinessTopoResource";
+
 
 
 
@@ -48,13 +51,13 @@ public class TopoDaoImpl implements TopoDao {
 
 
     private String topoPrefix() {
-        try {
-            String ip = EtcdUtil.getClusterIpByServiceName("topo-core-service");
+//        try {
+//            String ip = EtcdUtil.getClusterIpByServiceName("topo-core-service");
             return HTTP+ip + ":" + CONFIG_PORT + "/" + MONITOR_PREFIX + "/";
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return "";
     }
 
     @Bean
@@ -178,6 +181,18 @@ public class TopoDaoImpl implements TopoDao {
     public boolean insertTopoNodeList(List<TopoNodeEntity> nodes) throws JsonProcessingException {
         return rest().postForObject(topoPrefix() + PATH_SAVE_TOPO_NODES, objectMapper.writeValueAsString(nodes), boolean.class);
 
+    }
+
+    @Override
+    public boolean insertBusinessTopoNodeList(List<TopoBusinessNodeEntity> newNodeList) throws JsonProcessingException {
+        return rest().postForObject(topoPrefix() + PATH_SAVE_BUSINESS_TOPO_NODES, objectMapper.writeValueAsString(newNodeList), boolean.class);
+
+    }
+
+    @Override
+    public boolean delTopoResourceByBusinessId(String businessId) {
+        rest().delete(topoPrefix() + PATH_DEL_BUSINESS_TOPO_RESOURCE + "?uuid={1}", businessId);
+        return true;
     }
 
 

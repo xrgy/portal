@@ -1,17 +1,19 @@
 package business.service.impl;
 
 import business.dao.BusinessDao;
-import business.entity.BusinessEntity;
-import business.entity.BusinessResourceEntity;
+import business.entity.*;
 import business.service.BusinessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.common.ResCommon;
 import monitor.common.ResultMsg;
 import monitor.entity.DelMonitorRecordView;
+import monitor.entity.OperationMonitorEntity;
+import monitor.service.MonitorService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import business.entity.PageData;
+import topo.service.TopoService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,12 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Autowired
     BusinessDao dao;
+
+    @Autowired
+    TopoService topoService;
+
+    @Autowired
+    MonitorService monitorService;
 
     @Override
     public boolean isJoinBusinessMonitor(String monitorUuid) {
@@ -107,6 +115,54 @@ public class BusinessServiceImpl implements BusinessService {
     @Override
     public ResultMsg getBusinessListByPage(PageData page) throws JsonProcessingException {
         return ResCommon.getCommonResultMsg(dao.getBusinessListByPage(page));
+    }
+
+    @Override
+    public ResultMsg delBusiness(String businessId) {
+
+        //调用拓扑接口，删除节点和链路
+        topoService.delTopoResourceByBusinessId(businessId);
+
+        //调用业务接口删除业务
+        boolean res = dao.delBusinessResourceByBusinessId(businessId);
+        return ResCommon.genSimpleResByBool(res);
+    }
+
+    @Override
+    public ResultMsg getBusinessInfo(String businessId) {
+        BusinessEntity business = dao.getBusinessNode(businessId);
+        BusinessInfo businessInfo = new BusinessInfo();
+        BeanUtils.copyProperties(business,businessInfo);
+        List<BusinessMonitorEntity> businessMonitorList = new ArrayList<>();
+        List<BusinessResourceEntity> resourceList = dao.getBusinessResourcesByBusinessId(businessId);
+        List<OperationMonitorEntity> monitorList = (List<OperationMonitorEntity>) monitorService.getBusinessMonitorRecord().getData();
+        resourceList.forEach(x->{
+            BusinessMonitorEntity monitorEntity = new BusinessMonitorEntity();
+            monitorEntity.setMonitorId(x.getMonitorId());
+            monitorEntity.setLightType(x.getLightType());
+            Optional<OperationMonitorEntity> monitorOpt = monitorList.stream().filter(y->y.getUuid().equals(x.getMonitorId())
+                    &&y.getLightTypeId().equals(x.getLightType())).findFirst();
+            monitorOpt.ifPresent(operationMonitorEntity -> {
+                monitorEntity.setIp(operationMonitorEntity.getIp());
+                monitorEntity.setName(operationMonitorEntity.getName());
+            });
+            businessMonitorList.add(monitorEntity);
+        });
+        businessInfo.setResourceList(businessMonitorList);
+        return ResCommon.getCommonResultMsg(businessInfo);
+    }
+
+    @Override
+    public ResultMsg delBusinessResource(String businessId, List<String> monitorIds) throws JsonProcessingException {
+        List<BusinessResourceEntity> resourceEntityList = new ArrayList<>();
+        monitorIds.forEach(x->{
+            BusinessResourceEntity resource = new BusinessResourceEntity();
+            resource.setBusinessUuid(businessId);
+            resource.setMonitorId(x);
+            resourceEntityList.add(resource);
+        });
+        boolean res = dao.delBusinessResourceList(resourceEntityList);
+        return ResCommon.genSimpleResByBool(res);
     }
 
 }

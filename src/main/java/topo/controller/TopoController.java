@@ -105,6 +105,12 @@ public class TopoController {
         TwaverBox twaverBox = mapper.readValue(topojson,TwaverBox.class);
         return service.saveTopo(twaverBox);
     }
+    @RequestMapping("saveBusinessTopo")
+    @ResponseBody
+    public ResultMsg saveBusinessTopo(String topojson) throws IOException {
+        TwaverBox twaverBox = mapper.readValue(topojson,TwaverBox.class);
+        return service.saveBusinessTopo(twaverBox);
+    }
     @RequestMapping("deleteNetTopoNode")
     @ResponseBody
     public ResultMsg deleteNetTopoNode(String uuid){

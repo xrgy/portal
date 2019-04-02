@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title></title>
+</head>
+<body th:fragment="editBusiness">
+<!--<div id="container">-->
+<div id="editBusiness" class="modal fade" tabindex="-1" role="dialog" aria-hidden="false">
+    <div class="modal-dialog def-dialog middle-dialog">
+        <div class="modal-content def-modal-content">
+            <div class="modal-header def-modal-header">
+                <i class="fa fa-edit skin-color"></i>
+                <span data-i18n="busines.eitBusiness"></span>
+                <button type="button" class="close skin-color close-style" data-dismiss="modal">&times;</button>
+            </div>
+            <hr class="skin-color border-color"/>
+            <form role="form" id="edit-business">
+                <div class="modal-body def-modal-body">
+                    <div id="leftMenu" class="model-tab col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <ul>
+                            <li data-i18n="business.edit.baseInfo" v-on:click="clickBaseInfo($event)" :class="{active:tabSelected=='baseInfo'}"></li>
+                            <li data-i18n="business.edit.resource" v-on:click="clickBusResource($event)" :class="{active:tabSelected=='resource'}"></li>
+                        </ul>
+                    </div>
+                    <div v-show="busRadio=='1'"  class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                        <div class="form-group">
+                            <label for="name" data-i18n="monitor.baseinfo.name"></label>
+                            <input class="form-control input-sm def-input-sm" type="text" name="name" id="name"
+                                   v-model="businessName" />
+                        </div>
+                    </div>
+
+                    <div v-show="busRadio=='2'"  class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                        <div id="oper" style="margin-bottom: 6px;">
+                            <button id="addResBt" type="button" class="btn def-btn def-btn-primary">
+                                <i class="fa fa-refresh" aria-hidden="true"></i>新增</button>
+                            <button id="delResBtn" type="button" class="btn def-btn def-btn-primary">
+                                <i class="fa fa-refresh" aria-hidden="true"></i>删除</button>
+                            <button id="refreshBt" type="button" class="btn def-btn def-btn-primary">
+                                <i class="fa fa-refresh" aria-hidden="true"></i>刷新</button>
+                            <!--<img class="" src="../image/alert5.png"/>-->
+                            <div id="tworight" style="display: inline-block">
+                                <div class="middleline"></div>
+                                <input class="" type="text" placeholder="请输入资源名称查询" style="border:none;background: #efefef"/>
+                                <div class="middleline"></div>
+                                <i class="fa fa-search" aria-hidden="true" style="color: #e56a15"></i>
+                            </div>
+                        </div>
+                        <div id="busResourcelist" style="background: #fff;">
+                            <table class="table" style="table-layout: fixed;font-size: 12px">
+                                <thead>
+                                <tr style="color: #6e6e6e">
+                                    <th style="width: 60px">
+                                        <input type='checkbox' class='input-checkbox'  id="allDel" name="allDel"  v-model=""/>
+                                    </th>
+                                    <th style="width: 100px">名称<i class="fa fa-sort" aria-hidden="true" style="color: #a39a99"></i>
+                                        <div class="middleline" style="margin-left: 0px"></div>
+                                    </th>
+                                    <th style="width: 100px">IP地址<i class="fa fa-sort" aria-hidden="true" style="color: #a39a99"></i>
+                                        <div class="middleline" style="margin-left: 20px"></div>
+                                    </th>
+                                    <th style="width: 80px">资源类型 <i class="fa fa-filter" aria-hidden="true" style="color: #a39a99"></i>
+                                        <div class="middleline" style="margin-left: 10px"></div>
+                                    </th>
+                                    <th style="width: 100px;">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <template v-for="(i,j) in resourceList">
+                                    <tr :id="'busResource'+j">
+                                        <td> <input type='checkbox' class='input-checkbox'  :id="'delres'+j" name="allDel"  v-model=""/></td>
+                                        <td style="color: #e56a15"><span :title="i.name">{{i.name}}</span></td>
+                                        <td style="color: #e56a15"><span :title="i.ip">{{i.ip}}</span></td>
+                                        <td>{{i.lightType|convertLightType}}</td>
+                                        <td><i class="fa fa-trash" v-on:click="delResource($event,i.monitorId)"></i></td>
+                                    </tr>
+                                </template>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer def-modal-footer">
+                    <button type="button" class="btn def-btn def-btn-primary" data-i18n="modal.footer.apply"></button>
+                    <input type="submit" class="btn def-btn def-btn-primary" data-i18n="modal.footer.confirm"/>
+                    <button type="button" class="btn def-btn def-btn-default" data-dismiss="modal"
+                            data-i18n="modal.footer.cancel"></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--</div>-->
+</body>
+</html>

@@ -83,10 +83,10 @@
             <div class="operBusiness" v-show="i.hoverEnable">
                 <div id="seeTopo"> <i class="fa fa-eye" aria-hidden="true" v-on:click="seeRelevantTopo($event,i.uuid)"></i>
                 <label data-i18n="business.list.showTopo"></label></div>
-                <div id="delBus"> <i class="fa fa-trash-o" aria-hidden="true"></i>
+                <div id="delBus"> <i class="fa fa-trash-o" aria-hidden="true" v-on:click="delBusiness($event,i.uuid)"></i>
                     <label data-i18n="business.list.delBus"></label></div>
-                <div id="editBus"> <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                <label data-i18n="business.list.etitBus"></label></div>
+                <div id="editBus"> <i class="fa fa-pencil-square-o" aria-hidden="true"  v-on:click="editBusiness($event,i.uuid)"></i>
+                <label data-i18n="business.list.editBus"></label></div>
             </div>
         </div>
     </div>
@@ -120,5 +120,6 @@
     </div>
 </div>
 </div>
+<div th:replace="business/editBusiness::editBusiness"></div>
 </body>
 </html>

@@ -31,6 +31,7 @@ require.config({
         'topoMain':'./topo/topo-main',
         'editTopo':'./topo/edit-topo',
         'showBusiness':'./business/business-list',
+        'editBusiness':'./business/edit-business',
         'showAlert':'./alert/alert-list'
 
 
@@ -44,6 +45,6 @@ require.config({
         'bootstrap-table':['bootstrap'],
         'bootstrap-table-zh-CN':['bootstrap'],
     },
-    waitSeconds: 60
+    waitSeconds: 6000
 
 });

@@ -2,6 +2,7 @@ package business.controller;
 
 import business.service.BusinessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.common.ResultMsg;
 import monitor.entity.DelMonitorRecordView;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import business.entity.PageData;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -51,9 +53,27 @@ public class BusinessController {
         return service.addBusinessResource(businessId,view);
     }
 
+    //删除业务
+    @RequestMapping("/delBusiness")
+    @ResponseBody
+    public ResultMsg delBusiness(String businessId) {
+        return service.delBusiness(businessId);
+    }
+
 //    @RequestMapping("/getRelevatTopo")
 //    @ResponseBody
 //    public ResultMsg getRelevatTopo(String uuid) throws JsonProcessingException {
 //        return service.getRelevatTopo(uuid);
 
+    @RequestMapping("/getBusinessInfo")
+    @ResponseBody
+    public ResultMsg getBusinessInfo(String businessId) {
+        return service.getBusinessInfo(businessId);
+    }
+    @RequestMapping("/delBusinessResource")
+    @ResponseBody
+    public ResultMsg delBusinessResource(String businessId,String monitorList) throws IOException {
+        List<String> monitorIds = mapper.readValue(monitorList, new TypeReference<List<String>>() {});
+        return service.delBusinessResource(businessId,monitorIds);
+    }
 }

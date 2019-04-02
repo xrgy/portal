@@ -13,6 +13,8 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                         businessList: [],
                         path: {
                             getBusinessList: "/business/getBusinessListByPage",
+                            delBusiness: "/business/delBusiness",
+
                             // getRelevatTopo:"/business/getRelevatTopo"
                         },
                         pageNum:1,
@@ -94,10 +96,10 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                                     $(".singleBusiness:nth-child(" + j + ") .busyStyle label").addClass("notBusy");
                                 }
 
-                                if (_self.businessList[i].available_score >= 75) {
+                                if (_self.businessList[i].available_score >= 100) {
                                     //绿色
                                     $(".singleBusiness:nth-child(" + j + ") .availableStyle label").addClass("notBusy");
-                                } else if (_self.businessList[i].available_score >= 26) {
+                                } else if (_self.businessList[i].available_score >= 90) {
                                     //黄色
                                     $(".singleBusiness:nth-child(" + j + ") .availableStyle label").addClass("normalBusy");
                                 } else {
@@ -110,6 +112,35 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                             sessionStorage.setItem('relevatBusinessUuid',uuid);
                             window.open("/topo/showWeaveTopo",'_parent');
                             topoMain.startTopo();
+                        },
+                        delBusiness:function (e,uuid) {
+                            var _self = this;
+                            $.ajax({
+                                type:"get",
+                                data:{delBusiness:uuid},
+                                url:_self.path.addTemplate,
+                                success:function (data) {
+                                    if (data.msg === "SUCCESS") {
+                                        //弹出框 新建成功
+                                        commonModule.prompt("prompt.insertSuccess",data.msg);
+                                    }else {
+                                        //弹出框 新建失败
+                                        commonModule.prompt("prompt.insertError","alert");
+                                    }
+                                    $("#monitorConfig").modal('hide');
+
+                                },
+                                error:function () {
+                                    //处理异常，请重试
+                                    $("#monitorConfig").modal('hide');
+                                    commonModule.prompt("prompt.exceptionPleaseTryAgain","alert");
+                                }
+
+                            })
+                        },
+                        editBusiness:function (e,uuid) {
+                            sessionStorage.setItem('editBusinessId',uuid);
+                            $("#editBusiness").modal({backdrop: 'static', keyboard: false, show: true})
                         },
                         //下一步
                         next: function () {

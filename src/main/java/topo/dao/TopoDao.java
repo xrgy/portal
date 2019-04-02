@@ -45,4 +45,13 @@ public interface TopoDao {
      * @return
      */
     boolean insertTopoNodeList(List<TopoNodeEntity> nodes) throws JsonProcessingException;
+
+    boolean insertBusinessTopoNodeList(List<TopoBusinessNodeEntity> newNodeList) throws JsonProcessingException;
+
+    /**
+     * 删除业务的节点和链路
+     * @param businessId
+     * @return
+     */
+    boolean delTopoResourceByBusinessId(String businessId);
 }

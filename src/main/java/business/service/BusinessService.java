@@ -43,4 +43,26 @@ public interface BusinessService {
 
 
     ResultMsg getBusinessListByPage(PageData page) throws JsonProcessingException;
+
+    /**
+     * 删除业务
+     * @param businessId
+     * @return
+     */
+    ResultMsg delBusiness(String businessId);
+
+    /**
+     * 获取业务信息，包括业务内的资源
+     * @param businessId
+     * @return
+     */
+    ResultMsg getBusinessInfo(String businessId);
+
+    /**
+     * 删除业务资源
+     * @param businessId
+     * @param monitorIds
+     * @return
+     */
+    ResultMsg delBusinessResource(String businessId, List<String> monitorIds) throws JsonProcessingException;
 }
