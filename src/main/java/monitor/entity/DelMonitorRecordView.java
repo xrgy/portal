@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DelMonitorRecordView {
+   // monitorId
     private String uuid;
     private String lightType;
 }

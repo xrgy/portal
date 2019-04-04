@@ -3,6 +3,7 @@ package alert.service.impl;
 import alert.dao.AlertDao;
 import alert.entity.AlertAlarmInfo;
 import alert.entity.AlertEntity;
+import alert.entity.AlertView;
 import alert.service.AlertService;
 import business.dao.BusinessDao;
 import business.service.BusinessService;
@@ -55,8 +56,8 @@ public class AlertServiceImpl implements AlertService {
     }
 
     @Override
-    public ResultMsg getAlertInfo(int severity, int resolve, String uuid) {
-        List<AlertEntity> alertList = dao.getAlertInfo(severity, resolve, uuid);
+    public ResultMsg getAlertInfo(AlertView view) throws JsonProcessingException {
+        List<AlertEntity> alertList = dao.getAlertInfo(view);
         alertList.forEach(x->{
             String description = x.getDescription();
             x.setAlertSource(getNameFromDescription(description));

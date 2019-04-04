@@ -3,6 +3,7 @@ package alert.dao;
 
 import alert.entity.AlertAlarmInfo;
 import alert.entity.AlertEntity;
+import alert.entity.AlertView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.List;
@@ -16,5 +17,5 @@ public interface AlertDao {
 
     boolean deleteAlertResourceBymonitoruuid(String monitorUuid);
 
-    List<AlertEntity> getAlertInfo(int severity, int resolve, String uuid);
+    List<AlertEntity> getAlertInfo(AlertView view) throws JsonProcessingException;
 }

@@ -33,16 +33,16 @@
 
                     <div v-show="busRadio=='2'"  class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
                         <div id="oper" style="margin-bottom: 6px;">
-                            <button id="addResBt" type="button" class="btn def-btn def-btn-primary">
-                                <i class="fa fa-refresh" aria-hidden="true"></i>新增</button>
-                            <button id="delResBtn" type="button" class="btn def-btn def-btn-primary">
-                                <i class="fa fa-refresh" aria-hidden="true"></i>删除</button>
-                            <button id="refreshBt" type="button" class="btn def-btn def-btn-primary">
-                                <i class="fa fa-refresh" aria-hidden="true"></i>刷新</button>
+                            <button id="addResBt" type="button" class="btn def-btn def-btn-primary"  v-on:click="addResource">
+                                <i class="fa fa-plus" aria-hidden="true" style="margin-right: 4px"></i>新增</button>
+                            <button id="delResBtn" type="button" class="btn def-btn def-btn-primary"  v-on:click="delList">
+                                <i class="fa fa-trash" aria-hidden="true" style="margin-right: 4px"></i>删除</button>
+                            <button id="refreshBt" type="button" class="btn def-btn def-btn-primary" v-on:click="refreshResourceList">
+                                <i class="fa fa-refresh" aria-hidden="true"  style="margin-right: 4px"></i>刷新</button>
                             <!--<img class="" src="../image/alert5.png"/>-->
-                            <div id="tworight" style="display: inline-block">
+                            <div id="tworight" style="display: inline-block;float: right;border-bottom: 0.1px solid #ccc;padding-bottom: 1px;">
                                 <div class="middleline"></div>
-                                <input class="" type="text" placeholder="请输入资源名称查询" style="border:none;background: #efefef"/>
+                                <input class="" type="text" placeholder="请输入资源名称查询" style="border:none;background: #fff;width: 120px;"/>
                                 <div class="middleline"></div>
                                 <i class="fa fa-search" aria-hidden="true" style="color: #e56a15"></i>
                             </div>
@@ -52,7 +52,8 @@
                                 <thead>
                                 <tr style="color: #6e6e6e">
                                     <th style="width: 60px">
-                                        <input type='checkbox' class='input-checkbox'  id="allDel" name="allDel"  v-model=""/>
+                                        <input type='checkbox' class='input-checkbox'  id="allDel" name="delAll"
+                                               v-on:click="checkAllDel($event)"/>
                                     </th>
                                     <th style="width: 100px">名称<i class="fa fa-sort" aria-hidden="true" style="color: #a39a99"></i>
                                         <div class="middleline" style="margin-left: 0px"></div>
@@ -60,20 +61,20 @@
                                     <th style="width: 100px">IP地址<i class="fa fa-sort" aria-hidden="true" style="color: #a39a99"></i>
                                         <div class="middleline" style="margin-left: 20px"></div>
                                     </th>
-                                    <th style="width: 80px">资源类型 <i class="fa fa-filter" aria-hidden="true" style="color: #a39a99"></i>
+                                    <th style="width: 100px">资源类型 <i class="fa fa-filter" aria-hidden="true" style="color: #a39a99"></i>
                                         <div class="middleline" style="margin-left: 10px"></div>
                                     </th>
-                                    <th style="width: 100px;">操作</th>
+                                    <th style="width: 60px;">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <template v-for="(i,j) in resourceList">
                                     <tr :id="'busResource'+j">
-                                        <td> <input type='checkbox' class='input-checkbox'  :id="'delres'+j" name="allDel"  v-model=""/></td>
+                                        <td><input type='checkbox' class='input-checkbox'  :id="'delres'+j" name="needDel"  :value="i.monitorId"/></td>
                                         <td style="color: #e56a15"><span :title="i.name">{{i.name}}</span></td>
                                         <td style="color: #e56a15"><span :title="i.ip">{{i.ip}}</span></td>
                                         <td>{{i.lightType|convertLightType}}</td>
-                                        <td><i class="fa fa-trash" v-on:click="delResource($event,i.monitorId)"></i></td>
+                                        <td><i class="fa fa-trash" v-on:click="delResource($event,i.monitorId)" style="cursor: pointer;"></i></td>
                                     </tr>
                                 </template>
                                 </tbody>
@@ -85,10 +86,90 @@
                 <div class="modal-footer def-modal-footer">
                     <button type="button" class="btn def-btn def-btn-primary" data-i18n="modal.footer.apply"></button>
                     <input type="submit" class="btn def-btn def-btn-primary" data-i18n="modal.footer.confirm"/>
-                    <button type="button" class="btn def-btn def-btn-default" data-dismiss="modal"
+                    <button type="button" class="btn def-btn def-btn-default btn-cancel" data-dismiss="modal"
                             data-i18n="modal.footer.cancel"></button>
                 </div>
             </form>
+
+        </div>
+    </div>
+    <div id="addResource" class="modal fade" tabindex="-1" role="dialog" aria-hidden="false" style="padding-left: 0 !important;">
+        <div class="modal-dialog middle-dialog">
+            <div class="modal-content def-modal-content col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="modal-header def-modal-header">
+                    <i class="fa fa-plus skin-color"></i>
+                    <span data-i18n="busines.addResource"></span>
+                    <button type="button" class="close skin-color close-style" v-on:click="closeAddResource($event)">&times;</button>
+                </div>
+                <hr class="skin-color border-color"/>
+                <form role="form" id="add-resource">
+                    <div class="modal-body def-modal-body">
+                        <div id="monitorResourcelist" style="background: #fff;">
+                            <table class="table" style="table-layout: fixed;font-size: 12px">
+                                <thead>
+                                <tr style="color: #6e6e6e">
+                                    <th style="width: 60px">
+                                        <input type='checkbox' class='input-checkbox'  id="allAdd" name="addAll"
+                                               v-on:click="checkAllAdd($event)"/>
+                                    </th>
+                                    <th style="width: 100px">名称<i class="fa fa-sort" aria-hidden="true" style="color: #a39a99"></i>
+                                        <div class="middleline" style="margin-left: 0px"></div>
+                                    </th>
+                                    <th style="width: 100px">IP地址<i class="fa fa-sort" aria-hidden="true" style="color: #a39a99"></i>
+                                        <div class="middleline" style="margin-left: 20px"></div>
+                                    </th>
+                                    <th style="width: 80px">资源类型 <i class="fa fa-filter" aria-hidden="true" style="color: #a39a99"></i>
+                                        <div class="middleline" style="margin-left: 10px"></div>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <template v-for="(i,j) in showMonitorList">
+                                    <tr :id="'monitorResource'+j">
+                                        <td> <input type='checkbox' class='input-checkbox'  :id="'addres'+j" name="needAdd"  :value="i.uuid"/></td>
+                                        <td style="color: #e56a15"><span :title="i.name"  :value="i.name">{{i.name}}</span></td>
+                                        <td style="color: #e56a15"><span :title="i.ip" :value="i.ip">{{i.ip}}</span></td>
+                                        <td ><span :value="i.lightTypeId">{{i.lightTypeId|convertLightType}}</span></td>
+                                    </tr>
+                                </template>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="pull-right" style="background: #fff;">
+                            <div id="chosePageSize" style="margin-top: 20px;">
+                                <label>
+                                    每页
+                                    <select id="pageSize" v-on:change="research()" v-model="pageSize"
+                                            aria-controls="DataTables_Table_0" size="1" name="DataTables_Table_0_length">
+                                        <option selected="selected" value="15">15</option>
+                                        <option value="30">30</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                    条记录
+                                </label>
+                            </div>
+                            <ul class="pagination pagination-sm">
+                                <li v-on:click="previous()" class="prev"><a href="#" style="color: #485664;">&laquo;</a>
+                                </li>
+                                <div id="page">
+                                    <select style="font-size: 12px;padding-right: 8px;"  name="monitortemplate" id="pageNum"
+                                            v-model="pageNum" v-on:change="search()">
+                                        <option v-for="page in pageNumList" :value="page">{{page}}</option>
+                                    </select>
+                                </div>
+                                <li class="next" v-on:click="next()"><a href="#" style="color: #485664;">&raquo;</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer def-modal-footer">
+                        <input type="submit" class="btn def-btn def-btn-primary" data-i18n="modal.footer.confirm"/>
+                        <button type="button" class="btn def-btn def-btn-default btn-cancel"   v-on:click="closeAddResource($event)"
+                                data-i18n="modal.footer.cancel"></button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

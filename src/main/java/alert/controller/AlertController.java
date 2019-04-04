@@ -1,5 +1,6 @@
 package alert.controller;
 
+import alert.entity.AlertView;
 import alert.service.AlertService;
 import business.service.BusinessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -33,7 +34,7 @@ public class AlertController {
 
     @RequestMapping("getAlertInfo")
     @ResponseBody
-    public ResultMsg getAlertInfo(int severity,int resolve, String uuid) throws JsonProcessingException {
-        return service.getAlertInfo(severity,resolve,uuid);
+    public ResultMsg getAlertInfo(AlertView view) throws JsonProcessingException {
+        return service.getAlertInfo(view);
     }
 }

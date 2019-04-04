@@ -1,5 +1,6 @@
 package business.controller;
 
+import business.entity.BusinessMonitorEntity;
 import business.service.BusinessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -51,6 +52,12 @@ public class BusinessController {
     @ResponseBody
     public ResultMsg addBusinessResource(String businessId,List<DelMonitorRecordView> view) throws JsonProcessingException {
         return service.addBusinessResource(businessId,view);
+    }
+    @RequestMapping("/updateBusiness")
+    @ResponseBody
+    public ResultMsg updateBusiness(String businessId,String busname,String data) throws IOException {
+        List<BusinessMonitorEntity> monitorEntityList = mapper.readValue(data, new TypeReference<List<BusinessMonitorEntity>>() {});
+        return service.updateBusiness(businessId,busname,monitorEntityList);
     }
 
     //删除业务

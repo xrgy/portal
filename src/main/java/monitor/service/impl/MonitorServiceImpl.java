@@ -1,6 +1,7 @@
 package monitor.service.impl;
 
 import alert.service.AlertService;
+import business.entity.PageData;
 import business.service.BusinessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -1453,36 +1454,42 @@ public class MonitorServiceImpl implements MonitorService {
         tomcatMonitor.forEach(x -> {
             OperationMonitorEntity entity = new OperationMonitorEntity();
             BeanUtils.copyProperties(x, entity);
+            entity.setLightTypeId(MonitorEnum.LightTypeEnum.TOMCAT.value());
             allMonitor.add(entity);
         });
         List<DBMonitorEntity> dbMonitor = dao.getAllDbMonitorEntity();
         dbMonitor.forEach(x -> {
             OperationMonitorEntity entity = new OperationMonitorEntity();
             BeanUtils.copyProperties(x, entity);
+            entity.setLightTypeId(MonitorEnum.LightTypeEnum.MYSQL.value());
             allMonitor.add(entity);
         });
         List<HostMonitorEntity> hostMonitor = dao.getAllHostMonitorEntity();
         hostMonitor.forEach(x -> {
             OperationMonitorEntity entity = new OperationMonitorEntity();
             BeanUtils.copyProperties(x, entity);
+            entity.setLightTypeId(MonitorEnum.LightTypeEnum.CVK.value());
             allMonitor.add(entity);
         });
         List<VmMonitorEntity> vmMonitor = dao.getAllVmMonitorEntity();
         vmMonitor.forEach(x -> {
             OperationMonitorEntity entity = new OperationMonitorEntity();
             BeanUtils.copyProperties(x, entity);
+            entity.setLightTypeId(MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value());
             allMonitor.add(entity);
         });
         List<K8snodeMonitorEntity> k8snodeMonitor = dao.getAllK8snodeMonitorEntity();
         k8snodeMonitor.forEach(x -> {
             OperationMonitorEntity entity = new OperationMonitorEntity();
             BeanUtils.copyProperties(x, entity);
+            entity.setLightTypeId(MonitorEnum.LightTypeEnum.K8SNODE.value());
             allMonitor.add(entity);
         });
         List<K8scontainerMonitorEntity> k8scontainerMOnitor = dao.getAllK8sContainerMonitorEntity();
         k8scontainerMOnitor.forEach(x -> {
             OperationMonitorEntity entity = new OperationMonitorEntity();
             BeanUtils.copyProperties(x, entity);
+            entity.setLightTypeId(MonitorEnum.LightTypeEnum.K8SCONTAINER.value());
             allMonitor.add(entity);
         });
 
@@ -1661,6 +1668,11 @@ public class MonitorServiceImpl implements MonitorService {
     @Override
     public List<NetworkMonitorEntity> getAllNetworkMonitorEntity() {
         return dao.getAllNetworkMonitorEntity();
+    }
+
+    @Override
+    public ResultMsg getBusMonitorListByPage(PageData page) throws JsonProcessingException {
+        return ResCommon.getCommonResultMsg(dao.getBusMonitorListByPage(page));
     }
 
 }

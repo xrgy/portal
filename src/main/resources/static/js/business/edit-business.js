@@ -14,10 +14,17 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                     path:{
                         getBusinessInfo: "/business/getBusinessInfo",
                         delBusinessResource: "/business/delBusinessResource",
-
+                        getBusMonitorList: "/monitor/getBusinessMonitorRecord",
+                        updateBusiness:"/business/updateBusiness",
                     },
                     businessName:"",
                     resourceList:null,
+                    pageNum:1,
+                    pageSize:15,
+                    pageNumList:[],
+                    totalPage:0,
+                    monitorEntityList:[],
+                    showMonitorList:[],
                 },
                 filters: {
                     convertLightType: function (type) {
@@ -56,6 +63,74 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                                 templateName: commonModule.i18n("form.select.default")
                             }];
                     },
+                    initData: function () {
+                        var _self = this;
+                        _self.monitorEntityList=[];
+                        _self.pageNumList=[];
+                        _self.showMonitorList=[];
+                        $.ajax({
+                            url: _self.path.getBusMonitorList,
+                            success: function (data) {
+                                if (data.msg == "SUCCESS") {
+                                    var data = data.data;
+                                    var totalRecord = data.length;
+                                    if (totalRecord % _self.pageSize == 0) {
+                                        _self.totalPage = Math.floor(totalRecord / _self.pageSize);
+                                    } else {
+                                        _self.totalPage = Math.floor(totalRecord / _self.pageSize) + 1;
+                                    }
+                                    for(var i=1;i<=_self.totalPage;i++){
+                                        _self.pageNumList.push(i);
+                                    }
+                                    var i=0;
+                                    data.forEach(function (x) {
+                                        _self.monitorEntityList.push(x);
+                                    });
+                                    _self.reloadMonitorList();
+                                }
+                            },
+                            error: function () {
+                            }
+                        })
+                    },
+                    reloadMonitorList:function () {
+                        var _self=this;
+                        _self.showMonitorList=[];
+                        var  startIndex = (_self.pageNum-1)*parseInt(_self.pageSize);
+                        for(var i=0;i<parseInt(_self.pageSize);i++){
+                            if (i+startIndex>=_self.monitorEntityList.length){
+                                break;
+                            }
+                            _self.showMonitorList.push(_self.monitorEntityList[i+startIndex]);
+                        }
+                    },
+                    closeAddResource:function (e) {
+                        $("#addResource").modal('hide');
+                    },
+                    research: function () {
+                        var _self = this;
+                        _self.pageNum =1;
+                        _self.reloadMonitorList();
+                    },
+                    previous: function () {
+                        var _self = this;
+                        if (_self.pageNum > 1) {
+                            _self.pageNum = _self.pageNum - 1;
+                            _self.reloadMonitorList();
+                        }
+                    },
+                    search: function () {
+                        this.reloadMonitorList();
+
+                    },
+                    //下一步
+                    next: function () {
+                        var _self = this;
+                        if (_self.pageNum < _self.totalPage) {
+                            _self.pageNum = _self.pageNum + 1;
+                            _self.reloadMonitorList();
+                        }
+                    },
                     clickBaseInfo: function (event) {
                         var e = event.target;
                         $('#leftMenu').find('li').removeClass('active');
@@ -63,18 +138,85 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                         this.tabSelected="baseInfo";
                         this.busRadio="1";
                     },
+                    checkAllDel:function (event) {
+                        var _self = this;
+                        if ($("#allDel").prop("checked")){
+                            $("input[name='needDel']:checkbox").each(function(){
+                                $(this).prop("checked",true);
+                            });
+                        }else {
+                            $("input[name='needDel']:checkbox").each(function(){
+                                $(this).prop("checked",false);
+                            });
+                        }
+
+                    },
+                    checkAllAdd:function (event) {
+                        var _self = this;
+                        if ($("#allAdd").prop("checked")){
+                            $("input[name='needAdd']:checkbox").each(function(){
+                                $(this).prop("checked",true);
+                            });
+                        }else {
+                            $("input[name='needAdd']:checkbox").each(function(){
+                                $(this).prop("checked",false);
+                            });
+                        }
+
+                    },
+
+                    delList:function () {
+                        var _self = this;
+                        var monitorList = [];
+                        $("input[name='needDel']:checkbox").each(function(){
+                            if($(this).prop("checked")){
+                                monitorList.push($(this).val());
+                            }
+                        });
+                      //todo 只是从_self.resourceList中移除
+//                        this.actionDel(JSON.stringify(monitorList))
+                        monitorList.forEach(function (item) {
+                            _self.resourceList.remove(item);
+                        })
+                    },
                     delResource:function (event,monitorId) {
                       var _self = this;
                       var monitorList = [];
                       monitorList.push(monitorId);
+                      //todo 只是从_self.resourceList中移除
+                      //_self.actionDel(JSON.stringify(monitorList))
+                        _self.resourceList.remove(monitorId);
+                    },
+                    addResource:function () {
+                        //显示modal，请求
+                        $("#addResource").modal({backdrop: 'static', keyboard: false, show: true})
+                        this.initData();
+                    },
+                    // actionDel:function (monitorListStr) {
+                    //     var _self=this;
+                    //     $.ajax({
+                    //         //"MySQL mysql"
+                    //         data: {"businessId":_self.businessId,"monitorList":monitorListStr},
+                    //         url: _self.path.delBusinessResource,
+                    //         success: function (data) {
+                    //             if (data.msg === "SUCCESS") {
+                    //                 _self.refreshResourceList();
+                    //             }
+                    //         },
+                    //         error: function () {
+                    //         }
+                    //     })
+                    // },
+                    refreshResourceList:function () {
+                        var _self=this;
+                        _self.resourceList=[];
                         $.ajax({
                             //"MySQL mysql"
-                            data: {"businessId":_self.businessId,"monitorList":JSON.stringify(monitorList)},
-                            url: _self.path.delBusinessResource,
+                            data: {"businessId":_self.businessId},
+                            url: _self.path.getBusinessInfo,
                             success: function (data) {
                                 if (data.msg === "SUCCESS") {
                                     var data = data.data;
-                                    _self.businessName=data.name;
                                     _self.resourceList=data.resourceList;
                                 }
                             },
@@ -103,169 +245,121 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                         var e = event.target;
                         $('#leftMenu').find('li').removeClass('active');
                         $(e).closest('li').addClass('active');
-                        editBusiness.tabSelected="resource";
+                        this.tabSelected="resource";
                         this.busRadio="2";
                     },
 
-
-                    initTable: function () {
-                        var _self = this;
-                        for(var i in _self.availDataObj){
-                            for(var j in _self.availDataObj[i].data){
-                                var item = _self.availDataObj[i].data[j];
-                                item.severity='0';
-                            }
-                        }
-                        for(var t in _self.perfDataObj){
-                            for(var k in _self.perfDataObj[t].data){
-                                var item1 = _self.perfDataObj[t].data[k];
-                                item1.level_one_severity='0';
-                                item1.level_one_alert_first_condition='0';
-                                item1.level_one_expression_more='and';
-                                item1.level_one_alert_second_condition='0';
-                                item1.level_two_severity='1';
-                                item1.level_two_alert_first_condition='0';
-                                item1.level_two_expression_more='and';
-                                item1.level_two_alert_second_condition='0';
-
-                            }
+                    hasK8sNodeType:function(element, index, array) {
+                        if (element.lightType=='k8sNode'){
+                            return true;
                         }
                     },
-                    groupByType: function (array) {
-                        var map = {}, ret = [];
-                        for (var i in array) {
-                            var line = array[i];
-                            if (!map[line.type]) {
-                                ret.push({
-                                    type: line.type,
-                                    data: [line.data]
-                                });
-                                map[line.type] = ret;
-                            } else {
-                                for (var j in ret) {
-                                    var typeArr = ret[j];
-                                    if (line.type === typeArr.type) {
-                                        typeArr.data.push(line.data);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        return ret;
-                    },
-                    //显示二级告警
-                    showMoreLine: function (event) {
-                        var e = event.target;
-                        //closet从当前元素开始向上查找，包括当前元素
-                        $(e).closest('.span-more-line').addClass("hidden");
-                        $(e).closest('.span-more-line').closest('div').next().removeClass('hidden');
-                    },
-                    //显示更多条件
-                    showMoreCondition: function (event) {
-                        var e = event.target;
-                        $(e).addClass("hidden");
-                        $(e).parent().next().removeClass('hidden');
-                    },
-                    //close按钮
-                    closeCondition: function (event) {
-                        var e = event.target;
-                        if ($(e).parent().prev('div').length !== 0) {
-                            $(e).parent().addClass("hidden");
-                            $(e).parent().prev('div').children('.span-more-condition').removeClass('hidden');
-                        } else {
-                            $(e).parent().next().addClass('hidden');
-                            $(e).closest('div').children('.span-more-condition').removeClass('hidden');
-                            $(e).parent().parent().prev('div').children('.span-more-line').removeClass('hidden');
-                            $(e).parent().parent().addClass('hidden');
+                    hasK8scType:function(element, index, array) {
+                        if (element.lightType=='k8sContainer'){
+                            return true;
                         }
                     },
-                    toggleType: function (event) {
-                        var e = event.target;
-                        $(e).toggleClass('fa-angle-down fa-angle-up');
-                        var start = $(e).parent().parent().attr('id');
-                        $(e).parent().parent().siblings("tr[id^=" + start + "]").toggleClass('hidden')
-                        // $($(e).parent().parent().siblings("tr[id^="+start+"]")).slideToggle();
-
+                    hasCvkType:function(element, index, array) {
+                        if (element.lightType=='CVK'){
+                            return true;
+                        }
                     },
-                    toggleMoitorMode:function (str) {
-                        var _self =this;
-                        _self.monitorMode=str;
-                        console.log("monitorMode:"+_self.monitorMode);
-                        _self.initData();
+                    hasVmType:function(element, index, array) {
+                        if (element.lightType=='VirtualMachine'){
+                            return true;
+                        }
                     },
                     //新建模板提交
                     submitForm:function () {
                         var _self = this;
-                        var data ={};
-                        data.template_name=_self.templateName;
-                        data.monitor_mode= _self.monitorMode;
-                        data.template_type= 1;
-                        data.light_type=_self.lightType;
-                        data.available = _self.availDataObj;
-                        data.performance = _self.perfDataObj;
+                        // _self.resourceList中必须包含cvk和vm，k8snode和k8sc
+                        var hasK8sn = _self.resourceList.some(_self.hasK8sNodeType);
+                        var hasK8sc = _self.resourceList.some(_self.hasK8scType);
+                        var hasCvk = _self.resourceList.some(_self.hasCvkType);
+                        var hasVm = _self.resourceList.some(_self.hasVmType);
+                        if (hasK8sn && hasK8sc && hasCvk && hasVm){
+                            //提交
+                            $.ajax({
+                                type:"post",
+                                data:{businessId:_self.businessId,busname:_self.businessName,data:JSON.stringify(_self.resourceList)},
+                                url:_self.path.updateBusiness,
+                                success:function (data) {
+                                    if (data.msg === "SUCCESS") {
+                                        //弹出框 新建成功
+                                        commonModule.prompt("prompt.updateSuccess",data.msg);
+                                    }else {
+                                        //弹出框 新建失败
+                                        commonModule.prompt("prompt.updateError","alert");
+                                    }
+                                    $("#editBusiness").modal('hide');
 
-                        $.ajax({
-                            type:"post",
-                            data:{templateData:JSON.stringify(data)},
-                            url:_self.path.addTemplate,
-                            success:function (data) {
-                                if (data.msg === "SUCCESS") {
-                                    //弹出框 新建成功
-                                    commonModule.prompt("prompt.deleteSuccess",data.msg);
-                                }else {
-                                    //弹出框 新建失败
-                                    commonModule.prompt("prompt.deleteError","alert");
+                                },
+                                error:function () {
+                                    //处理异常，请重试
+                                    $("#editBusiness").modal('hide');
+                                    commonModule.prompt("prompt.exceptionPleaseTryAgain","alert");
                                 }
-                                $("#monitorConfig").modal('hide');
-                                
-                            },
-                            error:function () {
-                                //处理异常，请重试
-                                $("#monitorConfig").modal('hide');
-                                commonModule.prompt("prompt.exceptionPleaseTryAgain","alert");
+
+                            })
+
+                        }else {
+                            commonModule.prompt("prompt.confirmError", "alert");
+                        }
+                    },
+                    submitAddResourceForm:function () {
+                        //不提交到服务器，只是提交到_self.resourceList中
+                        var _self = this;
+                        $("input[name='needAdd']:checkbox").each(function(){
+                            if($(this).prop("checked")){
+                                //monitorList.push($(this).val());
+                                //
+                                var monitorId = $(this).val();
+                                var name = $(this).closest("tr").find('span').eq(0).attr("value");
+                                var ip = $(this).closest("tr").find('span').eq(1).attr("value");
+                                var light = $(this).closest("tr").find('span').eq(2).attr("value")
+                                _self.resourceList.push({monitorId:monitorId,name:name,ip:ip,lightType:light})
                             }
-
-                        })
-
+                        });
+                        $("#addResource").modal('hide');
                     }
                 }
 
             });
-            $("#add-template").validate({
+            $("#edit-business").validate({
                 submitHandler: function () {
-                    monitorConfig.submitForm();
-                },
-                //失去焦点
-                onfocusout: function (element,event) {
-                    $(element).valid();
-                },
-                ignore:".ignore",
-                //在 keyup 时验证,默认为true
-                onkeyup:function (element,event) {
-                    // $(element).valid();
-                    return false;
+                    editBusiness.submitForm();
                 },
                 rules:{
-                    tempName:{
-                        required:true,
-                        //remote接受的返回值只要true和false即可
-                        remote:{
-                            //验证名称是否重复
-                            type:"post",
-                            url:"/monitorConfig/isTemplateNameDup",
-                            timeout:6000,
-                            data:{
-                                name:function () {
-                                    return $('#tempName').val();
-                            }}
-                        }
-                    }
                 },
                 messages:{
-                    tempName: {
-                        required: commonModule.i18n("validate.inputNotEmpty"),
-                        remote: commonModule.i18n("validate.templateNameDuplicate")
+                },
+                errorElement:"span",
+                errorPlacement:function (error,element) {
+                    element.parent("div").addClass('has_feedback');
+                    if (element.prop("type") === "checkbox"){
+                        error.insertAfter(element.parent("label"));
+                    }else {
+                        error.insertAfter(element);
                     }
+                },
+                success: function (label,element) {
+                    //要验证的元素通过验证后的动作
+                },
+                highlight: function (element,erroClass,validClass) {
+                    $(element).parent("div").addClass("has-error").removeClass("has-success");
+                },
+                unhighlight: function (element,erroClass,validClass) {
+                    $(element).parent("div").addClass("has-success").removeClass("has-error");
+                }
+            });
+
+            $("#add-resource").validate({
+                submitHandler: function () {
+                    editBusiness.submitAddResourceForm();
+                },
+                rules:{
+                },
+                messages:{
                 },
                 errorElement:"span",
                 errorPlacement:function (error,element) {
@@ -291,8 +385,21 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
         $("#editBusiness").on('show.bs.modal', function () {
             editBusiness.businessId = sessionStorage.getItem('editBusinessId');
             editBusiness.tabSelected="baseInfo";
+            editBusiness.busRadio="1";
             editBusiness.initBaseInfo();
         })
+        Array.prototype.indexOf = function(val) {
+            for (var i = 0; i < this.length; i++) {
+                if (this[i].monitorId == val) return i;
+            }
+            return -1;
+        }
+        Array.prototype.remove = function(val) {
+            var index = this.indexOf(val);
+            if (index > -1) {
+                this.splice(index, 1);
+            }
+        };
     }
     businessEdit();
     return {businessEdit: businessEdit}

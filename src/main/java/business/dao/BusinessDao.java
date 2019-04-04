@@ -18,7 +18,7 @@ public interface BusinessDao {
 
     boolean insertBusinessResourceList(List<BusinessResourceEntity> resourceList) throws JsonProcessingException;
 
-
+    
 
     /**
      * 根据资源uuid获取业务资源实体
@@ -46,4 +46,6 @@ public interface BusinessDao {
     boolean delBusinessResourceList(List<BusinessResourceEntity> needDel) throws JsonProcessingException;
 
     boolean delBusinessResourceByBusinessId(String businessId);
+
+    boolean insertBusiness(BusinessEntity businessEntity) throws JsonProcessingException;
 }

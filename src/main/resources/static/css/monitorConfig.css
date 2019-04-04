@@ -179,6 +179,7 @@
 #myBusiness #businessList .healthStyle #healthScore label{
     font-size: 26px;
 }
+#busResourcelist .middleline,
 #myBusiness #businessList .middleline{
     display: inline-block;
     /*float: left;*/
@@ -362,6 +363,7 @@
     width: 290px;
     margin-left: 800px;
 }
+#edit-business #oper .middleline,
 #myBusiness #oper .middleline{
     display: inline-block;
     /* float: left; */
@@ -442,6 +444,7 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
 #myalert table>tfoot>tr>th{
     border-top: 1.4px solid #ddd;
 }
+#add-resource #chosePageSize,
 #myBusiness #chosePageSize,
 #myalert #chosePageSize {
     width: 150px;
@@ -449,6 +452,7 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     margin-top: 24px;
     padding: 0 10px;
 }
+#add-resource #page,
 #myBusiness #page,
 #myalert #page {
     display: inline-block;
@@ -459,6 +463,8 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     /*!* box-shadow: -1px 10px 0px 0.4px #ccc; *!*/
     /*position: relative;*/
 }
+#add-resource #page select,
+#add-resource #chosePageSize select,
 #myBusiness #page select,
 #myBusiness #chosePageSize select,
 #myalert #page select,
@@ -478,6 +484,7 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     border-radius: 10px;
     border: 1px solid #ccc;
 }
+#add-resource .prev a, #add-resource .next a,
 #myBusiness .prev a, #myBusiness .next a,
 #myalert .prev a, #myalert .next a {
     float: none;
@@ -491,6 +498,7 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
 #myalert #chosePageSize{
     margin-top: 14px;
 }
+
 #myBusiness #breadlineTitle .middleline,
 #myalert #breadlineTitle .middleline{
     display: inline-block;
@@ -500,4 +508,10 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     margin-left: 1px;
     position: relative;
     top: 2px;
+}
+#editBusiness input[type="submit"],
+#editBusiness button{
+    box-shadow: none;
+    border-radius: 0;
+    width: 80px;
 }

@@ -32,6 +32,7 @@ public class BusinessDaoImpl implements BusinessDao {
     private static final String BUSINESS_PREFIX = "business";
     private static final String PATH_BUSINESS_LIST = "getBusinessList";
     private static final String PATH_ADD_BUSINESS_RESOURCE_LIST = "addBusinessResourceList";
+    private static final String PATH_ADD_BUSINESS = "addBusiness";
     private static final String PATH_ADD_BUSINESS_RESOURCE_LIST_BY_MONITOR = "getBusinessResourceByMonitorUuid";
     private static final String PATH_ADD_BUSINESS_RESOURCE_LIST_BY_BUSINESS = "getBusinessResourcesByBusinessId";
     private static final String PATH_GET_BUSINESS_BY_PAGE = "getBusinessByPage";
@@ -128,5 +129,11 @@ public class BusinessDaoImpl implements BusinessDao {
     public boolean delBusinessResourceByBusinessId(String businessId) {
         rest().delete(businessPrefix() + PATH_DEL_BUSINESS + "?uuid={1}", businessId);
         return true;
+    }
+
+    @Override
+    public boolean insertBusiness(BusinessEntity businessEntity) throws JsonProcessingException {
+        return rest().postForObject(businessPrefix() + PATH_ADD_BUSINESS, objectMapper.writeValueAsString(businessEntity), boolean.class);
+
     }
 }

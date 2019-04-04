@@ -48,14 +48,12 @@
             <div>
                 <div id="filter"><i class="fa fa-filter" aria-hidden="true"></i> 筛选 <i class="fa fa-arrow-circle-right"
                                                                                        aria-hidden="true"></i>
-                    <label class="labelCondition" style="margin-left: 60px;">级别: 紧急<i class="fa fa-times"
-                                                                                      aria-hidden="true"
-                                                                                      style="color: #e56a15"></i></label>
-                    <label class="labelCondition" style="  width: 92px;margin-left: 8px;">状态: 未恢复<i class="fa fa-times"
-                                                                                                    aria-hidden="true"
-                                                                                                    style="color: #e56a15"></i></label>
-                    <label class="labelCondition" style="width: 132px;margin-left: 8px;">资源: 172.25.17.253<i
-                            class="fa fa-times" aria-hidden="true" style="color: #e56a15"></i></label>
+                    <label class="labelCondition" style="margin-left: 60px;">{{alertLevel|convertAlertLevel}}
+                        <i class="fa fa-times" aria-hidden="true"  style="color: #e56a15" v-on:click="closeAddResource($event)"></i></label>
+                    <label class="labelCondition" style="  width: 92px;margin-left: 8px;">{{alertStatus|convertAlertStatus}}
+                        <i class="fa fa-times"  aria-hidden="true" style="color: #e56a15" v-on:click="closeAddResource($event)"></i></label>
+                    <label class="labelCondition" style="width: 132px;margin-left: 8px;">{{alertResource|convertAlertResource}}<i
+                            class="fa fa-times" aria-hidden="true" style="color: #e56a15" v-on:click="closeAddResource($event)"></i></label>
                     <label style="margin-left: 10px;">清空筛选</label>
                 </div>
                 <div id="oper" style="margin-bottom: 6px;">

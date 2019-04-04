@@ -1,5 +1,6 @@
 package monitor.service;
 
+import business.entity.PageData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import monitor.common.ResultMsg;
 import monitor.entity.*;
@@ -207,4 +208,6 @@ public interface MonitorService {
     boolean isMonitorRecordIpDup(String ip,String lightType);
 
     List<NetworkMonitorEntity> getAllNetworkMonitorEntity();
+
+    ResultMsg getBusMonitorListByPage(PageData page) throws JsonProcessingException;
 }

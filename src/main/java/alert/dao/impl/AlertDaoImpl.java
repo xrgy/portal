@@ -3,6 +3,7 @@ package alert.dao.impl;
 import alert.dao.AlertDao;
 import alert.entity.AlertAlarmInfo;
 import alert.entity.AlertEntity;
+import alert.entity.AlertView;
 import business.dao.BusinessDao;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -24,7 +25,7 @@ import java.util.List;
 @Repository
 public class AlertDaoImpl implements AlertDao {
 
-//    private static final String ip = "127.0.0.1";
+    private static final String ip = "127.0.0.1";
 //    private static final String CONFIG_PORT = "8086";
 //    private static final String IP = "http://172.31.105.232";
     private static final String CONFIG_PORT = "8095";
@@ -39,13 +40,13 @@ public class AlertDaoImpl implements AlertDao {
 
 
     private String alertPrefix() {
-                try {
-            String ip = EtcdUtil.getClusterIpByServiceName("alert-coll-service");
+//                try {
+//            String ip = EtcdUtil.getClusterIpByServiceName("alert-coll-service");
         return HTTP+ip + ":" + CONFIG_PORT + "/" + ALERT_PREFIX + "/";
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return "";
     }
 
     @Bean
@@ -74,8 +75,8 @@ public class AlertDaoImpl implements AlertDao {
     }
 
     @Override
-    public List<AlertEntity> getAlertInfo(int severity, int resolve, String uuid) {
-        String response = rest().getForObject(alertPrefix()+PATH_GET_ALERT_DETAIL+"?severity={1}&resolve={2}&uuid={3}",String.class,severity,resolve,uuid);
+    public List<AlertEntity> getAlertInfo(AlertView view) throws JsonProcessingException {
+        String response = rest().postForObject(alertPrefix()+PATH_GET_ALERT_DETAIL,objectMapper.writeValueAsString(view),String.class);
         try {
             return objectMapper.readValue(response,new TypeReference<List<AlertEntity>>(){});
         } catch (IOException e) {

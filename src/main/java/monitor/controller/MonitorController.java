@@ -1,5 +1,6 @@
 package monitor.controller;
 
+import business.entity.PageData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.common.ResCommon;
@@ -158,6 +159,10 @@ public class MonitorController {
     public ResultMsg getK8sMonitorEntity(String uuid){
         return ResCommon.getCommonResultMsg(service.getK8sMonitorEntity(uuid));
     }
-
+    @RequestMapping("/getBusMonitorListByPage")
+    @ResponseBody
+    public ResultMsg getBusMonitorListByPage(PageData page) throws JsonProcessingException {
+        return service.getBusMonitorListByPage(page);
+    }
 
 }

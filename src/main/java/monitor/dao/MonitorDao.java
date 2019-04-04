@@ -1,5 +1,7 @@
 package monitor.dao;
 
+import business.entity.PageBean;
+import business.entity.PageData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import monitor.entity.*;
 import monitor.entity.view.Cluster;
@@ -222,4 +224,11 @@ public interface MonitorDao {
      * @return
      */
     boolean isMonitorRecordIpDup(String ip, String lightType);
+
+    /**
+     * 为业务获取监控列表
+     * @param page
+     * @return
+     */
+    PageBean getBusMonitorListByPage(PageData page) throws JsonProcessingException;
 }

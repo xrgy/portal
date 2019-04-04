@@ -19,8 +19,11 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                         pageSize:15,
                         pageNumList:[],
                         totalPage:0,
-                        alertList:[]
-
+                        alertList:[],
+                        transAlertInfo:null,
+                        alertLevel:"",
+                        alertStatus:"",
+                        alertResource:""
                     },
                     filters: {
                         convertDesc: function (desc) {
@@ -68,10 +71,51 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                                     //已恢复
                                 return commonModule.i18n("alertStatus.already");
                             }
+                        },
+                        convertAlertLevel:function (severity) {
+                            var str="";
+                            switch (severity){
+                                case 0:
+                                    str = commonModule.i18n("alertLevel.critical");
+                                    break;
+                                case 1:
+                                    str = commonModule.i18n("alertLevel.major");
+                                    break;
+                                case 2:
+                                    str = commonModule.i18n("alertLevel.minor");
+                                    break;
+                                case 3:
+                                    str = commonModule.i18n("alertLevel.warning");
+                                    break;
+                                case 4:
+                                    str = commonModule.i18n("alertLevel.notice");
+                                    break;
+                                default:
+                                    break;
+                            };
+                            return "级别: "+str;
+                        },
+                        convertAlertStatus:function (status) {
+                            if (status==0){
+                                //未恢复
+                                return "状态: "+commonModule.i18n("alertStatus.none");
+                            }else {
+                                //已恢复
+                                return "状态: "+commonModule.i18n("alertStatus.already");
+                            }
+                        },
+                        convertAlertResource:function (name) {
+                            return "资源: "+name;
                         }
 
                     },
                     mounted: function () {
+                        var obj={"severity": 0,"resolve": 0,"ip":"172.25.17.253","uuid":"0b6b3cdf-fbbb-480a-aaa7-41edd38d75a2"};
+                        sessionStorage.setItem("transAlert",JSON.stringify(obj));
+                        this.transAlertInfo=JSON.parse(sessionStorage.getItem("transAlert"));
+                        this.alertLevel=this.transAlertInfo.severity;
+                        this.alertStatus=this.transAlertInfo.resolve;
+                        this.alertResource=this.transAlertInfo.ip;
                         this.initData();
                     },
                     methods: {
@@ -80,7 +124,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                             _self.businessList=[];
                             _self.pageNumList=[];
                             $.ajax({
-                                data: {"severity": 0, "resolve": 0,"uuid":"0b6b3cdf-fbbb-480a-aaa7-41edd38d75a2"},
+                                data: {"severity": 0,"ip":"172.25.17.253","uuid":"0b6b3cdf-fbbb-480a-aaa7-41edd38d75a2"},
                                 url: _self.path.getAlertList,
                                 success: function (data) {
                                     if (data.msg == "SUCCESS") {

@@ -165,4 +165,23 @@ public class BusinessServiceImpl implements BusinessService {
         return ResCommon.genSimpleResByBool(res);
     }
 
+    @Override
+    public ResultMsg updateBusiness(String businessId, String busname, List<BusinessMonitorEntity> data) throws JsonProcessingException {
+       //更新业务
+        BusinessEntity businessEntity = dao.getBusinessNode(businessId);
+        if (!businessEntity.getName().equals(busname)){
+            businessEntity.setName(busname);
+            dao.insertBusiness(businessEntity);
+        }
+        List<DelMonitorRecordView> view = new ArrayList<>();
+        data.forEach(x->{
+            DelMonitorRecordView dele = new DelMonitorRecordView();
+            dele.setUuid(x.getMonitorId());
+            dele.setLightType(x.getLightType());
+            view.add(dele);
+        });
+
+        return addBusinessResource(businessId,view);
+    }
+
 }

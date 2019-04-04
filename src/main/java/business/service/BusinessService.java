@@ -2,6 +2,7 @@ package business.service;
 
 
 import business.entity.BusinessEntity;
+import business.entity.BusinessMonitorEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import monitor.common.ResultMsg;
 import monitor.entity.DelMonitorRecordView;
@@ -65,4 +66,13 @@ public interface BusinessService {
      * @return
      */
     ResultMsg delBusinessResource(String businessId, List<String> monitorIds) throws JsonProcessingException;
+
+    /**
+     * 更新业务
+     * @param businessId
+     * @param busname
+     * @param data
+     * @return
+     */
+    ResultMsg updateBusiness(String businessId, String busname, List<BusinessMonitorEntity> data) throws JsonProcessingException;
 }

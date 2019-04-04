@@ -1,5 +1,7 @@
 package monitor.dao.impl;
 
+import business.entity.PageBean;
+import business.entity.PageData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -66,6 +68,8 @@ public class MonitorDaoImpl implements MonitorDao {
     private static final String PATH_GET_ALL_CVK_AND_VM_BY_CAS="getAllCvkAndVmByCasuuid";
     private static final String PATH_GET_ALL_VM_BY_CVK="getAllVmByCvkuuid";
     private static final String PATH_IS_IP_DUPLICATE="isMonitorRecordIpDup";
+    private static final String PATH_GET_BUSMONITOR_LIST="getBusMonitorListByPage";
+
 
 
 
@@ -349,6 +353,17 @@ public class MonitorDaoImpl implements MonitorDao {
     @Override
     public boolean isMonitorRecordIpDup(String ip, String lightType) {
         return rest().getForObject(monitorPrefix() + PATH_IS_IP_DUPLICATE+ "?ip={1}&lightType={2}", boolean.class, ip,lightType);
+    }
+
+    @Override
+    public PageBean getBusMonitorListByPage(PageData page) throws JsonProcessingException {
+        String response = rest().postForObject(monitorPrefix()+PATH_GET_BUSMONITOR_LIST,objectMapper.writeValueAsString(page),String.class);
+        try {
+            return objectMapper.readValue(response,PageBean.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
