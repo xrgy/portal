@@ -23,7 +23,8 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                         transAlertInfo:null,
                         alertLevel:"",
                         alertStatus:"",
-                        alertResource:""
+                        alertResource:"",
+                        alertUuid:"",
                     },
                     filters: {
                         convertDesc: function (desc) {
@@ -114,8 +115,11 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                         sessionStorage.setItem("transAlert",JSON.stringify(obj));
                         this.transAlertInfo=JSON.parse(sessionStorage.getItem("transAlert"));
                         this.alertLevel=this.transAlertInfo.severity;
+                        // this.alertLevel="";
+
                         this.alertStatus=this.transAlertInfo.resolve;
                         this.alertResource=this.transAlertInfo.ip;
+                        this.alertUuid=this.transAlertInfo.uuid;
                         this.initData();
                     },
                     methods: {
@@ -124,7 +128,8 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                             _self.businessList=[];
                             _self.pageNumList=[];
                             $.ajax({
-                                data: {"severity": 0,"ip":"172.25.17.253","uuid":"0b6b3cdf-fbbb-480a-aaa7-41edd38d75a2"},
+                                data: {"severity": _self.alertLevel,"ip":_self.alertResource,"resolve":_self.alertStatus,
+                                    "uuid":_self.alertUuid},
                                 url: _self.path.getAlertList,
                                 success: function (data) {
                                     if (data.msg == "SUCCESS") {
@@ -176,6 +181,32 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                                     $(".singleBusiness:nth-child(" + j + ") .availableStyle label").addClass("mostBusy");
                                 }
                             }
+                        },
+                        closeFilterCond:function (e,condition) {
+                            var _self = this;
+                          switch (condition){
+                              case 'severity':
+                                  _self.alertLevel=-1;
+                                  _self.initData();
+                                  break;
+                              case 'status':
+                                  _self.alertStatus=-1;
+                                  _self.initData();
+                                  break;
+                              case 'monitor':
+                                  _self.alertResource="";
+                                  _self.initData();
+                                  break;
+                              case 'all':
+                                  _self.alertLevel=-1;
+                                  _self.alertStatus=-1;
+                                  _self.alertResource="";
+                                  _self.alertUuid="";
+                                  _self.initData();
+                                  break;
+                              default:
+                                  break;
+                          }
                         },
                         seeRelevantTopo: function (e, uuid) {
                             sessionStorage.setItem('relevatBusinessUuid',uuid);

@@ -27,12 +27,12 @@ import java.util.List;
 @Service
 public class AlertServiceImpl implements AlertService {
 
-    private static final String RULE_ANME_START="rule";
-    private static final String AVL_RULE_NAME="_avl";
-    private static final String ONE="one";
-    private static final String TWO="two";
-    private static final String ONE_LEVEL_PERF="_one_level_perf";
-    private static final String TWO_LEVEL_PERF="_two_level_perf";
+    private static final String RULE_ANME_START = "rule";
+    private static final String AVL_RULE_NAME = "_avl";
+    private static final String ONE = "one";
+    private static final String TWO = "two";
+    private static final String ONE_LEVEL_PERF = "_one_level_perf";
+    private static final String TWO_LEVEL_PERF = "_two_level_perf";
 
 
     @Autowired
@@ -58,45 +58,49 @@ public class AlertServiceImpl implements AlertService {
     @Override
     public ResultMsg getAlertInfo(AlertView view) throws JsonProcessingException {
         List<AlertEntity> alertList = dao.getAlertInfo(view);
-        alertList.forEach(x->{
+        alertList.forEach(x -> {
             String description = x.getDescription();
             x.setAlertSource(getNameFromDescription(description));
             x.setIp(getIpFromDescription(description));
             Metrics metric = null;
-            if (description.contains("当前值")){
+            if (description.contains("当前值")) {
                 //通过性能表 找指标名
-                metric = monitorConfigService.getMetricByRule("perf",x.getAlertRuleUuid());
-            }else {
+                metric = monitorConfigService.getMetricByRule("perf", x.getAlertRuleUuid());
+            } else {
                 //通过可用性表 找指标名
-                metric =  monitorConfigService.getMetricByRule("avl",x.getAlertRuleUuid());
+                metric = monitorConfigService.getMetricByRule("avl", x.getAlertRuleUuid());
             }
-            x.setAlertInfo(metric.getName());
+            if (null != metric) {
+                x.setAlertInfo(metric.getName());
+            }
+
             x.setCreateT(formatDate(x.getCreateTime()));
-            if (null!=x.getResolvedTime()) {
+            if (null != x.getResolvedTime()) {
                 x.setResolvedT(formatDate(x.getResolvedTime()));
             }
         });
         return ResCommon.getCommonResultMsg(alertList);
     }
 
-    public String getNameFromDescription(String description){
+    public String getNameFromDescription(String description) {
         String[] split = description.split("\\(");
-        if (split.length>0){
+        if (split.length > 0) {
             return split[0];
-        }else {
+        } else {
             return "";
         }
     }
 
-    public String getIpFromDescription(String description){
+    public String getIpFromDescription(String description) {
         String[] split = description.split("\\(");
-        if (split.length>1){
+        if (split.length > 1) {
             String str[] = split[1].split("\\)");
             return str[0];
-        }else {
+        } else {
             return "";
         }
     }
+
     public static String formatDate(Date date) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         return simpleDateFormat.format(date);
