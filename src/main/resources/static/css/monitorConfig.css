@@ -255,6 +255,7 @@
     margin-top: 24px;
     padding: 0 10px;
 }
+#monitorConifgList #breadline,
 #myBusiness #breadline,
 #myalert #breadline{
     background: #e56a15;
@@ -264,7 +265,7 @@
     position: absolute;
     top: 46px;
 }
-#myBusiness #breadlineTitle,
+#monitorConifgList #breadlineTitle,
 #myBusiness #breadlineTitle,
 #myalert #breadlineTitle{
     width: 100%;
@@ -312,6 +313,8 @@
     margin-top: 16px;
     height: 28px;
 }
+#monitorConifgList #oper #delResBtn,
+#monitorConifgList #oper #refresh,
 #myalert #oper #refresh{
     width: 86px;
     height: 30px;
@@ -374,6 +377,7 @@
     position: relative;
     top: 4px;
 }
+#monitorConifgList #oper #tworight,
 #myalert #oper #tworight{
     display: inline-block;
     border-bottom: 0.1px solid #ccc;
@@ -381,6 +385,7 @@
     width: 290px;
     margin-left: 638px;
 }
+#monitorConifgList #oper .middleline,
 #myalert #oper .middleline{
     display: inline-block;
     /* float: left; */
@@ -444,6 +449,7 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
 #myalert table>tfoot>tr>th{
     border-top: 1.4px solid #ddd;
 }
+#monitorConifgList #chosePageSize,
 #add-resource #chosePageSize,
 #myBusiness #chosePageSize,
 #myalert #chosePageSize {
@@ -452,6 +458,7 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     margin-top: 24px;
     padding: 0 10px;
 }
+#monitorConifgList #page,
 #add-resource #page,
 #myBusiness #page,
 #myalert #page {
@@ -463,6 +470,8 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     /*!* box-shadow: -1px 10px 0px 0.4px #ccc; *!*/
     /*position: relative;*/
 }
+#monitorConifgList #page select,
+#monitorConifgList #chosePageSize select,
 #add-resource #page select,
 #add-resource #chosePageSize select,
 #myBusiness #page select,
@@ -484,6 +493,7 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     border-radius: 10px;
     border: 1px solid #ccc;
 }
+#monitorConifgList .prev a, #monitorConifgList .next a,
 #add-resource .prev a, #add-resource .next a,
 #myBusiness .prev a, #myBusiness .next a,
 #myalert .prev a, #myalert .next a {
@@ -494,11 +504,15 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     padding-top: 2px;
     padding-bottom: 2px;
 }
+#editBusiness .pull-right ul,
+#editBusiness #chosePageSize,
+#monitorConifgList .pull-right ul,
+#monitorConifgList #chosePageSize,
 #myalert .pull-right ul,
 #myalert #chosePageSize{
     margin-top: 14px;
 }
-
+#monitorConifgList #breadlineTitle .middleline,
 #myBusiness #breadlineTitle .middleline,
 #myalert #breadlineTitle .middleline{
     display: inline-block;
@@ -514,4 +528,25 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     box-shadow: none;
     border-radius: 0;
     width: 80px;
+}
+#monitorConifgList #config-list{
+    position: absolute;
+    background: #cac7c7;
+    opacity: 0.9;
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 8px;
+    left: 2px;
+}
+.deviceBtn:hover
+.deviceBtn span:hover{
+    color:#333;
+}
+#monitorConifgList table td,
+#monitorConifgList table th{
+    text-align: center
+}
+.canNotTrash{
+    color: #c5c2c2;
+    cursor: auto!important;
 }

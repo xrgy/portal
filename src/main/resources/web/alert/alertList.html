@@ -57,7 +57,7 @@
                     <label  v-show="alertLevel!=-1 || alertStatus!=-1 || alertResource!=''"  style="margin-left: 10px;cursor: pointer;" v-on:click="closeFilterCond($event,'all')">清空筛选</label>
                 </div>
                 <div id="oper" style="margin-bottom: 6px;">
-                    <label id="refresh"> <i class="fa fa-refresh" aria-hidden="true"></i> 刷新</label>
+                    <label id="refresh" v-on:click="initData"> <i class="fa fa-refresh" aria-hidden="true"></i> 刷新</label>
                     <!--<img class="" src="../image/alert5.png"/>-->
                     <div id="tworight" style="display: inline-block">
                         <div id="divselect" style="display: inline-block;">
@@ -124,7 +124,7 @@
                     </tbody>
                 </table>
             </div>
-            <div style="display: inline-block"><span style="font-size: 12px">共3条记录 , 当前第1/1页</span></div>
+            <div style="display: inline-block"><span style="font-size: 12px">{{currenPageInfo}}</span></div>
             <!--右下方的-->
             <div class="pull-right" style="display: inline-block">
                 <div id="chosePageSize" >

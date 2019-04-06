@@ -10,33 +10,7 @@
 </div>
 <!--<div id="container">-->
     <div id="configList">
-        <div class="btn btn-primary">
-            <span data-i18n="monitorConfig.configMonitor"></span>
-            <i class="fa fa-angle-up skin-color" v-on:click="toggleConfigList($event)"></i></div>
-            <!--<a href="/monitorConfig/addMonitorConfig" data-i18n="monitorConfig.configMonitor"></a>-->
-        <div id="config-list" class="hidden">
-            <div id="network-config"><span class="deviceTitle" data-i18n="monitor.networkdevice"></span>
-                <template v-for="network in networkdevice">
-                    <div class="btn deviceBtn" v-on:click="addDeviceConfig(network.value)"><span>{{network.name}}</span></div>
-                </template>
-            </div>
-            <div id="middle-config"><span class="deviceTitle" data-i18n="monitor.middleware"></span>
-                <template v-for="middle in middleware">
-                    <div class="btn deviceBtn" v-on:click="addDeviceConfig(middle.value)"><span>{{middle.name}}</span></div>
-                </template></div>
-            <div id="database-config"><span class="deviceTitle" data-i18n="monitor.databasedevice"></span>
-                <template v-for="database in databasedevice">
-                    <div class="btn deviceBtn" v-on:click="addDeviceConfig(database.value)"><span>{{database.name}}</span></div>
-                </template></div>
-            <div id="virtual-config"><span class="deviceTitle" data-i18n="monitor.virtualdevice"></span>
-                <template v-for="virtual in virtualdevice">
-                    <div class="btn deviceBtn" v-on:click="addDeviceConfig(virtual.value)"><span>{{virtual.name}}</span></div>
-                </template></div>
-            <div id="container-config"><span class="deviceTitle" data-i18n="monitor.container"></span>
-                <template v-for="con in container">
-                    <div class="btn deviceBtn" v-on:click="addDeviceConfig(con.value)"><span>{{con.name}}</span></div>
-                </template></div>
-        </div>
+
 
         <div class="btn btn-primary">
             <span data-i18n="monitor.addbyself"></span>
@@ -64,7 +38,10 @@
                     <div class="btn deviceBtn" v-on:click="addDevice(con.type,con.value)"><span>{{con.name}}</span></div>
                 </template></div>
         </div>
+        <div class="btn btn-primary">
+            <a  v-on:click="loadMonitorTemplate()" data-i18n="monitor.baseinfo.monitortemplate"></a>
 
+        </div>
         <div class="btn btn-primary">
             <a  v-on:click="loadTopo()" data-i18n="topo.show"></a>
 
@@ -82,7 +59,7 @@
 
         </div>
     </div>
-<div th:replace="monitorConfig/addMonitorConfig::monitorConfig"></div>
+
 <div th:replace="monitor/addNetwork::addNetwork"></div>
 <div th:replace="monitor/addDB::addDB"></div>
 <div th:replace="monitor/addTomcat::addTomcat"></div>

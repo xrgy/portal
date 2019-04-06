@@ -20,11 +20,13 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                     businessName:"",
                     resourceList:null,
                     pageNum:1,
-                    pageSize:15,
+                    pageSize:10,
                     pageNumList:[],
+                    currenPageInfo:"",
                     totalPage:0,
                     monitorEntityList:[],
                     showMonitorList:[],
+                    totalRecord:0,
                 },
                 filters: {
                     convertLightType: function (type) {
@@ -73,11 +75,11 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                             success: function (data) {
                                 if (data.msg == "SUCCESS") {
                                     var data = data.data;
-                                    var totalRecord = data.length;
-                                    if (totalRecord % _self.pageSize == 0) {
-                                        _self.totalPage = Math.floor(totalRecord / _self.pageSize);
+                                    _self.totalRecord = data.length;
+                                    if (_self.totalRecord % _self.pageSize == 0) {
+                                        _self.totalPage = Math.floor(_self.totalRecord / _self.pageSize);
                                     } else {
-                                        _self.totalPage = Math.floor(totalRecord / _self.pageSize) + 1;
+                                        _self.totalPage = Math.floor(_self.totalRecord / _self.pageSize) + 1;
                                     }
                                     for(var i=1;i<=_self.totalPage;i++){
                                         _self.pageNumList.push(i);
@@ -103,6 +105,7 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                             }
                             _self.showMonitorList.push(_self.monitorEntityList[i+startIndex]);
                         }
+                        _self.currenPageInfo="共"+_self.totalRecord+"条记录 , 当前第"+_self.pageNum+"/"+_self.totalPage+"页"
                     },
                     closeAddResource:function (e) {
                         $("#addResource").modal('hide');

@@ -2,16 +2,13 @@
  * Created by gy on 2018/3/24.
  */
 'use strict'
-define(['jquery','bootstrap', 'vue','commonModule','topoMain','editTopo','showBusiness','showAlert'], function ($,bootstrap, Vue,commonModule,topoMain,editTopo,showBusiness,showAlert) {
+define(['jquery','bootstrap', 'vue','commonModule','topoMain','editTopo','showBusiness','showAlert','monitorConfigList'], function ($,bootstrap, Vue,commonModule,topoMain,editTopo,showBusiness,showAlert,monitorConfigList) {
     var confList = function () {
         if ($('#configList')[0]) {
             var monitorList = new Vue({
                 el: '#configList',
                 data: {//value是三级规格
-                    networkdevice:[{name: commonModule.i18n('monitor.networkdevice.switch'),value:"switch",type:'network_device'},
-                        {name: commonModule.i18n('monitor.networkdevice.router'),value:"router",type:'network_device'},
-                        {name: commonModule.i18n('monitor.networkdevice.firewall'),value:"firewall",type:'network_device'},
-                        {name: commonModule.i18n('monitor.networkdevice.LB'),value:"LB",type:'network_device'}],
+
                     middleware:[{name: 'tomcat',value:"Tomcat",type:'middleware'}],
                     databasedevice:[{name: 'MySQL',value:"MySQL",type:'database'}],
                     virtualdevice:[{name: 'CAS',value:"CAS",type:'virtualization'},
@@ -34,11 +31,7 @@ define(['jquery','bootstrap', 'vue','commonModule','topoMain','editTopo','showBu
                       $(e).toggleClass('fa-angle-down fa-angle-up');
                       $('#device-list').toggleClass('hidden');
                     },
-                    toggleConfigList:function (event) {
-                        var  e = event.currentTarget;
-                        $(e).toggleClass('fa-angle-down fa-angle-up');
-                        $('#config-list').toggleClass('hidden');
-                    },
+
                     addDevice:function (middletype,lighttype) {
                         sessionStorage.setItem('addLightType',lighttype);
                         switch(middletype){
@@ -59,9 +52,9 @@ define(['jquery','bootstrap', 'vue','commonModule','topoMain','editTopo','showBu
                                 break;
                         }
                     },
-                    addDeviceConfig:function (lighttype) {
-                        sessionStorage.setItem('addConfigLightType',lighttype);
-                        $("#monitorConfig").modal({backdrop: 'static', keyboard: false, show: true})
+                    loadMonitorTemplate:function () {
+                        window.open("/monitorConfig/showTemplateList",'_parent');
+                        monitorConfigList.showTempList();
                     },
                     loadTopo:function () {
                         window.open("/topo/showWeaveTopo",'_parent');

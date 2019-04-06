@@ -16,10 +16,12 @@ public class RuleTemplate {
 //    @JsonProperty("resourceUuid")
 //    private String lightTypeId;
 
+    @JsonProperty("template_name")
     private String templateName;
 
 //    private String monitorMode;
 
+    @JsonProperty("light_type")
     private String lightType;
 
 

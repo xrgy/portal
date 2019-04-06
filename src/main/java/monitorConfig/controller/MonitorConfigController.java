@@ -1,5 +1,8 @@
 package monitorConfig.controller;
 
+import business.entity.PageData;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.common.ResultMsg;
 import monitorConfig.entity.metric.NewTemplateView;
@@ -33,6 +36,12 @@ public class MonitorConfigController {
     public String monitorConfig(){
         return "monitorConfig/addMonitorConfig";
     }
+
+    @RequestMapping("showTemplateList")
+    public String showAlert(){
+        return "monitorConfig/monitorConfigList";
+    }
+
 
 
     @RequestMapping("/getMetricInfo")
@@ -80,14 +89,15 @@ public class MonitorConfigController {
 
     @RequestMapping("delTemplate")
     @ResponseBody
-    public ResultMsg delTemplate(List<String> templateUuids){
-        return service.delTemplate(templateUuids);
+    public ResultMsg delTemplate(String templateUuids) throws IOException {
+        List<String> templateUuidList = mapper.readValue(templateUuids, new TypeReference<List<String>>() {});
+        return service.delTemplate(templateUuidList);
     }
 
 
     @RequestMapping("getAllTemplate")
     @ResponseBody
-    public ResultMsg getAllTemplate(){
-        return service.getAllTemplate();
+    public ResultMsg getAllTemplate(PageData page,String type) throws JsonProcessingException {
+        return service.getAllTemplate(page,type);
     }
 }

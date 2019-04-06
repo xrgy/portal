@@ -135,16 +135,17 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div style="display: inline-block"><span style="font-size: 12px">{{currenPageInfo}}</span></div>
                         <div class="pull-right" style="background: #fff;">
-                            <div id="chosePageSize" style="margin-top: 20px;">
+                            <div id="chosePageSize" style="margin-top: 14px;">
                                 <label>
                                     每页
                                     <select id="pageSize" v-on:change="research()" v-model="pageSize"
                                             aria-controls="DataTables_Table_0" size="1" name="DataTables_Table_0_length">
-                                        <option selected="selected" value="15">15</option>
+                                        <option selected="selected" value="10">10</option>
+                                        <option value="20">20</option>
                                         <option value="30">30</option>
                                         <option value="50">50</option>
-                                        <option value="100">100</option>
                                     </select>
                                     条记录
                                 </label>

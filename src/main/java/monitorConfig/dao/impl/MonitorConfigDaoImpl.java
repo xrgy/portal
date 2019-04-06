@@ -1,5 +1,7 @@
 package monitorConfig.dao.impl;
 
+import business.entity.PageBean;
+import business.entity.PageData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -238,11 +240,11 @@ public class MonitorConfigDaoImpl implements MonitorConfigDao {
     }
 
     @Override
-    public List<RuleTemplate> getAllTemplate() {
-        ResponseEntity<String> response = rest().getForEntity(monitorConfigPrefix() + PATH_GET_ALL_TEMPLATE, String.class);
+    public PageBean getAllTemplate(PageData page,String type) throws JsonProcessingException {
+        String response = rest().postForObject(monitorConfigPrefix() + PATH_GET_ALL_TEMPLATE+"?type={1}",
+                objectMapper.writeValueAsString(page), String.class,type);
         try {
-            return objectMapper.readValue(response.getBody(), new TypeReference<List<RuleTemplate>>() {
-            });
+            return objectMapper.readValue(response, PageBean.class);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -32,7 +32,9 @@ require.config({
         'editTopo':'./topo/edit-topo',
         'showBusiness':'./business/business-list',
         'editBusiness':'./business/edit-business',
-        'showAlert':'./alert/alert-list'
+        'showAlert':'./alert/alert-list',
+        'monitorConfigList':'./monitorConfig/monitor-config-list',
+
 
 
     },

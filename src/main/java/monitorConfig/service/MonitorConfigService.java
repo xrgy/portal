@@ -1,5 +1,6 @@
 package monitorConfig.service;
 
+import business.entity.PageData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import monitor.entity.DelMonitorRecordView;
 import monitor.entity.OperationMonitorEntity;
@@ -99,10 +100,11 @@ public interface MonitorConfigService {
     ResultMsg OpenTemplate(String uuid) throws IOException;
 
     /**
+     * 如果type为all 则获取全部的
      * 获取监控模板列表，这里面要绑定每个模板被使用的监控记录数量，前端直接如果大于0，则删除按钮是灰色的
      * @return
      */
-    ResultMsg getAllTemplate();
+    ResultMsg getAllTemplate(PageData page,String type) throws JsonProcessingException;
 
     Metrics getMetricByRule(String perf, String alertRuleUuid);
 }

@@ -1,6 +1,9 @@
 package monitorConfig.service.impl;
 
+import business.entity.PageBean;
+import business.entity.PageData;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.common.ResCommon;
 import monitor.common.CommonEnum;
@@ -202,9 +205,12 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
     }
 
     @Override
-    public ResultMsg getAllTemplate() {
-        List<RuleTemplate>  view = dao.getAllTemplate();
-        view.forEach(x->{
+    public ResultMsg getAllTemplate(PageData page,String type) throws JsonProcessingException {
+//        PageBean<RuleTemplate> view = dao.getAllTemplate(page,type);
+        PageBean view = dao.getAllTemplate(page,type);
+        List<RuleTemplate> filterList = objectMapper.convertValue(view.getList(), new TypeReference<List<RuleTemplate>>() { });
+        filterList.forEach(x->{
+//            RuleTemplate x = (RuleTemplate)y;
             int count = 0;
             try {
                 count = monitorService.getMonitorCountByTemplateId(x.getUuid(),x.getLightType());
@@ -213,6 +219,7 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
             }
             x.setUsedCount(count);
         });
+        view.setList(filterList);
         return ResCommon.getCommonResultMsg(view);
     }
 

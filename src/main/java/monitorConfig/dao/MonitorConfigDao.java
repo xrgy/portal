@@ -1,5 +1,7 @@
 package monitorConfig.dao;
 
+import business.entity.PageBean;
+import business.entity.PageData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import monitorConfig.entity.metric.Metrics;
 import monitorConfig.entity.metric.NewTemplateView;
@@ -124,7 +126,7 @@ public interface MonitorConfigDao {
      * 获取所有的监控模板列表
      * @return
      */
-    List<RuleTemplate> getAllTemplate();
+    PageBean getAllTemplate(PageData page, String type) throws JsonProcessingException;
 
     Metrics getMetricByRule(String perf, String alertRuleUuid);
 }

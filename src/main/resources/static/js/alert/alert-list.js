@@ -25,6 +25,9 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                         alertStatus:"",
                         alertResource:"",
                         alertUuid:"",
+                        currenPageInfo:"",
+                        totalRecord:0,
+                        showAlertList:[],
                     },
                     filters: {
                         convertDesc: function (desc) {
@@ -134,12 +137,35 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                                 success: function (data) {
                                     if (data.msg == "SUCCESS") {
                                         var data = data.data;
+                                        _self.totalRecord = data.length;
+                                        if (_self.totalRecord % _self.pageSize == 0) {
+                                            _self.totalPage = Math.floor(_self.totalRecord / _self.pageSize);
+                                        } else {
+                                            _self.totalPage = Math.floor(_self.totalRecord / _self.pageSize) + 1;
+                                        }
+                                        for(var i=1;i<=_self.totalPage;i++){
+                                            _self.pageNumList.push(i);
+                                        }
                                        _self.alertList=data;
+                                        _self.reloadAlertList();
+
                                     }
                                 },
                                 error: function () {
                                 }
                             })
+                        },
+                        reloadAlertList:function () {
+                            var _self=this;
+                            _self.showAlertList=[];
+                            var  startIndex = (_self.pageNum-1)*parseInt(_self.pageSize);
+                            for(var i=0;i<parseInt(_self.pageSize);i++){
+                                if (i+startIndex>=_self.alertList.length){
+                                    break;
+                                }
+                                _self.showAlertList.push(_self.alertList[i+startIndex]);
+                            }
+                            _self.currenPageInfo="共"+_self.totalRecord+"条记录 , 当前第"+_self.pageNum+"/"+_self.totalPage+"页"
                         },
                         initFontColor: function () {
                             var _self = this;
@@ -218,7 +244,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                             var _self = this;
                             if (_self.pageNum<_self.totalPage){
                                 _self.pageNum= _self.pageNum+1;
-                                this.initData();
+                                _self.reloadAlertList();
                             }
                             // //得到当前选中项的页号
                             // var id = _self.pageNum;
@@ -238,7 +264,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                             var _self = this;
                             if (_self.pageNum>1){
                                 _self.pageNum= _self.pageNum-1;
-                                this.initData();
+                                _self.reloadAlertList();
                             }
                             // //得到当前选中项的页号
                             // var id = $("#pageNum option:selected").val();
@@ -264,7 +290,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                             // //调用查询方法
                             var _self = this;
                             _self.pageNum =1;
-                            this.initData();
+                            _self.reloadAlertList();
                         },
                         search: function () {
                             // //得到每页显示条数
@@ -279,7 +305,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                             // } else {
                             //     pageCount = Math.ceil(pageNumCount / pageSize);
                             // }
-                            this.initData();
+                            _self.reloadAlertList();
                         },
                         selectStyle: function (event, j) {
                             this.businessList[j].hoverEnable = true;
