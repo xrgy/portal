@@ -100,8 +100,8 @@ public class MonitorConfigDaoImpl implements MonitorConfigDao {
     }
 
     @Override
-    public boolean isTemplateNameDup(String name) {
-        return rest().getForObject(monitorConfigPrefix() + PATH_NAME_DUP + "?name={1}", boolean.class, name);
+    public boolean isTemplateNameDup(String name,String templateUuid) {
+        return rest().getForObject(monitorConfigPrefix() + PATH_NAME_DUP + "?name={1}&templateUuid={2}", boolean.class, name,templateUuid);
     }
 
     @Override
@@ -219,9 +219,9 @@ public class MonitorConfigDaoImpl implements MonitorConfigDao {
 
     @Override
     public boolean updateTemplate(UpTemplateView view) {
-        boolean t = false;
+        boolean t = true;
         try {
-             rest().put(monitorConfigPrefix() + PATH_UPDATE_TEMPLATE+"/{1}", objectMapper.writeValueAsString(view), boolean.class,view.getUuid());
+             rest().put(monitorConfigPrefix() + PATH_ADD_TEMPLATE+"/{1}", objectMapper.writeValueAsString(view), boolean.class,view.getUuid());
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

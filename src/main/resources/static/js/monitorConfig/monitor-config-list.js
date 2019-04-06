@@ -87,6 +87,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'topoMain'], functio
                         },
                         addDeviceConfig: function (lighttype) {
                             sessionStorage.setItem('addConfigLightType', lighttype);
+                            sessionStorage.setItem('templateOpe', "add");
                             $("#monitorConfig").modal({backdrop: 'static', keyboard: false, show: true})
                         },
                         checkAllDel: function (event) {
@@ -116,7 +117,9 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'topoMain'], functio
                         },
                         editResource: function (event, temId) {
                             var _self = this;
-                            //todo
+                            sessionStorage.setItem('templateOpe', "edit");
+                            sessionStorage.setItem('templateOpeObj', temId);
+                            $("#monitorConfig").modal({backdrop: 'static', keyboard: false, show: true})
                         },
                         delList: function () {
                             var _self = this;

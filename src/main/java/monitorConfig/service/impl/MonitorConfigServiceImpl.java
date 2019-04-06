@@ -11,13 +11,11 @@ import monitor.common.ResultMsg;
 import monitor.entity.DelMonitorRecordView;
 import monitor.service.MonitorService;
 import monitorConfig.dao.MonitorConfigDao;
-import monitorConfig.entity.metric.Metrics;
-import monitorConfig.entity.metric.NewTemplateView;
+import monitorConfig.entity.metric.*;
 import monitorConfig.entity.TestEntity;
-import monitorConfig.entity.metric.ResMetricInfo;
-import monitorConfig.entity.metric.UpTemplateView;
 import monitorConfig.entity.template.*;
 import monitorConfig.service.MonitorConfigService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
@@ -75,8 +73,8 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
     }
 
     @Override
-    public boolean isTemplateNameDup(String name) {
-        return dao.isTemplateNameDup(name);
+    public boolean isTemplateNameDup(String name,String templateUuid) {
+        return dao.isTemplateNameDup(name,templateUuid);
     }
 
     @Override
@@ -187,8 +185,32 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
     }
 
     @Override
-    public ResultMsg updateTemplate(UpTemplateView view) {
-        boolean res = dao.updateTemplate(view);
+    public ResultMsg updateTemplate(NewTemplateView view) {
+        //NewTemplateView 转为UpTemplateView
+        UpTemplateView upTemplateView = new UpTemplateView();
+        BeanUtils.copyProperties(view,upTemplateView);
+        List<UpAvaliable> available = new ArrayList<>();
+        List<UpPerformance> performance = new ArrayList<>();
+        view.getAvailable().forEach(x->{
+            x.getData().forEach(y->{
+                UpAvaliable avl = new UpAvaliable();
+                avl.setUuid(y.getAvlUuid());
+                avl.setMetricUuid(y.getUuid());
+                avl.setSeverity(y.getSeverity());
+                available.add(avl);
+            });
+        });
+        upTemplateView.setAvailable(available);
+        view.getPerformance().forEach(x->{
+            x.getData().forEach(y->{
+                UpPerformance perf = new UpPerformance();
+                BeanUtils.copyProperties(y,perf);
+                perf.setMetricUuid(y.getUuid());
+                performance.add(perf);
+            });
+        });
+        upTemplateView.setPerformance(performance);
+        boolean res = dao.updateTemplate(upTemplateView);
         if (res){
 
         }
@@ -198,8 +220,19 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
     @Override
     public ResultMsg OpenTemplate(String uuid) throws IOException {
         UpTemplateView templateView = dao.getOpenTemplateData(uuid);
+
         int count = monitorService.getMonitorCountByTemplateId(uuid,templateView.getLightType());
         templateView.setUsedCount(count);
+
+//        ResMetricInfo newInfo = new ResMetricInfo();
+//        newInfo.setMonitorMode(templateView.getMonitorMode());
+//        List<MetricInfo> avlMetricInfo = new ArrayList<>();
+//        templateView.getAvailable().forEach(x->{
+//
+//        });
+
+//        ResMetricInfo info = dao.getMetricInfo(lightType,monitorMode);
+
 
         return ResCommon.getCommonResultMsg(templateView);
     }

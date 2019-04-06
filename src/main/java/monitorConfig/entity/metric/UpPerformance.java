@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 public class UpPerformance {
 
-    private String uuid;
+    private String levelOneUuid;
 
 
     private String description;
@@ -41,6 +41,9 @@ public class UpPerformance {
 
     @JsonProperty("level_one_second_threshold")
     private String levelOneSecondThreshold;
+
+    private String levelTwoUuid;
+
 
     @JsonProperty("level_two_severity")
     private String levelTwoSeverity;

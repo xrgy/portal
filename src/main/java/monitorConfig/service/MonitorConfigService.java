@@ -32,7 +32,7 @@ public interface MonitorConfigService {
      * @param name
      * @return
      */
-    public boolean isTemplateNameDup(String name);
+    public boolean isTemplateNameDup(String name,String templateUuid);
 
     /**
      * 新建模板
@@ -90,7 +90,7 @@ public interface MonitorConfigService {
      * @param view
      * @return
      */
-    ResultMsg updateTemplate(UpTemplateView view);
+    ResultMsg updateTemplate(NewTemplateView view);
 
     /**
      * 修改打开某个监控模板(模板id)，返回

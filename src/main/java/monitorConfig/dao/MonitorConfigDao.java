@@ -24,7 +24,7 @@ public interface MonitorConfigDao {
      * @param name
      * @return
      */
-    public boolean isTemplateNameDup(String name);
+    public boolean isTemplateNameDup(String name,String templateUuid);
 
 
     /**

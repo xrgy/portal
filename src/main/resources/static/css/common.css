@@ -32,7 +32,7 @@ input[type=text]{
     border-top: 2px solid #ec670b
 }
 .modal .def-dialog{
-    width: 78%;
+    width: 82%;
 }
 .magic-radio +label::before{
     border-radius: 50%;

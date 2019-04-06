@@ -16,5 +16,8 @@ public class RecMetricInfo {
     //type: interface...
     private String type;
 
+    //avl rule uuid
+
+
     private List<MetricInfo> data;
 }

@@ -13,6 +13,8 @@ import java.util.List;
 @Setter
 public class NewTemplateView {
 
+    private String uuid;
+
     /**
      * 模板名称
      */

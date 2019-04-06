@@ -54,7 +54,8 @@ public class MonitorConfigController {
     public boolean isTemplateNameDup(HttpServletRequest request){
         //返回true 未重复
         String name = request.getParameter("name");
-        return service.isTemplateNameDup(name);
+        String templateUuid = request.getParameter("templateUUid");
+        return service.isTemplateNameDup(name,templateUuid);
     }
 
 
@@ -76,7 +77,7 @@ public class MonitorConfigController {
     @ResponseBody
     public ResultMsg updateTemplate(HttpServletRequest request) throws IOException {
         String data = request.getParameter("templateData");
-        UpTemplateView view = mapper.readValue(data, UpTemplateView.class);
+        NewTemplateView view = mapper.readValue(data, NewTemplateView.class);
         return service.updateTemplate(view);
     }
 
