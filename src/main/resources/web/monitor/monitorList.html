@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>监控列表</title>
+</head>
+<body>
+<div id="pjax-header">
+    <div th:replace="common::common"></div>
+</div>
+<div id="monitorList" >
+
+
+    <!--<img class="breadDisplay" src="../image/业务列表.png"/>-->
+    <img style="width: 100%;height: 43px;" class="breadDisplay" src="../image/alert6.png"/>
+    <!--<img class="breadDisplay" src="../image/alert2.JPG"/>-->
+    <!--黄色的-->
+    <div id="breadline"></div>
+    <div id="breadlineTitle">
+        <div style="margin-top: -4px;">
+            <label style="font-family: 宋体;font-weight: 600;">运行监测</label>
+            <div class="middleline"></div>
+            <label style="font-family: 宋体;font-weight: 600;">监控配置</label>
+            <div class="middleline"></div>
+            <label style="color: #f08640; font-family: 宋体;font-weight: 600;">监控列表</label>
+        </div>
+    </div>
+    <div style="background: #efefef">
+        <div id="leftMenu" class="model-tab col-xs-2 col-sm-2 col-md-2 col-lg-2" style="background: #fff;height: 480px">
+            <ul style="font-weight: 600;">
+                <li v-on:click="clickResource($event,'all')" :class="{active:tabSelected=='all'}"><i class="fa fa-th-large" aria-hidden="true"></i> 全部模板</li>
+                <li><i class="fa fa-gears" aria-hidden="true"></i> 按资源类别<i class="fa fa-angle-down" aria-hidden="true"
+                                                                           style="margin-left: 58px;"></i>
+                    <ul style="margin-left: 20px;  color: #928886;font-weight: 500;">
+                        <li v-on:click="clickResource($event,'network_device')" :class="{active:tabSelected=='network_device'}">网络设备</li>
+                        <li v-on:click="clickResource($event,'database')" :class="{active:tabSelected=='database'}" style="margin-top: -10px;">数据库</li>
+                        <li v-on:click="clickResource($event,'virtualization')" :class="{active:tabSelected=='virtualization'}" style="margin-top: -10px;">虚拟化</li>
+                        <li v-on:click="clickResource($event,'container')" :class="{active:tabSelected=='container'}" style="margin-top: -10px;">容器</li>
+                        <li v-on:click="clickResource($event,'middleware')" :class="{active:tabSelected=='middleware'}" style="margin-top: -10px;">中间件</li>
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+        <div id="right" class=" col-xs-10 col-sm-10 col-md-10 col-lg-10" style="background: #efefef;">
+            <!--右上方-->
+            <div>
+                <div id="oper" style="padding: 10px;;">
+                    <div class="btn btn-primary">
+                        <span data-i18n="monitor.addbyself"></span>
+                        <i class="fa fa-angle-up skin-color" v-on:click="toggleDeviceList($event)"></i></div>
+                    <div id="device-list" class="hidden">
+                        <div id="network-device"><span class="deviceTitle" data-i18n="monitor.networkdevice"></span>
+                            <template v-for="network in networkdevice">
+                                <div class="btn deviceBtn" v-on:click="addDevice(network.type,network.value)"><span>{{network.name}}</span></div>
+                            </template>
+                        </div>
+                        <div id="middle-device"><span class="deviceTitle" data-i18n="monitor.middleware"></span>
+                            <template v-for="middle in middleware">
+                                <div class="btn deviceBtn" v-on:click="addDevice(middle.type,middle.value)"><span>{{middle.name}}</span></div>
+                            </template></div>
+                        <div id="database-device"><span class="deviceTitle" data-i18n="monitor.databasedevice"></span>
+                            <template v-for="database in databasedevice">
+                                <div class="btn deviceBtn" v-on:click="addDevice(database.type,database.value)"><span>{{database.name}}</span></div>
+                            </template></div>
+                        <div id="virtual-device"><span class="deviceTitle" data-i18n="monitor.virtualdevice"></span>
+                            <template v-for="virtual in addvirtualdevice">
+                                <div class="btn deviceBtn" v-on:click="addDevice(virtual.type,virtual.value)"><span>{{virtual.name}}</span></div>
+                            </template></div>
+                        <div id="container"><span class="deviceTitle" data-i18n="monitor.container"></span>
+                            <template v-for="con in addcontainer">
+                                <div class="btn deviceBtn" v-on:click="addDevice(con.type,con.value)"><span>{{con.name}}</span></div>
+                            </template></div>
+                    </div>
+                    <label id="delResBtn"  v-on:click="delList" style="cursor: pointer;">
+                        <i class="fa fa-trash" aria-hidden="true" style="margin-right: 4px"></i>删除</label>
+                    <label id="refresh"  v-on:click="refresh" style="cursor: pointer;"> <i class="fa fa-refresh" aria-hidden="true"></i> 刷新</label>
+                    <!--<img class="" src="../image/alert5.png"/>-->
+                    <div id="tworight" style="display: inline-block;margin-left: 430px;">
+                        <div id="divselect" style="display: inline-block;">
+                            <!--<label>告警源 <i class="fa fa-angle-down" aria-hidden="true"></i></label>-->
+                            <select style="font-size: 12px; background: #efefef">
+                                <option>名称</option>
+                            </select>
+                        </div>
+                        <i class="fa fa-angle-down" aria-hidden="true"></i>
+                        <div class="middleline"></div>
+                        <input class="" type="text" placeholder="请输入查询内容" style="border:none;background: #efefef"/>
+                        <div class="middleline"></div>
+                        <i class="fa fa-search" aria-hidden="true" style="color: #e56a15"></i>
+                    </div>
+                </div>
+
+            </div>
+            <!--列表-->
+            <div id="monitorListCon" style="background: #fff;">
+                <table class="table" style="table-layout: fixed;font-size: 12px">
+                    <thead>
+                    <tr style="color: #6e6e6e">
+                        <th style="width: 30px">
+                            <input type='checkbox' class='input-checkbox'  id="allDel" name="addDel"
+                                   v-on:click="checkAllDel($event)"/>
+                        </th>
+                        <th style="width: 80px">名称<i class="fa fa-sort" aria-hidden="true" style="color: #a39a99"></i>
+                            <div class="middleline" style="margin-left: 0px"></div>
+                        </th>
+                        <th style="width: 80px">状态<i class="fa fa-filter" aria-hidden="true" style="color: #a39a99"></i>
+                            <div class="middleline" style="margin-left: 0px"></div>
+                        </th>
+                        <th style="width: 80px">IP<i class="fa fa-sort" aria-hidden="true" style="color: #a39a99"></i>
+                            <div class="middleline" style="margin-left: 0px"></div>
+                        </th>
+                        <th style="width: 80px">资源类型 <i class="fa fa-filter" aria-hidden="true" style="color: #a39a99"></i>
+                            <div class="middleline" style="margin-left: 10px"></div>
+                        </th>
+                        <th style="width: 80px">监控模板
+                            <div class="middleline" style="margin-left: 10px"></div>
+                        </th>
+                        <th style="width: 100px;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <template v-for="(i,j) in showMonitorList">
+                        <tr :id="'monitor'+j">
+                            <td> <input type='checkbox' class='input-checkbox' :id="'monitor'+j" name="needDel"  :value="i.uuid"/></td>
+                            <td style="color: #e56a15"><span :title="i.name"  :value="i.name">{{i.name}}</span></td>
+                            <td><div style="display: inline-block" :class="[i.status=='1'?'running':'notrunning']"></div><span :value="i.status" style="margin-left: 6px;">{{i.status|converMonitorStatus}}</span></td>
+                            <td style="color: #e56a15"><span :title="i.ip"  :value="i.ip">{{i.ip}}</span></td>
+                            <td ><span :value="i.lightTypeId">{{i.lightTypeId|convertLightType}}</span></td>
+                            <td style="color: #e56a15"><span :title="i.templateName"  :value="i.templateId" style="cursor: pointer"
+                                                             v-on:click="showTemplateInfo($event,i.templateId)">{{i.templateName}}</span></td>
+                            <td><i class="fa fa-trash"  v-on:click="delResource($event,i)" style="cursor: pointer;width: 40px"></i>
+                                <i class="fa fa-edit" :class="{canNotTrash:(i.lightTypeId=='CVK' || i.lightTypeId=='VirtualMachine'
+                                ||i.lightTypeId=='k8sNode'||i.lightTypeId=='k8sContainer')}"
+                                   v-on:click="editResource($event,i)" style="cursor: pointer;"></i></td>
+                        </tr>
+                    </template>
+                    </tbody>
+                </table>
+            </div>
+            <div style="display: inline-block"><span style="font-size: 12px">{{currenPageInfo}}</span></div>
+            <!--右下方的-->
+            <div class="pull-right" style="background: #efefef;">
+                <div id="chosePageSize" style="margin-top: 14px;">
+                    <label>
+                        每页
+                        <select id="pageSize" v-on:change="research()" v-model="pageSize"
+                                aria-controls="DataTables_Table_0" size="1" name="DataTables_Table_0_length">
+                            <option selected="selected" value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                        </select>
+                        条记录
+                    </label>
+                </div>
+                <ul class="pagination pagination-sm">
+                    <li v-on:click="previous()" class="prev"><a href="#" style="color: #485664;">&laquo;</a>
+                    </li>
+                    <div id="page">
+                        <select style="font-size: 12px;padding-right: 8px;"  name="monitortemplate" id="pageNum"
+                                v-model="pageNum" v-on:change="search()">
+                            <option v-for="page in pageNumList" :value="page">{{page}}</option>
+                        </select>
+                    </div>
+                    <li class="next" v-on:click="next()"><a href="#" style="color: #485664;">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="monitorConfig/addMonitorConfig::monitorConfig"></div>
+<div th:replace="monitor/addNetwork::addNetwork"></div>
+<div th:replace="monitor/addDB::addDB"></div>
+<div th:replace="monitor/addTomcat::addTomcat"></div>
+<div th:replace="monitor/addCas::addCas"></div>
+<div th:replace="monitor/addK8s::addK8s"></div></body>
+</html>

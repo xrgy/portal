@@ -3,6 +3,7 @@ package monitor.entity;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import monitorConfig.entity.template.MonitorTemplate;
 
 
 /**
@@ -30,4 +31,11 @@ public class K8sMonitorEntity {
 
     private String templateId;
 
+
+    private String k8sNTemplateId;
+
+
+    private String K8scTemplateId;
+
+    private MonitorTemplate monitorTemplate;
 }

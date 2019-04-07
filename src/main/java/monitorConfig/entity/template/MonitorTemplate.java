@@ -12,27 +12,27 @@ import java.util.List;
 @Getter
 @Setter
 public class MonitorTemplate {
-    List<RuleTemplate> ssh;
+    List<NewRuleTemplate> ssh;
 
-    List<RuleTemplate> wmi;
+    List<NewRuleTemplate> wmi;
 
-    List<RuleTemplate> snmp_v2;
+    List<NewRuleTemplate> snmp_v2;
 
-    List<RuleTemplate> snmp_v1;
+    List<NewRuleTemplate> snmp_v1;
 
-    List<RuleTemplate> k8s;
+    List<NewRuleTemplate> k8s;
 
-    List<RuleTemplate> k8sn;
+    List<NewRuleTemplate> k8sn;
 
-    List<RuleTemplate> k8sc;
+    List<NewRuleTemplate> k8sc;
 
-    List<RuleTemplate> cas;
+    List<NewRuleTemplate> cas;
 
-    List<RuleTemplate> cascluster;
+    List<NewRuleTemplate> cascluster;
 
-    List<RuleTemplate> cvk;
+    List<NewRuleTemplate> cvk;
 
-    List<RuleTemplate> virtualMachine;
+    List<NewRuleTemplate> virtualMachine;
 
-    List<RuleTemplate> other;
+    List<NewRuleTemplate> other;
 }

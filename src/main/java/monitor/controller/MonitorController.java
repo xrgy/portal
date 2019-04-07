@@ -2,6 +2,7 @@ package monitor.controller;
 
 import business.entity.PageData;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.common.ResCommon;
 import monitor.common.ResultMsg;
@@ -30,6 +31,13 @@ public class MonitorController {
 
     @Autowired
     private ObjectMapper mapper;
+
+    @RequestMapping("showMonitorList")
+    public String showMonitorList(){
+        return "monitor/monitorList";
+    }
+
+
 
     @RequestMapping("/isMonitorRecordIpDup")
     @ResponseBody
@@ -69,7 +77,8 @@ public class MonitorController {
     //全部类型的
     @RequestMapping("/delNetworkMonitorRecord")
     @ResponseBody
-    public ResultMsg delNetworkMonitorRecord(List<DelMonitorRecordView> view) throws JsonProcessingException {
+    public ResultMsg delNetworkMonitorRecord(String  delInfo) throws IOException {
+        List<DelMonitorRecordView> view = mapper.readValue(delInfo, new TypeReference<List<DelMonitorRecordView>>() {});
         return service.delNetworkMonitorRecord(view);
     }
 
@@ -114,6 +123,11 @@ public class MonitorController {
     @ResponseBody
     public ResultMsg getBusinessMonitorRecord() throws JsonProcessingException {
         return service.getBusinessMonitorRecord();
+    }
+    @RequestMapping("/getMonitorRecordList")
+    @ResponseBody
+    public ResultMsg getMonitorRecordList(String middle) throws JsonProcessingException {
+        return service.getMonitorRecordList(middle);
     }
 
 

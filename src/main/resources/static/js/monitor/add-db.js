@@ -20,11 +20,16 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     infoMonitortemplate: '',
                     path: {
                         getTemplateByLightType: "/monitorConfig/getTemplateByLightType",
-                        addDBMonitorRecord: "/monitor/addDbMonitorRecord"
+                        addDBMonitorRecord: "/monitor/addDbMonitorRecord",
+                        getEditData:"/monitor/getDbMonitor",
+                        updateDBMonitorRecord:"/monitor/updateDbMonitorRecord"
                     },
                     templateList: [{uuid: '', templateName: commonModule.i18n("form.select.default")}],
                     lightType: "",
                     tabSelected: "",
+                    monitorOpe:"",
+                    monitorOpeUuid:""
+
                 },
                 mounted: function () {
                     var light = sessionStorage.getItem('addLightType');
@@ -49,6 +54,39 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                                 uuid: '',
                                 templateName: commonModule.i18n("form.select.default")
                             }];
+                    },
+                    initEditData: function (lightType) {
+                        var _self = this;
+                        _self.lightType = lightType;
+                        this.templateList = [{
+                            uuid: '',
+                            templateName: commonModule.i18n("form.select.default")
+                        }];
+                        $.ajax({
+                            data: {uuid: _self.monitorOpeUuid},
+                            url: _self.path.getEditData,
+                            success: function (data) {
+                                if (data.msg == "SUCCESS") {
+                                    var data = data.data;
+                                    _self.infoIp = data.ip;
+                                    _self.infoName = data.name;
+                                    _self.infoUsername = data.username;
+                                    _self.infoPassword = data.password;
+                                    _self.infoPort = data.port;
+                                    _self.infoTimeinterval = data.scrapeInterval;
+                                    _self.infoTimeout = data.scrapeTimeout;
+                                    _self.infoBbname = data.databasename;
+                                    _self.infoMonitortemplate = data.templateId;
+                                    data.monitorTemplate.other.forEach(function (x) {
+                                        _self.templateList.push(x);
+                                    });
+                                }
+                            },
+                            error: function () {
+
+                            }
+
+                        })
                     },
                     initData: function (lightType) {
                         var _self = this;
@@ -84,21 +122,32 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     submitForm: function () {
                         var _self = this;
                         var formdata = new FormData($('#add-db')[0]);
+                        if (_self.monitorOpe == "edit"){
+                            formdata.append("uuid", _self.monitorOpeUuid);
+                        }
                         formdata.append("lightType", _self.lightType);
                         $.ajax({
                             type: "post",
                             data: formdata,
                             contentType: false,
                             processData: false,
-                            url: _self.path.addDBMonitorRecord,
+                            url:  _self.monitorOpe == "edit" ? _self.path.updateDBMonitorRecord :_self.path.addDBMonitorRecord,
                             dataType: 'json',//预期服务器返回数据类型
                             success: function (data) {
                                 if (data.msg === "SUCCESS") {
                                     //弹出框 新建成功
-                                    commonModule.prompt("prompt.insertSuccess",data.msg);
+                                    if (_self.monitorOpe == "edit"){
+                                        commonModule.prompt("prompt.updateSuccess",data.msg);
+                                    }else {
+                                        commonModule.prompt("prompt.insertSuccess",data.msg);
+                                    }
                                 }else {
                                     //弹出框 新建失败
-                                    commonModule.prompt("prompt.insertError","alert");
+                                    if (_self.monitorOpe == "edit") {
+                                        commonModule.prompt("prompt.updateError","alert");
+                                    }else {
+                                        commonModule.prompt("prompt.insertError","alert");
+                                    }
                                 }
                                 $("#adddb").modal('hide');
                             },
@@ -210,10 +259,19 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
 
         $("#adddb").on('show.bs.modal', function (event) {
             addDb.initForm();
-            var light = sessionStorage.getItem('addLightType');
-            addDb.title = commonModule.i18n("modal.title.add" + light);
+            var light="";
+            addDb.monitorOpe=sessionStorage.getItem('monitorOpe');
+            if (addDb.monitorOpe=="edit"){
+                addDb.monitorOpeUuid=sessionStorage.getItem('monitorOpeObj');
+                light=sessionStorage.getItem('editLightType');
+                addDb.title = commonModule.i18n("modal.title.update" + light);
+                addDb.initEditData(light);
+            }else {
+                light = sessionStorage.getItem('addLightType');
+                addDb.title = commonModule.i18n("modal.title.add" + light);
+                addDb.initData(light);
+            }
             addDb.tabSelected = light;
-            addDb.initData(light);
         });
         $("#adddb").on("hide.bs.model", function (e) {
             $("#add-db").resetForm();

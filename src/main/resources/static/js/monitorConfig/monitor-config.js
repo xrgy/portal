@@ -2,7 +2,8 @@
  * Created by gy on 2018/3/24.
  */
 'use strict'
-define(['jquery','bootstrap', 'vue','commonModule','topoMain','editTopo','showBusiness','showAlert','monitorConfigList'], function ($,bootstrap, Vue,commonModule,topoMain,editTopo,showBusiness,showAlert,monitorConfigList) {
+define(['jquery','bootstrap', 'vue','commonModule','topoMain','editTopo','showBusiness','showAlert','monitorConfigList','monitorList'],
+    function ($,bootstrap, Vue,commonModule,topoMain,editTopo,showBusiness,showAlert,monitorConfigList,monitorList) {
     var confList = function () {
         if ($('#configList')[0]) {
             var monitorList = new Vue({
@@ -26,32 +27,11 @@ define(['jquery','bootstrap', 'vue','commonModule','topoMain','editTopo','showBu
                     openConfigModal: function () {
                         $("#monitorConfig").modal({backdrop: 'static', keyboard: false, show: true})
                     },
-                    toggleDeviceList:function (event) {
-                      var  e = event.currentTarget;
-                      $(e).toggleClass('fa-angle-down fa-angle-up');
-                      $('#device-list').toggleClass('hidden');
+                    loadMonitorList:function () {
+                        window.open("/monitor/showMonitorList",'_parent');
+                        monitorList.showMonitorList();
                     },
 
-                    addDevice:function (middletype,lighttype) {
-                        sessionStorage.setItem('addLightType',lighttype);
-                        switch(middletype){
-                            case 'network_device':
-                                $('#addnetwork').modal({backdrop:'static',keyboard:false,show:true});
-                                break;
-                            case 'middleware':
-                                $('#addtomcat').modal({backdrop:'static',keyboard:false,show:true});
-                                break;
-                            case 'database':
-                                $('#adddb').modal({backdrop:'static',keyboard:false,show:true});
-                                break;
-                            case 'virtualization':
-                                $('#addcas').modal({backdrop:'static',keyboard:false,show:true});
-                                break;
-                            case 'container':
-                                $('#addk8s').modal({backdrop:'static',keyboard:false,show:true});
-                                break;
-                        }
-                    },
                     loadMonitorTemplate:function () {
                         window.open("/monitorConfig/showTemplateList",'_parent');
                         monitorConfigList.showTempList();

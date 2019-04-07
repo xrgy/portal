@@ -210,4 +210,11 @@ public interface MonitorService {
     List<NetworkMonitorEntity> getAllNetworkMonitorEntity();
 
     ResultMsg getBusMonitorListByPage(PageData page) throws JsonProcessingException;
+
+    /**
+     * 根据二级规格获取监控记录
+     * @param middle
+     * @return
+     */
+    ResultMsg getMonitorRecordList(String middle);
 }

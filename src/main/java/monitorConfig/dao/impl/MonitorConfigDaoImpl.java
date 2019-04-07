@@ -53,7 +53,10 @@ public class MonitorConfigDaoImpl implements MonitorConfigDao {
     private static final String PATH_GET_OPEN_TEMPLATE_DATA = "getOpenTemplateData";
     private static final String PATH_UPDATE_TEMPLATE = "updateTemplate";
     private static final String PATH_GET_ALL_TEMPLATE = "getAllTemplate";
+    private static final String PATH_GET_ALL_TEMPLATE_NO = "getAllTemplateNo";
+
     private static final String PATH_GET_METRIC_BY_RULE = "getMetricInfoByRule";
+
 
 
     private static final String HTTP="http://";
@@ -261,4 +264,16 @@ public class MonitorConfigDaoImpl implements MonitorConfigDao {
         }
         return null;
     }
+
+    @Override
+    public List<AlertRuleTemplateEntity> getAllTemplateNo() {
+        String response = rest().getForObject(monitorConfigPrefix() + PATH_GET_ALL_TEMPLATE_NO, String.class);
+        try {
+            return objectMapper.readValue(response, new TypeReference<List<AlertRuleTemplateEntity>>() {});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

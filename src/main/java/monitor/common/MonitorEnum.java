@@ -90,5 +90,60 @@ public interface MonitorEnum {
             return this.value;
         }
     }
+    enum MiddleTypeEnum{
+
+        NETWORK_DEVICE("network_device"),
+
+        MIDDLEWARE("middleware"),
+
+        DATABASE("database"),
+
+        VIRTUALIZATION("virtualization"),
+
+        CONTAINER("container");
+
+
+        private String value;
+
+        MiddleTypeEnum(String msg) {
+            this.value = msg;
+        }
+
+        public String value() {
+            return this.value;
+        }
+    }
+
+    enum QuotaMonitorStatusEnum{
+
+        SNMP_MONITOR_STATUS("snmp_monitorstatus"),
+
+        MYSQL_MONITOR_STATUS("mysql_monitorstatus"),
+
+        TOMCAT_MONITOR_STATUS("jmx_monitorstatus"),
+
+        CAS_MONITOR_STATUS("cas_monitorstatus"),
+
+        HOST_MONITOR_STATUS("cas_cvk_monitorstatus"),
+
+        VM_MONITOR_STATUS("cas_vm_monitorstatus"),
+
+        K8S_MONITOR_STATUS("k8s_cluster_monitorstatus"),
+
+        K8S_NODE_MONITOR_STATUS("k8s_container_monitorstatus"),
+
+        K8S_CONTAINER_MONITOR_STATUS("k8s_node_monitorstatus");
+
+
+        private String value;
+
+        QuotaMonitorStatusEnum(String msg) {
+            this.value = msg;
+        }
+
+        public String value() {
+            return this.value;
+        }
+    }
 
 }

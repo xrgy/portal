@@ -8,6 +8,8 @@ import monitor.common.ResultMsg;
 import monitorConfig.entity.metric.Metrics;
 import monitorConfig.entity.metric.NewTemplateView;
 import monitorConfig.entity.metric.UpTemplateView;
+import monitorConfig.entity.template.AlertRuleTemplateEntity;
+import monitorConfig.entity.template.MonitorTemplate;
 import monitorConfig.entity.template.RuleMonitorEntity;
 
 import java.io.IOException;
@@ -46,7 +48,7 @@ public interface MonitorConfigService {
      * @param lightType
      * @return
      */
-    public ResultMsg getTemplateByLightType(String lightType,String monitorMode);
+    public MonitorTemplate getTemplateByLightType(String lightType, String monitorMode);
 
     /**
      * 根据监控记录id和模板id生成监控实体规则
@@ -107,4 +109,10 @@ public interface MonitorConfigService {
     ResultMsg getAllTemplate(PageData page,String type) throws JsonProcessingException;
 
     Metrics getMetricByRule(String perf, String alertRuleUuid);
+
+    /**
+     * 获取所有的监控模板，没有条件
+     * @return
+     */
+    List<AlertRuleTemplateEntity> getAllTemplateNo();
 }

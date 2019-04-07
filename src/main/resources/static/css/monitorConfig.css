@@ -255,6 +255,7 @@
     margin-top: 24px;
     padding: 0 10px;
 }
+#monitorList #breadline,
 #monitorConifgList #breadline,
 #myBusiness #breadline,
 #myalert #breadline{
@@ -265,6 +266,7 @@
     position: absolute;
     top: 46px;
 }
+#monitorList #breadlineTitle,
 #monitorConifgList #breadlineTitle,
 #myBusiness #breadlineTitle,
 #myalert #breadlineTitle{
@@ -313,6 +315,8 @@
     margin-top: 16px;
     height: 28px;
 }
+#monitorList #oper #delResBtn,
+#monitorList #oper #refresh,
 #monitorConifgList #oper #delResBtn,
 #monitorConifgList #oper #refresh,
 #myalert #oper #refresh{
@@ -377,6 +381,7 @@
     position: relative;
     top: 4px;
 }
+#monitorList #oper #tworight,
 #monitorConifgList #oper #tworight,
 #myalert #oper #tworight{
     display: inline-block;
@@ -385,6 +390,7 @@
     width: 290px;
     margin-left: 638px;
 }
+#monitorList #oper .middleline,
 #monitorConifgList #oper .middleline,
 #myalert #oper .middleline{
     display: inline-block;
@@ -432,11 +438,24 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     top: 8px;
 }
 /*紧急*/
+#monitorListCon .notrunning,
 #myalert .major{
     width: 14px;
     height: 14px;
     border-radius: 14px;
     background: #c11212;
+}
+#monitorListCon .running{
+    width: 14px;
+    height: 14px;
+    border-radius: 14px;
+    background: #1db163;
+}
+#monitorListCon .notrunning +span{
+    color: #c11212;
+}
+#monitorListCon .running +span{
+    color: #1db163;
 }
 #myalert  table td {
     white-space: nowrap;/*控制单行显示*/
@@ -449,6 +468,8 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
 #myalert table>tfoot>tr>th{
     border-top: 1.4px solid #ddd;
 }
+#addk8s #chosePageSize,
+#monitorList #chosePageSize,
 #monitorConifgList #chosePageSize,
 #add-resource #chosePageSize,
 #myBusiness #chosePageSize,
@@ -458,6 +479,8 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     margin-top: 24px;
     padding: 0 10px;
 }
+#addk8s #page,
+#monitorList #page,
 #monitorConifgList #page,
 #add-resource #page,
 #myBusiness #page,
@@ -470,6 +493,10 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     /*!* box-shadow: -1px 10px 0px 0.4px #ccc; *!*/
     /*position: relative;*/
 }
+#addk8s #page select,
+#addk8s #chosePageSize select,
+#monitorList #page select,
+#monitorList #chosePageSize select,
 #monitorConifgList #page select,
 #monitorConifgList #chosePageSize select,
 #add-resource #page select,
@@ -493,6 +520,8 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     border-radius: 10px;
     border: 1px solid #ccc;
 }
+#addk8s .prev a, #addk8s .next a,
+#monitorList .prev a, #monitorList .next a,
 #monitorConifgList .prev a, #monitorConifgList .next a,
 #add-resource .prev a, #add-resource .next a,
 #myBusiness .prev a, #myBusiness .next a,
@@ -504,6 +533,10 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     padding-top: 2px;
     padding-bottom: 2px;
 }
+#addk8s .pull-right ul,
+#addk8s #chosePageSize,
+#monitorList .pull-right ul,
+#monitorList #chosePageSize,
 #editBusiness .pull-right ul,
 #editBusiness #chosePageSize,
 #monitorConifgList .pull-right ul,
@@ -512,6 +545,7 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
 #myalert #chosePageSize{
     margin-top: 14px;
 }
+#monitorList #breadlineTitle .middleline,
 #monitorConifgList #breadlineTitle .middleline,
 #myBusiness #breadlineTitle .middleline,
 #myalert #breadlineTitle .middleline{
@@ -529,6 +563,7 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     border-radius: 0;
     width: 80px;
 }
+#monitorList #device-list,
 #monitorConifgList #config-list{
     position: absolute;
     background: #cac7c7;
@@ -542,6 +577,10 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
 .deviceBtn span:hover{
     color:#333;
 }
+#addk8s table td,
+#addk8s table th,
+#monitorList table td,
+#monitorList table th,
 #monitorConifgList table td,
 #monitorConifgList table th{
     text-align: center

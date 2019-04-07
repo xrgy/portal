@@ -84,22 +84,22 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
     }
 
     @Override
-    public ResultMsg getTemplateByLightType(String lightType,String monitorMode) {
-        ResultMsg msg = new ResultMsg();
+    public MonitorTemplate getTemplateByLightType(String lightType,String monitorMode) {
+//        ResultMsg msg = new ResultMsg();
         MonitorTemplate templateList = dao.getTemplateByLightType(lightType);
 //        JSONObject object = new JSONObject();
 //        object.put("lightType",lightType);
 //        object.put("monitorMode",monitorMode);
 //        object.put("template",templateList);
-        if (null == templateList){
-            msg.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            msg.setMsg(CommonEnum.MSG_ERROR.value());
-        }else {
-            msg.setCode(HttpStatus.OK.value());
-            msg.setMsg(CommonEnum.MSG_SUCCESS.value());
-            msg.setData(templateList);
-        }
-        return msg;
+//        if (null == templateList){
+//            msg.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+//            msg.setMsg(CommonEnum.MSG_ERROR.value());
+//        }else {
+//            msg.setCode(HttpStatus.OK.value());
+//            msg.setMsg(CommonEnum.MSG_SUCCESS.value());
+//            msg.setData(templateList);
+//        }
+        return templateList;
 
     }
 
@@ -169,7 +169,7 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
         //删除
         //delAlertRuleByUuid 需要uuid是monitoruuid+templateuuid 去除'-'
         String tempuuid = (uuid+oldTemplateId).replaceAll("-", "");
-        boolean res = dao.delAlertRuleByUuid(tempuuid);
+        boolean res = true;// dao.delAlertRuleByUuid(tempuuid);
         if (res){
             return addMonitorRecordAlertRule(uuid,templateId);
         }
@@ -259,6 +259,11 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
     @Override
     public Metrics getMetricByRule(String perf, String alertRuleUuid) {
         return dao.getMetricByRule(perf, alertRuleUuid);
+    }
+
+    @Override
+    public List<AlertRuleTemplateEntity> getAllTemplateNo() {
+        return dao.getAllTemplateNo();
     }
 
 

@@ -34,6 +34,8 @@ require.config({
         'editBusiness':'./business/edit-business',
         'showAlert':'./alert/alert-list',
         'monitorConfigList':'./monitorConfig/monitor-config-list',
+        'monitorList':'./monitor/monitor-list',
+
 
 
 

@@ -4,6 +4,7 @@ import business.entity.PageData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import monitor.common.ResCommon;
 import monitor.common.ResultMsg;
 import monitorConfig.entity.metric.NewTemplateView;
 import monitorConfig.entity.metric.UpTemplateView;
@@ -85,7 +86,7 @@ public class MonitorConfigController {
     @RequestMapping("/getTemplateByLightType")
     @ResponseBody
     public ResultMsg getTemplateByLightType(String lightType,String monitorMode){
-        return service.getTemplateByLightType(lightType,monitorMode);
+        return ResCommon.getCommonResultMsg(service.getTemplateByLightType(lightType,monitorMode));
     }
 
     @RequestMapping("delTemplate")

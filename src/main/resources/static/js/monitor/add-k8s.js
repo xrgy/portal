@@ -22,13 +22,34 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'bootstrap-table'], 
                     path: {
                         getTemplateByLightType: "/monitorConfig/getTemplateByLightType",
                         addContainerMonitorRecord: "/monitor/addContainerMonitorRecord",
-                        getContainerList: "/monitor/getContainerList"
+                        getContainerList: "/monitor/getContainerList",
+                        getEditData:"/monitor/getK8sMonitor",
+                        updateContainerMonitorRecord:"/monitor/updateContainerMonitorRecord"
                     },
                     k8sTemplateList: [{uuid: '', templateName: commonModule.i18n("form.select.default")}],
                     k8snTemplateList: [{uuid: '', templateName: commonModule.i18n("form.select.default")}],
                     k8scTemplateList: [{uuid: '', templateName: commonModule.i18n("form.select.default")}],
                     lightType: "",
                     tabSelected: "",
+                    monitorOpe:"",
+                    monitorOpeUuid:"",
+                    pageNum: 1,
+                    pageSize: 10,
+                    pageNumList: [],
+                    totalPage: 0,
+                    currenPageInfo: "",
+                    totalRecord: 0,
+                    containerEntityList: [],
+                    showContainerList: [],
+                },
+                filters: {
+                    convertContainerStatus: function (value) {
+                        if (value === "0") {
+                            return commonModule.i18n("monitor.baseinfo.status.stopped")
+                        } else if (value === "1") {
+                            return commonModule.i18n("monitor.baseinfo.status.running")
+                        }
+                    },
                 },
                 mounted: function () {
                     var light = sessionStorage.getItem('addLightType');
@@ -36,9 +57,9 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'bootstrap-table'], 
                 },
                 methods: {
 
-                    clearTable: function () {
-                        $('#tabdiv')[0].innerHTML = "<table id='mycontainertab' class='table table-hover'></table>";
-                    },
+                    // clearTable: function () {
+                    //     $('#tabdiv')[0].innerHTML = "<table id='mycontainertab' class='table table-hover'></table>";
+                    // },
                     initForm: function () {
                         $("#add-k8s").validate().resetForm();
                         $('.form-group').removeClass("has-error");
@@ -63,13 +84,56 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'bootstrap-table'], 
                                 templateName: commonModule.i18n("form.select.default")
                             }];
                     },
+                    initEditData: function (lightType) {
+                        var _self = this;
+                        _self.lightType = lightType;
+                        $.ajax({
+                            data: {uuid: _self.monitorOpeUuid},
+                            url: _self.path.getEditData,
+                            success: function (data) {
+                                if (data.msg == "SUCCESS") {
+                                    var data = data.data;
+                                    _self.infoIp = data.ip;
+                                    _self.infoName = data.name;
+                                    _self.infoAPIPort = data.apiPort;
+                                    _self.infoCAdvisorPort = data.cadvisorPort,
+                                    _self.infoTimeinterval = data.scrapeInterval;
+                                    _self.infoTimeout = data.scrapeTimeout;
+                                    _self.radioType = "1";
+                                    _self.infoBbname = data.databasename;
+                                    _self.infoK8sMonitortemplate = data.templateId;
+                                    _self.infoK8snMonitortemplate = data.k8sNTemplateId;
+                                    if (data.k8scTemplateId==null){
+                                        _self.infoK8scMonitortemplate='';
+                                    }else {
+                                        _self.infoK8scMonitortemplate = data.k8scTemplateId;
+                                    }
+                                    if (data.monitorTemplate.k8s !== null) {
+                                        data.monitorTemplate.k8s.forEach(function (x) {
+                                            _self.k8sTemplateList.push(x);
+                                        });
+                                    }
+                                    if (data.monitorTemplate.k8sn !== null) {
+                                        data.monitorTemplate.k8sn.forEach(function (x) {
+                                            _self.k8snTemplateList.push(x);
+                                        });
+                                    }
+                                    if (data.monitorTemplate.k8sc !== null) {
+                                        data.monitorTemplate.k8sc.forEach(function (x) {
+                                            _self.k8scTemplateList.push(x);
+                                        });
+                                    }
+                                }
+                            },
+                            error: function () {
+
+                            }
+
+                        })
+                    },
                     initData: function (lightType) {
                         var _self = this;
                         _self.lightType = lightType;
-                        this.templateList = [{
-                            uuid: '',
-                            templateName: commonModule.i18n("form.select.default")
-                        }];
                         $.ajax({
                             data: {lightType: lightType},
                             url: _self.path.getTemplateByLightType,
@@ -99,70 +163,158 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'bootstrap-table'], 
 
                         })
                     },
-                    initTable: function () {
+                    checkAllDel: function (event) {
                         var _self = this;
-                        $('#mycontainertab').bootstrapTable({
-                            method: 'get',
-                            contentType: "application/x-www-form-urlencoded",
-                            dataType: "json",
-                            url: _self.path.getContainerList + "?ip=" + _self.infoIp + "&apiPort=" + _self.infoAPIPort,
-                            height: 500,//高度调整
-                            striped: true, //是否显示行间隔色
-                            dataField: 'data',//请求回来的list字段名
-                            // dataField: "res",//获取数据的别名，先省略，则为你返回的
-                            pageNumber: 1, //初始化加载第一页，默认第一页
-                            pagination: true,//是否分页
-                            // queryParamsType:'limit',
-                            // queryParams:queryParams,
-                            sidePagination: 'client',//：client客户端分页，server服务端分页
-                            pageSize: 10,//单页记录数
-                            // pageList:[5,10,20,30],//分页步进值
-                            showRefresh: false,//刷新按钮
-                            showColumns: false,
-                            // clickToSelect: true,//是否启用点击选中行
-                            // toolbarAlign:'right',
-                            // buttonsAlign:'right',//按钮对齐方式
-                            // toolbar:'#toolbar',//指定工作栏
-                            columns: [
-                                {
-                                    title: '',
-                                    field: '',
-                                    checkbox: true,
-                                    // checked:true,没用选不选中根据filed有没有值
-                                    // width: 25,
-                                    class: 'mycheck',
-                                    align: 'center',
-                                    valign: 'middle',
-                                },
-                                {
-                                    title: '容器名称',
-                                    field: 'name',
-                                    sortable: true
-                                },
-                                {
-                                    title: 'pod',
-                                    field: 'podName',
-                                    sortable: true
-                                },
-                                {
-                                    title: '运行状态',
-                                    field: 'status',
-                                    sortable: true,
-                                    formatter: function (value, row, index) {
-                                        //通过formatter可以自定义列显示的内容
-                                        //value：当前field的值，即id
-                                        //row：当前行的数据
-                                        if (value === "0") {
-                                            return commonModule.i18n("monitor.baseinfo.status.stopped")
-                                        } else if (value === "1") {
-                                            return commonModule.i18n("monitor.baseinfo.status.running")
-                                        }
-                                    }
-                                }
+                        if ($("#allDel").prop("checked")) {
+                            $("input[name='needDel']:checkbox").each(function () {
+                                $(this).prop("checked", true);
+                            });
+                        } else {
+                            $("input[name='needDel']:checkbox").each(function () {
+                                $(this).prop("checked", false);
+                            });
+                        }
 
-                            ],
-                            locale: 'zh-CN',//中文支持,
+                    },
+                    // initTable: function () {
+                    //             var _self = this;
+                    //             $('#mycontainertab').bootstrapTable({
+                    //                 method: 'get',
+                    //                 cache: false,
+                    //                 contentType: "application/x-www-form-urlencoded",
+                    //                 dataType: "json",
+                    //                 url: _self.path.getContainerList + "?ip=" + _self.infoIp + "&apiPort=" + _self.infoAPIPort,
+                    //                 height: 500,//高度调整
+                    //                 striped: true, //是否显示行间隔色
+                    //                 dataField: 'data',//请求回来的list字段名
+                    //                 // dataField: "res",//获取数据的别名，先省略，则为你返回的
+                    //                 pageNumber: 1, //初始化加载第一页，默认第一页
+                    //                 pagination: true,//是否分页
+                    //                 // queryParamsType:'limit',
+                    //                 // queryParams:queryParams,
+                    //                 sidePagination: 'client',//：client客户端分页，server服务端分页
+                    //                 pageSize: 10,//单页记录数
+                    //                 // pageList:[5,10,20,30],//分页步进值
+                    //                 showRefresh: false,//刷新按钮
+                    //                 showColumns: false,
+                    //                 // clickToSelect: true,//是否启用点击选中行
+                    //                 // toolbarAlign:'right',
+                    //                 // buttonsAlign:'right',//按钮对齐方式
+                    //                 // toolbar:'#toolbar',//指定工作栏
+                    //                 columns: [
+                    //                     {
+                    //                         title: '',
+                    //                         field: '',
+                    //                         checkbox: true,
+                    //                         // checked:true,没用选不选中根据filed有没有值
+                    //                         // width: 25,
+                    //                         class: 'mycheck',
+                    //                         align: 'center',
+                    //                         valign: 'middle',
+                    //                     },
+                    //                     {
+                    //                         title: '容器名称',
+                    //                         field: 'name',
+                    //                         sortable: true
+                    //                     },
+                    //                     {
+                    //                         title: 'pod',
+                    //                         field: 'podName',
+                    //                         sortable: true
+                    //                     },
+                    //                     {
+                    //                         title: '运行状态',
+                    //                         field: 'status',
+                    //                         sortable: true,
+                    //                         formatter: function (value, row, index) {
+                    //                             //通过formatter可以自定义列显示的内容
+                    //                             //value：当前field的值，即id
+                    //                             //row：当前行的数据
+                    //                             if (value === "0") {
+                    //                                 return commonModule.i18n("monitor.baseinfo.status.stopped")
+                    //                             } else if (value === "1") {
+                    //                                 return commonModule.i18n("monitor.baseinfo.status.running")
+                    //                             }
+                    //                         }
+                    //                     }
+                    //
+                    //                 ],
+                    //         onLoadSuccess: function(res){  //加载成功时执行
+                    //             console.info("加载成功");
+                    //             console.log(res);
+                    //         },
+                    //         onLoadError: function(){  //加载失败时执行
+                    //             console.info("加载数据失败");
+                    //         },
+                    //         locale: 'zh-CN',//中文支持,
+                    //     })
+                    // },
+                    reloadMonitorList: function () {
+                        var _self = this;
+                        _self.showContainerList = [];
+                        var startIndex = (_self.pageNum - 1) * parseInt(_self.pageSize);
+                        for (var i = 0; i < parseInt(_self.pageSize); i++) {
+                            if (i + startIndex >= _self.containerEntityList.length) {
+                                break;
+                            }
+                            _self.showContainerList.push(_self.containerEntityList[i + startIndex]);
+                        }
+                        _self.currenPageInfo = "共" + _self.totalRecord + "条记录 , 当前第" + _self.pageNum + "/" + _self.totalPage + "页"
+                    },
+                    initContainerTable: function () {
+                        var _self = this;
+                        _self.pageNumList = [];
+                        _self.containerEntityList = [];
+                        $.ajax({
+                            url: _self.path.getContainerList + "?ip=" + _self.infoIp + "&apiPort=" + _self.infoAPIPort,
+                            success: function (data) {
+                                if (data.msg == "SUCCESS") {
+                                    var data = data.data;
+                                    _self.totalRecord = data.length;
+                                    if (_self.totalRecord % _self.pageSize == 0) {
+                                        _self.totalPage = Math.floor(_self.totalRecord / _self.pageSize);
+                                    } else {
+                                        _self.totalPage = Math.floor(_self.totalRecord / _self.pageSize) + 1;
+                                    }
+                                    for (var i = 1; i <= _self.totalPage; i++) {
+                                        _self.pageNumList.push(i);
+                                    }
+                                    var i = 0;
+                                    data.forEach(function (x) {
+                                        _self.containerEntityList.push(x);
+                                    });
+                                    _self.reloadMonitorList();
+                                }
+                            },
+                            error: function () {
+                            }
                         })
+                    },
+                    //下一步
+                    next: function () {
+                        var _self = this;
+                        if (_self.pageNum < _self.totalPage) {
+                            _self.pageNum = _self.pageNum + 1;
+                            _self.reloadMonitorList();
+                        }
+                    },
+
+                    //上一步
+                    previous: function () {
+                        var _self = this;
+                        if (_self.pageNum > 1) {
+                            _self.pageNum = _self.pageNum - 1;
+                            _self.reloadMonitorList();
+                        }
+                    },
+                    //修改每页显示条数时，要从第一页开始查起
+                    research: function () {
+                        var _self = this;
+                        _self.pageNum = 1;
+                        _self.reloadMonitorList();
+                    },
+                    search: function () {
+                        this.reloadMonitorList();
                     },
                     clickResource: function (event, lighttype) {
                         var e = event.target;
@@ -174,27 +326,44 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'bootstrap-table'], 
                     submitForm: function () {
                         var _self = this;
                         var ids = [];//得到用户选择的数据的ID
-                        var rows = $("#mycontainertab").bootstrapTable('getSelections');
-                        for (var i = 0; i < rows.length; i++) {
-                            ids.push(rows[i].id);
-                        }
+                        // var rows = $("#mycontainertab").bootstrapTable('getSelections');
+                        $("input[name='needDel']:checkbox").each(function () {
+                            if ($(this).prop("checked")) {
+                                var id = $(this).val();
+                                ids.push(id);
+                            }
+                        });
+                        // for (var i = 0; i < rows.length; i++) {
+                        //     ids.push(rows[i].id);
+                        // }
                         var formdata = new FormData($('#add-k8s')[0]);
                         formdata.append("lightType", _self.lightType);
                         formdata.append("containerIds", JSON.stringify(ids));
+                        if (_self.monitorOpe == "edit"){
+                            formdata.append("uuid", _self.monitorOpeUuid);
+                        }
                         $.ajax({
                             type: "post",
                             data: formdata,
                             contentType: false,
                             processData: false,
-                            url: _self.path.addContainerMonitorRecord,
+                            url: _self.monitorOpe == "edit" ? _self.path.updateContainerMonitorRecord :_self.path.addContainerMonitorRecord,
                             dataType: 'json',//预期服务器返回数据类型
                             success: function (data) {
                                 if (data.msg === "SUCCESS") {
                                     //弹出框 新建成功
-                                    commonModule.prompt("prompt.insertSuccess", data.msg);
+                                    if (_self.monitorOpe == "edit"){
+                                        commonModule.prompt("prompt.updateSuccess",data.msg);
+                                    }else {
+                                        commonModule.prompt("prompt.insertSuccess", data.msg);
+                                    }
                                 } else {
                                     //弹出框 新建失败
-                                    commonModule.prompt("prompt.insertError", "alert");
+                                    if (_self.monitorOpe == "edit") {
+                                        commonModule.prompt("prompt.updateError","alert");
+                                    }else {
+                                        commonModule.prompt("prompt.insertError", "alert");
+                                    }
                                 }
                                 $("#addk8s").modal('hide');
                             },
@@ -323,13 +492,22 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'bootstrap-table'], 
 
         $("#addk8s").on('show.bs.modal', function (event) {
             addK8s.initForm();
-            $('#tabdiv')[0].innerHTML = "<table id='mycontainertab' class='table table-hover'></table>";
-            var light = sessionStorage.getItem('addLightType');
-            addK8s.title = commonModule.i18n("modal.title.add" + light);
+            // $('#tabdiv')[0].innerHTML = "<table id='mycontainertab' class='table table-hover'></table>";
+            var light="";
+            addK8s.monitorOpe=sessionStorage.getItem('monitorOpe');
+            if (addK8s.monitorOpe=="edit"){
+                addK8s.monitorOpeUuid=sessionStorage.getItem('monitorOpeObj');
+                light=sessionStorage.getItem('editLightType');
+                addK8s.title = commonModule.i18n("modal.title.update" + light);
+                addK8s.initEditData(light);
+            }else {
+                light = sessionStorage.getItem('addLightType');
+                addK8s.title = commonModule.i18n("modal.title.add" + light);
+                addK8s.initData(light);
+            }
             addK8s.tabSelected = light;
-            addK8s.initData(light);
             // setTimeout(function () {
-            //     $('#tabdiv').innerHTML = "<table id='mycontainertab' class='table table-hover'></table>";
+            //     $('#tabdiv')[0].innerHTML = "<table id='mycontainertab' class='table table-hover'></table>";
             // }, 1000);
         });
         $("#addk8s").on("hide.bs.model", function (e) {

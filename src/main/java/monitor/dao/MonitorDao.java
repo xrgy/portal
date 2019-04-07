@@ -231,4 +231,7 @@ public interface MonitorDao {
      * @return
      */
     PageBean getBusMonitorListByPage(PageData page) throws JsonProcessingException;
+
+    String getQuotaValue(String monitorUuid,String quotaName);
+
 }

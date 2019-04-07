@@ -129,4 +129,7 @@ public interface MonitorConfigDao {
     PageBean getAllTemplate(PageData page, String type) throws JsonProcessingException;
 
     Metrics getMetricByRule(String perf, String alertRuleUuid);
+
+    List<AlertRuleTemplateEntity> getAllTemplateNo();
+
 }

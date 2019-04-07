@@ -69,6 +69,7 @@ public class MonitorDaoImpl implements MonitorDao {
     private static final String PATH_GET_ALL_VM_BY_CVK="getAllVmByCvkuuid";
     private static final String PATH_IS_IP_DUPLICATE="isMonitorRecordIpDup";
     private static final String PATH_GET_BUSMONITOR_LIST="getBusMonitorListByPage";
+    private static final String PATH_GET_QUOTA_VALUE="getQuotaValueByName";
 
 
 
@@ -308,7 +309,7 @@ public class MonitorDaoImpl implements MonitorDao {
     @Override
     public List<K8sNodeAndContainerView> getAllNodeAndContainerByK8suuid(String uuid) throws JsonProcessingException {
 
-        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_NODE_AND_CONTAINER_BY_K8S,String.class);
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_NODE_AND_CONTAINER_BY_K8S+"?uuid={1}",String.class,uuid);
         try {
             return objectMapper.readValue(response.getBody(),new TypeReference<List<K8sNodeAndContainerView>>(){});
         } catch (IOException e) {
@@ -319,7 +320,7 @@ public class MonitorDaoImpl implements MonitorDao {
 
     @Override
     public List<K8scontainerMonitorEntity> getAllContainerByK8sNodeuuid(String uuid) {
-        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_CONTAINER_BY_K8SNODE,String.class);
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_CONTAINER_BY_K8SNODE+"?uuid={1}",String.class,uuid);
         try {
             return objectMapper.readValue(response.getBody(),new TypeReference<List<K8scontainerMonitorEntity>>(){});
         } catch (IOException e) {
@@ -330,7 +331,7 @@ public class MonitorDaoImpl implements MonitorDao {
 
     @Override
     public List<CvkAndVmView> getAllCvkAndVmByCasuuid(String uuid) throws JsonProcessingException {
-        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_CVK_AND_VM_BY_CAS,String.class);
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_CVK_AND_VM_BY_CAS+"?uuid={1}",String.class,uuid);
         try {
             return objectMapper.readValue(response.getBody(),new TypeReference<List<CvkAndVmView>>(){});
         } catch (IOException e) {
@@ -341,7 +342,7 @@ public class MonitorDaoImpl implements MonitorDao {
 
     @Override
     public List<VmMonitorEntity> getAllVmByCvkuuid(String uuid) {
-        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_VM_BY_CVK,String.class);
+        ResponseEntity<String> response = rest().getForEntity(monitorPrefix()+PATH_GET_ALL_VM_BY_CVK+"?uuid={1}",String.class,uuid);
         try {
             return objectMapper.readValue(response.getBody(),new TypeReference<List<VmMonitorEntity>>(){});
         } catch (IOException e) {
@@ -364,6 +365,11 @@ public class MonitorDaoImpl implements MonitorDao {
             e.printStackTrace();
         }
         return null;
+    }
+    @Override
+    public String getQuotaValue(String monitorUuid,String quotaName) {
+        String quotaValue = rest().getForObject(monitorPrefix()+PATH_GET_QUOTA_VALUE+"?monitorUUid={1}&quotaName={2}",String.class,monitorUuid,quotaName);
+        return quotaValue;
     }
 
 

@@ -30,6 +30,7 @@ public class OperationMonitorEntity {
     private String monitorInfo;
 
     private String templateId;
+    private String templateName;
 
     private String scrapeInterval;
 
@@ -42,5 +43,10 @@ public class OperationMonitorEntity {
     private String extra;
 
     private int deleted;
+
+    //资源状态，正常为1，其他不正常
+    private String status;
+
+    private String middleType;
 
 }
