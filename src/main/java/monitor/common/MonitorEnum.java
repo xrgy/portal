@@ -130,9 +130,9 @@ public interface MonitorEnum {
 
         K8S_MONITOR_STATUS("k8s_cluster_monitorstatus"),
 
-        K8S_NODE_MONITOR_STATUS("k8s_container_monitorstatus"),
+        K8S_NODE_MONITOR_STATUS("k8s_node_monitorstatus"),
 
-        K8S_CONTAINER_MONITOR_STATUS("k8s_node_monitorstatus");
+        K8S_CONTAINER_MONITOR_STATUS("k8s_container_monitorstatus");
 
 
         private String value;

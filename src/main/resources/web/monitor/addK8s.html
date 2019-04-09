@@ -68,21 +68,21 @@
                         <!--容器列表-->
                         <div v-show="radioType=='3'" id="tabdiv">
                             <!--<table id="mycontainertab" class="table table-hover"></table>-->
-                            <div id="monitorListCon" style="background: #fff;">
-                                <table class="table" style="table-layout: fixed;font-size: 12px">
+                            <div id="containerList" style="background: #fff;">
+                                <table class="table  table-striped" style="table-layout: fixed;font-size: 12px">
                                     <thead>
                                     <tr style="color: #6e6e6e">
                                         <th style="width: 30px">
-                                            <input type='checkbox' class='input-checkbox'  id="allDel" name="addDel"
+                                            <input type='checkbox' class='input-checkbox'  id="allDel" name="allDel"
                                                    v-on:click="checkAllDel($event)"/>
                                         </th>
                                         <th style="width: 80px">容器名称<i class="fa fa-sort" aria-hidden="true" style="color: #a39a99"></i>
                                             <div class="middleline" style="margin-left: 0px"></div>
                                         </th>
-                                        <th style="width: 80px">pod<i class="fa fa-sort" aria-hidden="true" style="color: #a39a99"></i>
+                                        <th style="width: 100px">pod<i class="fa fa-sort" aria-hidden="true" style="color: #a39a99"></i>
                                             <div class="middleline" style="margin-left: 0px"></div>
                                         </th>
-                                        <th style="width: 80px">运行状态<i class="fa fa-sort" aria-hidden="true" style="color: #a39a99"></i>
+                                        <th style="width: 60px">运行状态<i class="fa fa-sort" aria-hidden="true" style="color: #a39a99"></i>
                                             <div class="middleline" style="margin-left: 0px"></div>
                                         </th>
                                     </tr>
@@ -91,8 +91,8 @@
                                     <template v-for="(i,j) in showContainerList">
                                         <tr :id="'container'+j">
                                             <td> <input type='checkbox' class='input-checkbox' :id="'container'+j" name="needDel"  :value="i.id"/></td>
-                                            <td style="color: #e56a15"><span :title="i.name"  :value="i.name">{{i.name}}</span></td>
-                                            <td style="color: #e56a15"><span :title="i.podName"  :value="i.podName">{{i.podName}}</span></td>
+                                            <td ><span :title="i.name"  :value="i.name">{{i.name}}</span></td>
+                                            <td ><span :title="i.podName"  :value="i.podName">{{i.podName}}</span></td>
                                             <td ><span :value="i.status">{{i.status|convertContainerStatus}}</span></td>
                                         </tr>
                                     </template>
@@ -101,9 +101,9 @@
                             </div>
                             <div style="display: inline-block"><span style="font-size: 12px">{{currenPageInfo}}</span></div>
                             <!--右下方的-->
-                            <div class="pull-right" style="background: #efefef;">
-                                <div id="chosePageSize" style="margin-top: 14px;">
-                                    <label>
+                            <div class="pull-right" style="background: #efefef;margin: 6px 0 0;">
+                                <div id="chosePageSize" style="width: 130px;margin: 0">
+                                    <label style="margin-bottom: 0">
                                         每页
                                         <select id="pageSize" v-on:change="research()" v-model="pageSize"
                                                 aria-controls="DataTables_Table_0" size="1" name="DataTables_Table_0_length">
@@ -115,7 +115,7 @@
                                         条记录
                                     </label>
                                 </div>
-                                <ul class="pagination pagination-sm">
+                                <ul class="pagination pagination-sm" style="margin:0">
                                     <li v-on:click="previous()" class="prev"><a href="#" style="color: #485664;">&laquo;</a>
                                     </li>
                                     <div id="page">

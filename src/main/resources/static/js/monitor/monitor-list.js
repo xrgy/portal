@@ -196,6 +196,12 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'topoMain'], functio
                             $(e).closest('li').addClass('active');
                             //其实是middle
                             this.tabSelected = lighttype;
+                            this.pageNum = 1;
+                            this.pageSize = 10;
+                            this.pageNumList = [];
+                            this.totalPage = 0;
+                            this.currenPageInfo = "";
+                            this.totalRecord = 0;
                             this.initTable(lighttype);
                         },
                         initTable: function (type) {

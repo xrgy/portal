@@ -165,12 +165,12 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'bootstrap-table'], 
                     },
                     checkAllDel: function (event) {
                         var _self = this;
-                        if ($("#allDel").prop("checked")) {
-                            $("input[name='needDel']:checkbox").each(function () {
+                        if ($("#containerList #allDel").prop("checked")) {
+                            $("#containerList input[name='needDel']:checkbox").each(function () {
                                 $(this).prop("checked", true);
                             });
                         } else {
-                            $("input[name='needDel']:checkbox").each(function () {
+                            $("#containerList input[name='needDel']:checkbox").each(function () {
                                 $(this).prop("checked", false);
                             });
                         }

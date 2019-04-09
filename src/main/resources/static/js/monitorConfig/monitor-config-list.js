@@ -110,7 +110,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'topoMain'], functio
                                 var _self = this;
                                 var temList = [];
                                 temList.push(temId);
-                                // _self.actionDel(JSON.stringify(temList));
+                                _self.actionDel(JSON.stringify(temList));
                             }else {
                                 commonModule.prompt("prompt.template.notDel","alert");
                             }
@@ -132,7 +132,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'topoMain'], functio
                                 }
                             });
                             if (temList.length>0){
-                                // this.actionDel(JSON.stringify(temList))
+                                this.actionDel(JSON.stringify(temList))
                             }else {
                                 commonModule.prompt("prompt.template.notDel","alert");
                             }
@@ -157,6 +157,12 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'topoMain'], functio
                             $(e).closest('li').addClass('active');
                             //其实是
                             this.tabSelected = lighttype;
+                            this.pageNum = 1;
+                            this.pageSize = 10;
+                            this.pageNumList = [];
+                            this.totalPage = 0;
+                            this.currenPageInfo = "";
+                            this.totalRecord = 0;
                             this.initTable(lighttype);
                         },
                         initTable: function (type) {

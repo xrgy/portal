@@ -169,7 +169,7 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
         //删除
         //delAlertRuleByUuid 需要uuid是monitoruuid+templateuuid 去除'-'
         String tempuuid = (uuid+oldTemplateId).replaceAll("-", "");
-        boolean res = true;// dao.delAlertRuleByUuid(tempuuid);
+        boolean res =  dao.delAlertRuleByUuid(tempuuid);
         if (res){
             return addMonitorRecordAlertRule(uuid,templateId);
         }

@@ -49,4 +49,6 @@ public class AlertEntity {
 
     private String resolvedT;
 
+    private String lightType;
+
 }

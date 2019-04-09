@@ -1,52 +1,61 @@
 
-#monitorBasicInfo .radio-left{
+#monitorBasicInfo .radio-left {
     margin-left: 34px;
 }
 
 #performanceContainer .span-title,
-#avaliableContainer .span-title{
+#avaliableContainer .span-title {
     color: #ec670b;
     font-size: 14px;
     margin-left: -10px;
 }
-#avaliableContainer table{
+
+#avaliableContainer table {
 
 }
+
 #performanceContainer table .span-line,
-#avaliableContainer table .span-line{
+#avaliableContainer table .span-line {
     border-left: 1px solid #cccccc;
     margin-right: 6px;
 }
+
 /*#performanceContainer table tbody tr td:not(:nth-child(1)),*/
 /*#avaliableContainer table tbody tr td:not(:nth-child(1)){*/
 #performanceContainer table tbody tr td,
-#avaliableContainer table tbody tr td{
+#avaliableContainer table tbody tr td {
     padding-left: 18px;
 }
-#avaliableContainer table tr .td-group ,
+
+#avaliableContainer table tr .td-group,
 #performanceContainer table tr .td-group {
     padding-left: 0 !important;
 }
-#performanceContainer table .display-inline{
+
+#performanceContainer table .display-inline {
     display: inline-block;
 }
-#performanceContainer table .span-more-condition{
+
+#performanceContainer table .span-more-condition {
     cursor: pointer;
     padding: 4px;
     border: 0.2px solid #ec670b;
     margin-right: 4px;
 }
-#performanceContainer table .span-more-line{
+
+#performanceContainer table .span-more-line {
     cursor: pointer;
     padding: 4px 12px 4px;
     border: 0.2px solid #ec670b;
     margin-right: 4px;
 }
-#performanceContainer table #second-line-thresh{
+
+#performanceContainer table #second-line-thresh {
     margin-top: 2px;
 }
+
 #avaliableContainer table .toggle-font,
-#performanceContainer table .toggle-font{
+#performanceContainer table .toggle-font {
     margin-left: 6px;
     font-weight: bold;
     font-size: 16px;
@@ -54,82 +63,101 @@
     top: 4px;
     cursor: pointer;
 }
+
 #addcas .divradio,
-#addk8s .divradio{
+#addk8s .divradio {
     margin-left: 120px;
 }
-#add-cas table{
+
+#add-cas table {
     width: 146px;
     height: 400px;
     display: inline-block;
 }
-#add-cas .table-left{
+
+#add-cas .table-left {
     margin-left: 102px;
 }
-#add-cas .table-right{
+
+#add-cas .table-right {
     margin-left: 250px;
 }
+
 #add-cas .no-part-border {
     border-right: 1px solid transparent !important;
 }
 
-#tipNodeMsg{
+#tipNodeMsg {
     position: absolute;
 }
-#tipLinkMsg{
+
+#tipLinkMsg {
     position: absolute;
 }
+
 #mycanvas .topotip,
-#mynetcanvas .topotip{
+#mynetcanvas .topotip {
     width: 230px;
     height: 170px;
     opacity: 1.0;
     background: #fff;
     border: solid 1px #ccc;
 }
-#mycanvas .topotip{
+
+#mycanvas .topotip {
     height: 110px;
 }
-#mycanvas .topoLinktip{
+
+#mycanvas .topoLinktip {
     height: 70px;
 }
-#mycanvas .topotip .tip-node-name{
+
+#mycanvas .topotip .tip-node-name {
     padding-left: 30px;
     padding-top: 10px;
 }
-#mycanvas .topotip .tip-node-others{
+
+#mycanvas .topotip .tip-node-others {
     padding-left: 30px;
 }
-#mycanvas .topotip .tip-link-others{
+
+#mycanvas .topotip .tip-link-others {
     padding-left: 20px;
 }
-#mynetcanvas .topotip fieldset{
+
+#mynetcanvas .topotip fieldset {
     padding: 0 10px;
     border: 1px solid silver;
     margin: 0 10px;
 }
-#mynetcanvas .topotip fieldset legend{
+
+#mynetcanvas .topotip fieldset legend {
     font-size: 12px;
     font-weight: bold;
     margin-bottom: 0 !important;
     border-bottom: 0;
     width: 20%;
 }
-#mynetcanvas .topotip .alertspan{
+
+#mynetcanvas .topotip .alertspan {
     width: 60px;
     display: inline-block;
 }
-#mynetcanvas .topotip .tip-node-type{
+
+#mynetcanvas .topotip .tip-node-type {
     padding-top: 8px;
     padding-left: 5px;
 }
-#mynetcanvas .topotip .tip-node-others{
+
+#mynetcanvas .topotip .tip-node-others {
     margin-left: 30px;
 }
-#mynetcanvas .topotip .tip-link-type{
+
+#mynetcanvas .topotip .tip-link-type {
     padding-left: 15px;
 }
-#myBusiness .breadDisplay{
+
+#myBusiness .breadDisplay {
     width: 100%;
 }
 
@@ -138,13 +166,15 @@
     /*background: #fafafb;*/
     /*background: #efefef;*/
 }
+
 #myBusiness .wrapper {
     display: grid;
     grid-template-columns: 246px 246px 246px 246px 246px;
     grid-template-rows: 150px;
     padding: 10px;
 }
-#myBusiness #businessList  .singleBusiness{
+
+#myBusiness #businessList .singleBusiness {
     background: #fff;
     padding: 6px;
     border: solid 1px #ddd;
@@ -152,53 +182,65 @@
     height: 150px;
 }
 
-#myBusiness #businessList .businessTitle{
+#myBusiness #businessList .businessTitle {
     text-align: center;
     background: #f1f1f1;
 }
+
 #myBusiness .mostBusy {
     color: #c11212;
 }
+
 #myBusiness .normalBusy {
     color: #f08640;
 }
+
 #myBusiness .notBusy {
     color: #39ab6c;
 }
-#myBusiness #businessList .healthStyle{
+
+#myBusiness #businessList .healthStyle {
     text-align: center;
     padding: 10px 0px;
     margin: 0 6px;
 }
-#myBusiness #businessList .healthStyle label{
+
+#myBusiness #businessList .healthStyle label {
     /*font-size: 20px;*/
 }
-#myBusiness #businessList .healthStyle #healthScore{
+
+#myBusiness #businessList .healthStyle #healthScore {
     padding-top: 10px;
 }
-#myBusiness #businessList .healthStyle #healthScore label{
+
+#myBusiness #businessList .healthStyle #healthScore label {
     font-size: 26px;
 }
+
 #busResourcelist .middleline,
-#myBusiness #businessList .middleline{
+#myBusiness #businessList .middleline {
     display: inline-block;
     /*float: left;*/
     border: #eae9e9 solid 0.1px;
     height: 70%;
     margin: 8px 0 8px -60px;
 }
-#myBusiness #businessList .rightDiv{
+
+#myBusiness #businessList .rightDiv {
     padding: 8px;
     margin-left: 6px;
     text-align: center;
 }
-#myBusiness #businessList .rightDiv .rightValue{
-   margin-top: -2px;
+
+#myBusiness #businessList .rightDiv .rightValue {
+    margin-top: -2px;
 }
-#myBusiness #businessList .rightDiv .rightBottom{
+
+#myBusiness #businessList .rightDiv .rightBottom {
     margin-top: 4px;
 }
-#myBusiness #businessList .operBusiness{
+
+#myBusiness #businessList .operBusiness {
     /* margin-top: -110px; */
     position: relative;
     background: #fff;
@@ -210,27 +252,30 @@
     top: -116px;
     left: -5px;
 }
-#myBusiness #businessList .heartBeat{
+
+#myBusiness #businessList .heartBeat {
     font-size: 70px;
 }
+
 /*#myBusiness #businessList .singleBusiness:nth-child(-n+5) .operBusiness{*/
-    /*top:-110px;*/
+/*top:-110px;*/
 /*}*/
 
 #myBusiness #businessList .singleBusiness:nth-child(1),
 #myBusiness #businessList .singleBusiness:nth-child(2),
 #myBusiness #businessList .singleBusiness:nth-child(3),
 #myBusiness #businessList .singleBusiness:nth-child(4),
-#myBusiness #businessList .singleBusiness:nth-child(5){
+#myBusiness #businessList .singleBusiness:nth-child(5) {
     margin-top: -5px;
 }
-#myBusiness #businessList #seeTopo{
+
+#myBusiness #businessList #seeTopo {
     margin-left: 70px;
 }
 
 #myBusiness #businessList #delBus,
 #myBusiness #businessList #seeTopo,
-#myBusiness #businessList #editBus{
+#myBusiness #businessList #editBus {
     display: inline-block;
     width: 30px;
     text-align: center;
@@ -239,26 +284,31 @@
     cursor: pointer;
     margin-top: 30px;
 }
-#myBusiness #businessList #editBus{
+
+#myBusiness #businessList #editBus {
     margin-left: 2px;
 }
+
 #myBusiness .prev a,
-#myBusiness .next a{
+#myBusiness .next a {
     float: none;
 }
-#myBusiness #page{
+
+#myBusiness #page {
     display: inline-block;
 }
-#myBusiness #chosePageSize{
+
+#myBusiness #chosePageSize {
     width: 150px;
     float: right;
     margin-top: 24px;
     padding: 0 10px;
 }
+
 #monitorList #breadline,
 #monitorConifgList #breadline,
 #myBusiness #breadline,
-#myalert #breadline{
+#myalert #breadline {
     background: #e56a15;
     width: 74px;
     height: 5px;
@@ -266,10 +316,11 @@
     position: absolute;
     top: 46px;
 }
+
 #monitorList #breadlineTitle,
 #monitorConifgList #breadlineTitle,
 #myBusiness #breadlineTitle,
-#myalert #breadlineTitle{
+#myalert #breadlineTitle {
     width: 100%;
     height: 32px;
     box-shadow: 1px 1px 2px 2px #eee;
@@ -280,28 +331,33 @@
     border-bottom: solid #e1e2e2;
 }
 
-#myalert #leftMenu{
+#myalert #leftMenu {
     height: 600px;
     margin-top: 10px;
 }
-#myalert ul i{
+
+#myalert ul i {
     color: #afa8a6
 }
-#myalert #filter{
+
+#myalert #filter {
     height: 40px;
     padding: 10px;
 }
-#myalert #filter .labelCondition{
+
+#myalert #filter .labelCondition {
     width: 90px;
     height: 26px;
     background: #56c58a;
     color: #fff;
     padding: 4px;
 }
-#myalert #filter .labelCondition i{
+
+#myalert #filter .labelCondition i {
     margin-left: 7px;
 }
-#myBusiness #oper #refresh{
+
+#myBusiness #oper #refresh {
 
     background: #928886;
     color: #fff;
@@ -315,11 +371,12 @@
     margin-top: 16px;
     height: 28px;
 }
+
 #monitorList #oper #delResBtn,
 #monitorList #oper #refresh,
 #monitorConifgList #oper #delResBtn,
 #monitorConifgList #oper #refresh,
-#myalert #oper #refresh{
+#myalert #oper #refresh {
     width: 86px;
     height: 30px;
     background: #928886;
@@ -330,7 +387,8 @@
     /* padding-left: 10px; */
     text-align: center;
 }
-#divselect{
+
+#divselect {
     width: 60px;
     /* border-right: none; */
     height: 20px;
@@ -338,7 +396,8 @@
     /* box-shadow: -1px 10px 0px 0.4px #ccc; */
     position: relative;
 }
-#divselect select{
+
+#divselect select {
     border: none;
     outline: none;
     width: 100%;
@@ -350,28 +409,30 @@
     /* padding-left: 60px; */
     padding-left: 10px;
 }
+
 /*//使用伪类给select添加自己想用的图标*/
-  /*div:after{*/
-      /*content: "";*/
-      /*width: 14px;*/
-      /*height: 8px;*/
-      /*background: url(img/xiala.png) no-repeat center;*/
-  /*//通过定位将图标放在合适的位置*/
-  /*position: absolute;*/
-      /*right: 20px;*/
-      /*top: 45%;*/
-  /*//给自定义的图标实现点击下来功能*/
-  /*pointer-events: none;*/
-  /*}*/
-#myBusiness #oper #tworight{
+/*div:after{*/
+/*content: "";*/
+/*width: 14px;*/
+/*height: 8px;*/
+/*background: url(img/xiala.png) no-repeat center;*/
+/*//通过定位将图标放在合适的位置*/
+/*position: absolute;*/
+/*right: 20px;*/
+/*top: 45%;*/
+/*//给自定义的图标实现点击下来功能*/
+/*pointer-events: none;*/
+/*}*/
+#myBusiness #oper #tworight {
     display: inline-block;
     border-bottom: 0.1px solid #ccc;
     padding-bottom: 1px;
     width: 290px;
     margin-left: 800px;
 }
+
 #edit-business #oper .middleline,
-#myBusiness #oper .middleline{
+#myBusiness #oper .middleline {
     display: inline-block;
     /* float: left; */
     background: #ddd;
@@ -381,18 +442,20 @@
     position: relative;
     top: 4px;
 }
+
 #monitorList #oper #tworight,
 #monitorConifgList #oper #tworight,
-#myalert #oper #tworight{
+#myalert #oper #tworight {
     display: inline-block;
     border-bottom: 0.1px solid #ccc;
     padding-bottom: 1px;
     width: 290px;
     margin-left: 638px;
 }
+
 #monitorList #oper .middleline,
 #monitorConifgList #oper .middleline,
-#myalert #oper .middleline{
+#myalert #oper .middleline {
     display: inline-block;
     /* float: left; */
     background: #ddd;
@@ -402,33 +465,38 @@
     position: relative;
     top: 4px;
 }
+
 input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-    color:    #afafb0;
+    color: #afafb0;
     font-size: 11px;
 }
 
-#myalert .sort{
+#myalert .sort {
     position: relative;
     padding-right: 15px;
     color: #a39a99;
 }
+
 #myalert .sort:before,
-#myalert .sort:after{
+#myalert .sort:after {
     position: absolute;
     right: 5px;
     z-index: 1;
     font-size: 12px;
     top: -10px;
 }
-#myalert .sort:before{
+
+#myalert .sort:before {
     /*top:2px;*/
     content: "\f0de";
 }
-#myalert .sort:after{
+
+#myalert .sort:after {
     /*bottom:2px;*/
     content: "\f0dd";
 }
-#myalert #alertlist .middleline{
+
+#myalert #alertlist .middleline {
     display: inline-block;
     background: #eee;
     height: 24px;
@@ -437,37 +505,69 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     position: relative;
     top: 8px;
 }
+
 /*紧急*/
-#monitorListCon .notrunning,
-#myalert .major{
+#monitorListCon .notrunning{
     width: 14px;
     height: 14px;
     border-radius: 14px;
     background: #c11212;
 }
-#monitorListCon .running{
+
+#myalert .alerttip {
+     width: 14px;
+     height: 14px;
+     border-radius: 14px;
+ }
+/*紧急*/
+#myalert .critical {
+    background: #c11212;
+}
+/*重要*/
+#myalert .major {
+    background: #ec670b;
+}
+/*次要*/
+#myalert .minor {
+    background: #ffc267;
+}
+/*警告*/
+#myalert .warn {
+    background: #22a5df;
+}
+/*通知*/
+#myalert .notice {
+    background: #3e3e3e;
+}
+
+#monitorListCon .running {
     width: 14px;
     height: 14px;
     border-radius: 14px;
     background: #1db163;
 }
-#monitorListCon .notrunning +span{
+
+#monitorListCon .notrunning + span {
     color: #c11212;
 }
-#monitorListCon .running +span{
+
+#monitorListCon .running + span {
     color: #1db163;
 }
-#myalert  table td {
-    white-space: nowrap;/*控制单行显示*/
-    overflow: hidden;/*超出隐藏*/
-    text-overflow: ellipsis;/*隐藏的字符用省略号表示*/
+
+#myalert table td {
+    white-space: nowrap; /*控制单行显示*/
+    overflow: hidden; /*超出隐藏*/
+    text-overflow: ellipsis; /*隐藏的字符用省略号表示*/
 }
-#myalert table>tbody>tr>td,
-#myalert table>tbody>tr>th,
-#myalert table>tfoot>tr>td,
-#myalert table>tfoot>tr>th{
+
+#myalert table > tbody > tr > td,
+#myalert table > tbody > tr > th,
+#myalert table > tfoot > tr > td,
+#myalert table > tfoot > tr > th {
     border-top: 1.4px solid #ddd;
 }
+
 #addk8s #chosePageSize,
 #monitorList #chosePageSize,
 #monitorConifgList #chosePageSize,
@@ -479,6 +579,7 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     margin-top: 24px;
     padding: 0 10px;
 }
+
 #addk8s #page,
 #monitorList #page,
 #monitorConifgList #page,
@@ -493,6 +594,7 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     /*!* box-shadow: -1px 10px 0px 0.4px #ccc; *!*/
     /*position: relative;*/
 }
+
 #addk8s #page select,
 #addk8s #chosePageSize select,
 #monitorList #page select,
@@ -504,7 +606,7 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
 #myBusiness #page select,
 #myBusiness #chosePageSize select,
 #myalert #page select,
-#myalert #chosePageSize select{
+#myalert #chosePageSize select {
     /*border: none;*/
     /*outline: none;*/
     /*width: 100%;*/
@@ -520,6 +622,7 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     border-radius: 10px;
     border: 1px solid #ccc;
 }
+
 #addk8s .prev a, #addk8s .next a,
 #monitorList .prev a, #monitorList .next a,
 #monitorConifgList .prev a, #monitorConifgList .next a,
@@ -533,6 +636,7 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     padding-top: 2px;
     padding-bottom: 2px;
 }
+
 #addk8s .pull-right ul,
 #addk8s #chosePageSize,
 #monitorList .pull-right ul,
@@ -542,13 +646,14 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
 #monitorConifgList .pull-right ul,
 #monitorConifgList #chosePageSize,
 #myalert .pull-right ul,
-#myalert #chosePageSize{
+#myalert #chosePageSize {
     margin-top: 14px;
 }
+
 #monitorList #breadlineTitle .middleline,
 #monitorConifgList #breadlineTitle .middleline,
 #myBusiness #breadlineTitle .middleline,
-#myalert #breadlineTitle .middleline{
+#myalert #breadlineTitle .middleline {
     display: inline-block;
     background: #eee;
     height: 14px;
@@ -557,14 +662,16 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     position: relative;
     top: 2px;
 }
+
 #editBusiness input[type="submit"],
-#editBusiness button{
+#editBusiness button {
     box-shadow: none;
     border-radius: 0;
     width: 80px;
 }
+
 #monitorList #device-list,
-#monitorConifgList #config-list{
+#monitorConifgList #config-list {
     position: absolute;
     background: #cac7c7;
     opacity: 0.9;
@@ -573,19 +680,38 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     border-radius: 8px;
     left: 2px;
 }
+
 .deviceBtn:hover
-.deviceBtn span:hover{
-    color:#333;
+.deviceBtn span:hover {
+    color: #333;
 }
+
 #addk8s table td,
 #addk8s table th,
 #monitorList table td,
 #monitorList table th,
 #monitorConifgList table td,
-#monitorConifgList table th{
+#monitorConifgList table th {
     text-align: center
 }
-.canNotTrash{
+
+.canNotTrash {
     color: #c5c2c2;
-    cursor: auto!important;
+    cursor: auto !important;
+}
+
+#containerList {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: 1px solid #dedede;
+    /* padding: 2px; */
+    border-radius: 6px;
+}
+#containerList table{
+    margin-bottom: 2px;
+}
+#containerList table th,
+#containerList table td{
+    border-right: 1px solid #eee;
 }

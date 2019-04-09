@@ -12,4 +12,5 @@ public class AlertView {
     String severity;
     String resolve;
     String uuid;
+    String lightType;
 }

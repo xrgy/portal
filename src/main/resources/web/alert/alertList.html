@@ -29,15 +29,15 @@
     <div style="background: #efefef">
         <div id="leftMenu" class="model-tab col-xs-2 col-sm-2 col-md-2 col-lg-2" style="background: #fff">
             <ul style="font-weight: 600;">
-                <li class="active"><i class="fa fa-th-large" aria-hidden="true"></i> 全部告警</li>
+                <li v-on:click="clickResource($event,'all')" :class="{active:tabSelected=='all'}"><i class="fa fa-th-large" aria-hidden="true"></i> 全部告警</li>
                 <li><i class="fa fa-gears" aria-hidden="true"></i> 按资源类别<i class="fa fa-angle-down" aria-hidden="true"
                                                                            style="margin-left: 58px;"></i>
                     <ul style="margin-left: 20px;  color: #928886;font-weight: 500;">
-                        <li>网络设备</li>
-                        <li style="margin-top: -10px;">数据库</li>
-                        <li style="margin-top: -10px;">虚拟化</li>
-                        <li style="margin-top: -10px;">容器</li>
-                        <li style="margin-top: -10px;">中间件</li>
+                        <li v-on:click="clickResource($event,'network_device')" :class="{active:tabSelected=='network_device'}">网络设备</li>
+                        <li v-on:click="clickResource($event,'database')" :class="{active:tabSelected=='database'}" style="margin-top: -10px;">数据库</li>
+                        <li v-on:click="clickResource($event,'virtualization')" :class="{active:tabSelected=='virtualization'}" style="margin-top: -10px;">虚拟化</li>
+                        <li v-on:click="clickResource($event,'container')" :class="{active:tabSelected=='container'}" style="margin-top: -10px;">容器</li>
+                        <li v-on:click="clickResource($event,'middleware')" :class="{active:tabSelected=='middleware'}" style="margin-top: -10px;">中间件</li>
                     </ul>
                 </li>
             </ul>
@@ -111,7 +111,9 @@
                     <template v-for="(i,j) in alertList">
                         <tr :id="'alert'+j">
                             <td>{{j+1}}</td>
-                            <td><div style="display: inline-block" class="major"></div><span>{{i.severity|convertSeverity}}</span></td>
+                            <td><div style="display: inline-block" class="alerttip"
+                                     :class="{'critical': i.severity==0, 'major': i.severity==1,'minor': i.severity==2,'warn':i.severity==3,'notice':i.severity==4}">
+                            </div><span>{{i.severity|convertSeverity}}</span></td>
                             <td style="color: #e56a15"><span :title="i.alertInfo|convertName">{{i.alertInfo|convertName}}</span></td>
                             <td style="color: #e56a15"><span :title="i.alertSource">{{i.alertSource}}</span></td>
                             <td style="color: #e56a15"><span :title="i.ip">{{i.ip}}</span></td>

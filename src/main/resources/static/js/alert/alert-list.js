@@ -28,6 +28,8 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                         currenPageInfo:"",
                         totalRecord:0,
                         showAlertList:[],
+                        tabSelected: "all",
+                        lightType:"all",
                     },
                     filters: {
                         convertDesc: function (desc) {
@@ -114,15 +116,25 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
 
                     },
                     mounted: function () {
-                        var obj={"severity": 0,"resolve": 0,"ip":"172.25.17.253","uuid":"0b6b3cdf-fbbb-480a-aaa7-41edd38d75a2"};
-                        sessionStorage.setItem("transAlert",JSON.stringify(obj));
+                        // var obj={"severity": 0,"resolve": 0,"ip":"172.25.17.253","uuid":"0b6b3cdf-fbbb-480a-aaa7-41edd38d75a2"};
+                        // sessionStorage.setItem("transAlert",JSON.stringify(obj));
                         this.transAlertInfo=JSON.parse(sessionStorage.getItem("transAlert"));
-                        this.alertLevel=this.transAlertInfo.severity;
-                        // this.alertLevel="";
+                        if (null!=this.transAlertInfo){
+                            this.alertLevel=this.transAlertInfo.severity;
+                            // this.alertLevel="";
 
-                        this.alertStatus=this.transAlertInfo.resolve;
-                        this.alertResource=this.transAlertInfo.ip;
-                        this.alertUuid=this.transAlertInfo.uuid;
+                            this.alertStatus=this.transAlertInfo.resolve;
+                            this.alertResource=this.transAlertInfo.ip;
+                            this.alertUuid=this.transAlertInfo.uuid;
+                        }else {
+                            this.alertLevel=-1;
+                            // this.alertLevel="";
+
+                            this.alertStatus=-1;
+                            this.alertResource="";
+                            this.alertUuid="";
+                            this.lightType="all";
+                        }
                         this.initData();
                     },
                     methods: {
@@ -132,7 +144,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                             _self.pageNumList=[];
                             $.ajax({
                                 data: {"severity": _self.alertLevel,"ip":_self.alertResource,"resolve":_self.alertStatus,
-                                    "uuid":_self.alertUuid},
+                                    "uuid":_self.alertUuid,"lightType":_self.lightType},
                                 url: _self.path.getAlertList,
                                 success: function (data) {
                                     if (data.msg == "SUCCESS") {
@@ -207,6 +219,21 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                                     $(".singleBusiness:nth-child(" + j + ") .availableStyle label").addClass("mostBusy");
                                 }
                             }
+                        },
+                        clickResource: function (event, lighttype) {
+                            var e = event.target;
+                            $('#leftMenu').find('li').removeClass('active');
+                            $(e).closest('li').addClass('active');
+                            //其实是middle
+                            this.tabSelected = lighttype;
+                            this.pageNum = 1;
+                            this.pageSize = 10;
+                            this.pageNumList = [];
+                            this.totalPage = 0;
+                            this.currenPageInfo = "";
+                            this.totalRecord = 0;
+                            this.lightType=lighttype;
+                            this.initData();
                         },
                         closeFilterCond:function (e,condition) {
                             var _self = this;
