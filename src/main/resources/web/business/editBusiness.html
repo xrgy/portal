@@ -55,10 +55,10 @@
                                         <input type='checkbox' class='input-checkbox'  id="allDel" name="delAll"
                                                v-on:click="checkAllDel($event)"/>
                                     </th>
-                                    <th style="width: 100px">名称<i class="fa fa-sort" aria-hidden="true" style="color: #a39a99"></i>
+                                    <th style="width: 100px">名称<i class="fa fa-sort" aria-hidden="true" ></i>
                                         <div class="middleline" style="margin-left: 0px"></div>
                                     </th>
-                                    <th style="width: 100px">IP地址<i class="fa fa-sort" aria-hidden="true" style="color: #a39a99"></i>
+                                    <th style="width: 100px">IP地址<i class="fa fa-sort" aria-hidden="true" ></i>
                                         <div class="middleline" style="margin-left: 20px"></div>
                                     </th>
                                     <th style="width: 100px">资源类型 <i class="fa fa-filter" aria-hidden="true" style="color: #a39a99"></i>
@@ -71,8 +71,8 @@
                                 <template v-for="(i,j) in resourceList">
                                     <tr :id="'busResource'+j">
                                         <td><input type='checkbox' class='input-checkbox'  :id="'delres'+j" name="needDel"  :value="i.monitorId"/></td>
-                                        <td style="color: #e56a15"><span :title="i.name">{{i.name}}</span></td>
-                                        <td style="color: #e56a15"><span :title="i.ip">{{i.ip}}</span></td>
+                                        <td ><span :title="i.name">{{i.name}}</span></td>
+                                        <td ><span :title="i.ip">{{i.ip}}</span></td>
                                         <td>{{i.lightType|convertLightType}}</td>
                                         <td><i class="fa fa-trash" v-on:click="delResource($event,i.monitorId)" style="cursor: pointer;"></i></td>
                                     </tr>

@@ -19,6 +19,8 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                         // getWeaveLink: "/topo/getAllWeaveTopoLink",
                         getBusinessNode: "/topo/getBusinessNode",
                         saveTopo: "/topo/saveBusinessTopo",
+                        deleteBusTopoNodeOrLink: "/topo/deleteBusTopoNodeOrLink",
+
 
                     },
                     selectname: "",
@@ -30,7 +32,8 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                     busUuid: "",
                     canvasId: "",
                     location: "self",
-                    autoLayout:null
+                    autoLayout: null,
+                    popupMenu:null,
 
                 },
                 mounted: function () {
@@ -117,9 +120,108 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                         ]
                     });
                     this.getData();
+                    this.initPopupMenu();
                 },
                 methods: {
+                    initPopupMenu: function () {
+                        var lastData, lastPoint, magnifyInteraction;
+                        this.popupMenu.onMenuShowing = function (e) {
+                            lastData = _self.network.getSelectionModel().getLastData();
+                            lastPoint = _self.network.getLogicalPoint(e);
+                            magnifyInteraction = null;
+                            _self.network.getInteractions().forEach(function (interaction) {
+                                if (interaction instanceof twaver.network.interaction.MagnifyInteraction
+                                    || interaction instanceof twaver.canvas.interaction.MagnifyInteraction) {
+                                    magnifyInteraction = interaction;
+                                }
+                            });
+                            return true;
+                            "solid 1px #ccc; width 100px"
+                        };
+                        var _self = this;
+                        _self.popupMenu.onAction = function (menuItem) {
 
+                            if (menuItem.label === '删除') {
+                                _self.box.remove(lastData);
+                                //todo ajax
+                                // lastData.getId()
+                                // lastData.getClassName()
+                                _self.deleteNodeOrLink(lastData.getId(),lastData.getClassName())
+                                // "twaver.Node" "twaver.Link"
+                            }
+                        };
+                        _self.popupMenu.isVisible = function (menuItem) {
+                            // if (magnifyInteraction) {
+                            //     return menuItem.group === 'Magnify';
+                            // } else {
+                            //     if (lastData) {
+                            //
+                            //         if (lastData instanceof twaver.Node && menuItem.group === 'Node') {
+                            //             return true;
+                            //         }
+                            //         if (lastData instanceof twaver.Link && menuItem.group === 'Link') {
+                            //             return true;
+                            //         }
+                            //         return menuItem.group === 'Element';
+                            //     } else {
+                            //         return menuItem.group === 'none';
+                            //     }
+                            // }
+                            return true;
+                        };
+                        this.popupMenu.isEnabled = function (menuItem) {
+                            // if (lastData) {
+                            //     if (lastData instanceof twaver.SubNetwork) {
+                            //         return true;
+                            //     }
+                            //     if (lastData instanceof twaver.Group && menuItem.group === 'Group') {
+                            //         var expanded = lastData.isExpanded();
+                            //         return menuItem.expand ? !expanded : expanded;
+                            //     }
+                            //     if (lastData instanceof twaver.Link && menuItem.group === 'Link') {
+                            //         var expanded = lastData.getStyle("link.bundle.expanded");
+                            //         return menuItem.expand ? !expanded : expanded;
+                            //     }
+                            //     if (menuItem.label === 'Clear Alarm') {
+                            //         return !lastData.getAlarmState().isEmpty();
+                            //     }
+                            // } else {
+                            //     if (menuItem.label === 'Up SubNetwork') {
+                            //         return self.network.getCurrentSubNetwork() != null;
+                            //     }
+                            // }
+                            return true;
+                        };
+                        this.popupMenu.setMenuItems([
+                            {label: '删除', group: 'Element'}
+                        ]);
+                        this.popupMenu.setWidth(100);
+                        this.popupMenu.setFocusBackground('#afaaaa')
+                        // this.popupMenu.setBorder();
+                        // this.popupMenu.renderMenu = function (view, menuItems) {
+                        //     console.log(view);
+                        // }
+                        this.popupMenu.onMenuItemRendered = function (div, menuItem) {
+                            div.style['color']="black";
+
+                            // div.childNodes[1].style['font-family']="'Microsoft Yahei', 'Open Sans',sans-serif";
+                            // div.childNodes[1].style['font-size']='12px';
+                        };
+                    },
+                    deleteNodeOrLink:function (id,type) {
+                        var _self = this;
+                        $.ajax({
+                            data: {"canvasId":_self.canvasId,"uuid":id,"type":type},
+                            url: _self.path.deleteBusTopoNodeOrLink,
+                            success: function (data) {
+                                if (data.msg === "SUCCESS") {
+                                }
+                            },
+                            error: function () {
+
+                            }
+                        })
+                    },
                     initBox: function () {
                         var _self = this;
                         var box = new twaver.ElementBox();
@@ -143,7 +245,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                         _self.springLayout.setLinkRepulsionFactor(0.6);
                         _self.springLayout.setInterval(50);
                         _self.springLayout.setStepCount(10);
-
+                        _self.popupMenu = new twaver.controls.PopupMenu(_self.network);
 
                     },
                     initDataBox: function () {
@@ -168,27 +270,27 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                                     var nodelist = data.nodes;
                                     for (var i = 0; i < nodelist.length; i++) {
                                         if (nodelist[i].xpoint == 0 && nodelist[i].ypoint == 0) {
-                                            _self.autoLayout.doLayout('symmetry', function () {
-                                                _self.springLayout.start();
-                                            });
+                                            // _self.autoLayout.doLayout('symmetry', function () {
+                                            //     _self.springLayout.start();
+                                            // });
                                             _self.location = "auto";
                                             break;
                                         }
                                     }
                                     if (nodelist) {
-                                        for (var index in nodelist) {
+                                        for (var index = 0; index < nodelist.length; index++) {
                                             _self.createNode(nodelist[index]);
                                         }
                                     }
 
                                     var linklist = data.links;
                                     if (linklist) {
-                                        for (var i in linklist) {
+                                        for (var i = 0; i < linklist.length; i++) {
                                             var fromNodeId = linklist[i].fromNodeId,
                                                 toNodeId = linklist[i].toNodeId,
                                                 uuid = linklist[i].uuid;
                                             var node1 = null, node2 = null;
-                                            for (var j in _self.nodeList) {
+                                            for (var j = 0; j < _self.nodeList.length; j++) {
                                                 if (_self.nodeList[j].getId() === fromNodeId) {
                                                     node1 = _self.nodeList[j];
                                                 }
@@ -350,6 +452,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                     createLink: function (uuid, node1, node2) {
                         var _self = this;
                         var link = new twaver.Link(uuid, node1, node2);
+                        // var link = new twaver.Link( node1, node2);
                         link.setClient("fromNode", node1.getName());
                         link.setClient("toNode", node2.getName());
                         _self.linkList.push(link);
@@ -358,12 +461,12 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
 
                     clickLayout: function (event) {
                         var _self = this;
-                        var isRunning = _self.springLayout.isRunning();
-                        if (isRunning) {
-                            _self.springLayout.stop();
-                        } else {
-                            _self.springLayout.start();
-                        }
+                        // var isRunning = _self.springLayout.isRunning();
+                        // if (isRunning) {
+                        //     _self.springLayout.stop();
+                        // } else {
+                        //     _self.springLayout.start();
+                        // }
                     }
                 }
 

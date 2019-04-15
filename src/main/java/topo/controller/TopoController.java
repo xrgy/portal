@@ -123,4 +123,10 @@ public class TopoController {
         return ResCommon.genSimpleResByBool(service.deleteTopoLinkByUuid(uuid));
     }
 
+    @RequestMapping("deleteBusTopoNodeOrLink")
+    @ResponseBody
+    public ResultMsg deleteBusTopoNodeOrLink(String canvasId,String uuid,String type){
+        return ResCommon.genSimpleResByBool(service.deleteBusTopoNodeOrLink(canvasId,uuid,type));
+    }
+
 }

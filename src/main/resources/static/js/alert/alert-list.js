@@ -116,8 +116,8 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
 
                     },
                     mounted: function () {
-                        // var obj={"severity": 0,"resolve": 0,"ip":"172.25.17.253","uuid":"0b6b3cdf-fbbb-480a-aaa7-41edd38d75a2"};
-                        // sessionStorage.setItem("transAlert",JSON.stringify(obj));
+                        var obj={"severity": 0,"resolve": 0,"ip":"172.25.17.253","uuid":"0b6b3cdf-fbbb-480a-aaa7-41edd38d75a2"};
+                        sessionStorage.setItem("transAlert",JSON.stringify(obj));
                         this.transAlertInfo=JSON.parse(sessionStorage.getItem("transAlert"));
                         if (null!=this.transAlertInfo){
                             this.alertLevel=this.transAlertInfo.severity;

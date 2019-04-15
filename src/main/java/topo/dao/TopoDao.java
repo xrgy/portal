@@ -54,4 +54,8 @@ public interface TopoDao {
      * @return
      */
     boolean delTopoResourceByBusinessId(String businessId);
+
+    boolean deleteBusTopoNodeByUuid(String uuid);
+
+    boolean deleteBusTopoLinkByUuid(String uuid);
 }

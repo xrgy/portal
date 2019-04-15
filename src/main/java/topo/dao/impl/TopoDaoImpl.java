@@ -44,6 +44,10 @@ public class TopoDaoImpl implements TopoDao {
     private static final String PATH_SAVE_BUSINESS_TOPO_NODES = "insertBusinessTopoNodeList";
     private static final String PATH_DEL_BUSINESS_TOPO_RESOURCE = "delBusinessTopoResource";
 
+    private static final String PATH_DEL_BUSINESS_TOPO_LINK = "deleteBusTopoLinkByUuid";
+    private static final String PATH_DEL_BUSINESS_TOPO_NODE = "deleteBusTopoNodeByUuid";
+
+
 
 
 
@@ -192,6 +196,18 @@ public class TopoDaoImpl implements TopoDao {
     @Override
     public boolean delTopoResourceByBusinessId(String businessId) {
         rest().delete(topoPrefix() + PATH_DEL_BUSINESS_TOPO_RESOURCE + "?uuid={1}", businessId);
+        return true;
+    }
+
+    @Override
+    public boolean deleteBusTopoNodeByUuid(String uuid) {
+        rest().delete(topoPrefix() + PATH_DEL_BUSINESS_TOPO_NODE + "?uuid={1}", uuid);
+        return true;
+    }
+
+    @Override
+    public boolean deleteBusTopoLinkByUuid(String uuid) {
+        rest().delete(topoPrefix() + PATH_DEL_BUSINESS_TOPO_LINK + "?uuid={1}", uuid);
         return true;
     }
 

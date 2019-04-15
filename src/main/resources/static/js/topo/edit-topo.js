@@ -170,20 +170,20 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                                         }
                                         var nodelist = data.nodes;
                                         if (nodelist) {
-                                            for (var index in nodelist) {
+                                            for (var index=0;index<nodelist.length;index++) {
                                                 _self.createNode(nodelist[index]);
                                             }
                                         }
                                         var portlist = data.ports;
                                         if (portlist) {
-                                            for (var index in portlist) {
+                                            for (var index=0;index< portlist.length;index++) {
                                                 _self.portList.push(portlist[index]);
                                                 _self.portToNode[portlist[index].uuid] = portlist[index];
                                             }
                                         }
                                         var linklist = data.links;
                                         if (linklist) {
-                                            for (var i in linklist) {
+                                            for (var i=0;i<linklist.length;i++) {
                                                 var fromPortId = linklist[i].fromPortId,
                                                     toPortId = linklist[i].toPortId,
                                                     canvasId = linklist[i].canvasId,
@@ -192,7 +192,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                                                 var toNodeId = _self.portToNode[toPortId].nodeUuid;
                                                 if (fromNodeId && toNodeId) {
                                                     var node1 = null, node2 = null;
-                                                    for (var j in _self.nodeList) {
+                                                    for (var j=0;j<_self.nodeList.length;j++) {
                                                         if (_self.nodeList[j].getId() === fromNodeId) {
                                                             node1 = _self.nodeList[j];
                                                         }
@@ -442,7 +442,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                         // _self.setLinkRateInterval();
 
                         //设备告警
-                        _self.getAllNodeAlarm();
+                        // _self.getAllNodeAlarm();
                     },
 
                     //设置透明度来实现闪烁效果

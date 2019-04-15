@@ -179,7 +179,7 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                       //todo 只是从_self.resourceList中移除
 //                        this.actionDel(JSON.stringify(monitorList))
                         monitorList.forEach(function (item) {
-                            _self.resourceList.remove(item);
+                            _self.resourceList.myremove(item);
                         })
                     },
                     delResource:function (event,monitorId) {
@@ -188,12 +188,12 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                       monitorList.push(monitorId);
                       //todo 只是从_self.resourceList中移除
                       //_self.actionDel(JSON.stringify(monitorList))
-                        _self.resourceList.remove(monitorId);
+                        _self.resourceList.myremove(monitorId);
                     },
                     addResource:function () {
                         //显示modal，请求
-                        $("#addResource").modal({backdrop: 'static', keyboard: false, show: true})
-                        this.initData();
+                        $("#addResource").modal({backdrop: 'static', keyboard: false, show: true});
+                        // this.initData();
                     },
                     // actionDel:function (monitorListStr) {
                     //     var _self=this;
@@ -385,20 +385,25 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
             });
 
         }
-        $("#editBusiness").on('show.bs.modal', function () {
-            editBusiness.businessId = sessionStorage.getItem('editBusinessId');
-            editBusiness.tabSelected="baseInfo";
-            editBusiness.busRadio="1";
-            editBusiness.initBaseInfo();
+        $("#addResource").on('show.bs.modal', function () {
+            editBusiness.initData();
         })
-        Array.prototype.indexOf = function(val) {
+        $("#editBusiness").on('show.bs.modal', function () {
+            if (editBusiness.tabSelected!="resource"){
+                editBusiness.businessId = sessionStorage.getItem('editBusinessId');
+                editBusiness.tabSelected="baseInfo";
+                editBusiness.busRadio="1";
+                editBusiness.initBaseInfo();
+            }
+        })
+        Array.prototype.myindexOf = function(val) {
             for (var i = 0; i < this.length; i++) {
                 if (this[i].monitorId == val) return i;
             }
             return -1;
         }
-        Array.prototype.remove = function(val) {
-            var index = this.indexOf(val);
+        Array.prototype.myremove = function(val) {
+            var index = this.myindexOf(val);
             if (index > -1) {
                 this.splice(index, 1);
             }

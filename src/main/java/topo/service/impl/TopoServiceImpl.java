@@ -101,8 +101,9 @@ public class TopoServiceImpl implements TopoService {
             List<NetworkMonitorEntity> monitorList = monitorService.getAllNetworkMonitorEntity();
             List<TopoNodeEntity> nodes = dao.getTopoNodeByCanvasId(canvas.getUuid());
             nodes.forEach(x->{
-                Optional<NetworkMonitorEntity> monitor = monitorList.stream().filter(y->y.getUuid().equals(x.getMonitorUuid())).findFirst();
+                Optional<NetworkMonitorEntity> monitor = monitorList.stream().filter(y->y.getUuid().equals(x.getUuid())).findFirst();
                 monitor.ifPresent(networkMonitorEntity -> x.setIp(networkMonitorEntity.getIp()));
+                x.setMonitorUuid(x.getUuid());
             });
             List<TopoLinkEntity> links =dao.getTopoLinkByCanvasId(canvas.getUuid());
             List<TopoPortEntity> ports = dao.getAllPorts();
@@ -226,6 +227,18 @@ public class TopoServiceImpl implements TopoService {
     public boolean delTopoResourceByBusinessId(String businessId) {
 
         return dao.delTopoResourceByBusinessId(businessId);
+    }
+
+    @Override
+    public boolean deleteBusTopoNodeOrLink(String canvasId, String uuid, String type) {
+        if (type.equals("twaver.Node")){
+            //删除节点 也是只从拓扑数据库中删除节点  和删除业务没有关系
+            return dao.deleteBusTopoNodeByUuid(uuid);
+        }else if (type.equals("twaver.Link")){
+            //删除链路 只从拓扑数据库中删除链路
+            return dao.deleteBusTopoLinkByUuid(uuid);
+        }
+        return true;
     }
 
     private ResultMsg getCommonResultMsg(Object o) {

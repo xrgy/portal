@@ -100,4 +100,6 @@ public interface TopoService {
      * @return
      */
     boolean delTopoResourceByBusinessId(String businessId);
+
+    boolean deleteBusTopoNodeOrLink(String canvasId, String uuid, String type);
 }
