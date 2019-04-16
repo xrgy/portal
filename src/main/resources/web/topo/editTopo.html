@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>画布</title>
+    <title>全局拓扑</title>
 
 </head>
 <body>
@@ -10,6 +10,30 @@
     <div th:replace="common::common"></div>
 </div>
 <div id="mynetcanvas">
+    <img style="width: 100%;height: 43px;" class="breadDisplay" src="../image/alert6.png"/>
+    <div  v-on:mouseover="hoverFuc" class="breadDiv" ></div>
+    <div class="breadHoverDiv" v-show="breadHoverAble" v-on:mouseleave="outFunc">
+        <div class="levelOneTitle">监控</div>
+        <div class="levelTwoTitle" v-on:click="loadMonitorList()">监控列表</div>
+        <div class="levelOneTitle">监控配置</div>
+        <div class="levelTwoTitle" style="width: 100px" v-on:click="loadMonitorTemplate()" >监控模板列表</div>
+        <div class="levelOneTitle">告警</div>
+        <div class="levelTwoTitle" v-on:click="loadAlert()">告警列表</div>
+        <div class="levelOneTitle">业务监控</div>
+        <div class="levelTwoTitle" v-on:click="loadBusinessList()">业务清单</div>
+        <div class="levelOneTitle">拓扑</div>
+        <div class="levelTwoTitle"  v-on:click="loadNetTopo()">拓扑视图</div>
+    </div>
+    <div id="breadline"></div>
+    <div id="breadlineTitle">
+        <div style="margin-top: -4px;">
+            <label style="font-family: 宋体;font-weight: 600;">运行监测</label>
+            <div class="middleline"></div>
+            <label style="font-family: 宋体;font-weight: 600;">拓扑</label>
+            <div class="middleline"></div>
+            <label style="color: #f08640; font-family: 宋体;font-weight: 600;">拓扑视图</label>
+        </div>
+    </div>
     <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" id="netTopo">
 
     </div>

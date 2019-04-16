@@ -2,7 +2,8 @@
  * Created by gy on 2018/12/18.
  */
 'use strict'
-define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function ($, Vue, commonModule, validateExtend, twaver) {
+define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver','topoMain','editTopo','showBusiness','showAlert','monitorConfigList','monitorList'],
+    function ($, Vue, commonModule, validateExtend, twaver,topoMain,editTopo,showBusiness,showAlert,monitorConfigList,monitorList) {
     var netTopo = function () {
         if ($('#mynetcanvas')[0]) {
             var netTopo = new Vue({
@@ -49,6 +50,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                     selectLinkRightPort: "",
                     selectLinkLeftRate: "",
                     selectLinkRightRate: "",
+                    breadHoverAble:false,
                 },
                 mounted: function () {
                     this.initBox();
@@ -126,6 +128,34 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                         twaver.SerializationSettings.setClientType("toPort", 'string');
 
 
+                    },
+                    hoverFuc:function () {
+                        this.breadHoverAble=true;
+                    },
+                    outFunc:function () {
+                        this.breadHoverAble=false;
+                    },
+                    loadMonitorList:function () {
+                        window.open("/monitor/showMonitorList",'_parent');
+                        monitorList.showMonitorList();
+                    },
+
+                    loadMonitorTemplate:function () {
+                        window.open("/monitorConfig/showTemplateList",'_parent');
+                        monitorConfigList.showTempList();
+                    },
+                    loadNetTopo:function () {
+                        window.open("/topo/showNetTopo",'_parent');
+                        editTopo.netTopo();
+
+                    },
+                    loadBusinessList:function () {
+                        window.open("/business/showBusinessList",'_parent');
+                        showBusiness.showBusiness();
+                    },
+                    loadAlert:function () {
+                        window.open("/alert/showAlert",'_parent');
+                        showAlert.showAlert();
                     },
                     initBox: function () {
                         var _self = this;

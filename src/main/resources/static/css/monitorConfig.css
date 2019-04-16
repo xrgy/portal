@@ -304,7 +304,7 @@
     margin-top: 24px;
     padding: 0 10px;
 }
-
+#mynetcanvas #breadline,
 #monitorList #breadline,
 #monitorConifgList #breadline,
 #myBusiness #breadline,
@@ -316,7 +316,7 @@
     position: absolute;
     top: 46px;
 }
-
+#mynetcanvas #breadlineTitle,
 #monitorList #breadlineTitle,
 #monitorConifgList #breadlineTitle,
 #myBusiness #breadlineTitle,
@@ -649,7 +649,7 @@ input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
 #myalert #chosePageSize {
     margin-top: 14px;
 }
-
+#mynetcanvas #breadlineTitle .middleline,
 #monitorList #breadlineTitle .middleline,
 #monitorConifgList #breadlineTitle .middleline,
 #myBusiness #breadlineTitle .middleline,

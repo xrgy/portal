@@ -2,7 +2,8 @@
  * Created by gy on 2018/3/24.
  */
 'use strict'
-define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function ($, Vue, commonModule, validateExtend,topoMain) {
+define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain','editTopo','showBusiness','showAlert','monitorConfigList','monitorList'],
+    function ($, Vue, commonModule, validateExtend,topoMain,editTopo,showBusiness,showAlert,monitorConfigList,monitorList) {
     var showBusiness = function () {
         if ($('#myBusiness')[0]) {
             var showBus = new Vue({
@@ -21,7 +22,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                         pageSize:15,
                         pageNumList:[],
                         totalPage:0,
-
+                        breadHoverAble:false,
                     },
                     filters: {
                         convertDesc: function (desc) {
@@ -67,6 +68,34 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                                 }
                             })
                         },
+                        hoverFuc:function () {
+                            this.breadHoverAble=true;
+                        },
+                        outFunc:function () {
+                            this.breadHoverAble=false;
+                        },
+                        loadMonitorList:function () {
+                            window.open("/monitor/showMonitorList",'_parent');
+                            monitorList.showMonitorList();
+                        },
+
+                        loadMonitorTemplate:function () {
+                            window.open("/monitorConfig/showTemplateList",'_parent');
+                            monitorConfigList.showTempList();
+                        },
+                        loadNetTopo:function () {
+                            window.open("/topo/showNetTopo",'_parent');
+                            editTopo.netTopo();
+
+                        },
+                        loadBusinessList:function () {
+                            window.open("/business/showBusinessList",'_parent');
+                            showBusiness.showBusiness();
+                        },
+                        loadAlert:function () {
+                            window.open("/alert/showAlert",'_parent');
+                            showAlert.showAlert();
+                        },
                         initFontColor: function () {
                             var _self = this;
                             for (var i = 0; i < _self.businessList.length; i++) {
@@ -96,10 +125,10 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                                     $(".singleBusiness:nth-child(" + j + ") .busyStyle label").addClass("notBusy");
                                 }
 
-                                if (_self.businessList[i].available_score >= 100) {
+                                if (_self.businessList[i].available_score >= 75) {
                                     //绿色
                                     $(".singleBusiness:nth-child(" + j + ") .availableStyle label").addClass("notBusy");
-                                } else if (_self.businessList[i].available_score >= 90) {
+                                } else if (_self.businessList[i].available_score >= 26) {
                                     //黄色
                                     $(".singleBusiness:nth-child(" + j + ") .availableStyle label").addClass("normalBusy");
                                 } else {

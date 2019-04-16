@@ -2,7 +2,8 @@
  * Created by gy on 2018/3/24.
  */
 'use strict'
-define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function ($, Vue, commonModule, validateExtend,topoMain) {
+define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain','editTopo','showBusiness','showAlert','monitorConfigList','monitorList'],
+    function ($, Vue, commonModule, validateExtend,topoMain,editTopo,showBusiness,showAlert,monitorConfigList,monitorList) {
     var showAlert = function () {
         if ($('#myalert')[0]) {
             var showBus = new Vue({
@@ -30,6 +31,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                         showAlertList:[],
                         tabSelected: "all",
                         lightType:"all",
+                        breadHoverAble:false,
                     },
                     filters: {
                         convertDesc: function (desc) {
@@ -179,46 +181,33 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend','topoMain'], function
                             }
                             _self.currenPageInfo="共"+_self.totalRecord+"条记录 , 当前第"+_self.pageNum+"/"+_self.totalPage+"页"
                         },
-                        initFontColor: function () {
-                            var _self = this;
-                            for (var i = 0; i < _self.businessList.length; i++) {
-                                var j = i + 1;
-                                if (_self.businessList[i].health_score >= 75) {
-                                    //绿色
-                                    $(".singleBusiness:nth-child(" + j + ") .heartBeat").addClass("notBusy");
-                                    $(".singleBusiness:nth-child(" + j + ") .healthStyle label").addClass("notBusy");
-                                } else if (_self.businessList[i].health_score >= 26) {
-                                    //黄色
-                                    $(".singleBusiness:nth-child(" + j + ") .heartBeat").addClass("normalBusy");
-                                    $(".singleBusiness:nth-child(" + j + ") .healthStyle label").addClass("normalBusy");
-                                } else {
-                                    //红色
-                                    $(".singleBusiness:nth-child(" + j + ") .heartBeat").addClass("mostBusy");
-                                    $(".singleBusiness:nth-child(" + j + ") .healthStyle label").addClass("mostBusy");
-                                }
+                        hoverFuc:function () {
+                            this.breadHoverAble=true;
+                        },
+                        outFunc:function () {
+                            this.breadHoverAble=false;
+                        },
+                        loadMonitorList:function () {
+                            window.open("/monitor/showMonitorList",'_parent');
+                            monitorList.showMonitorList();
+                        },
 
-                                if (_self.businessList[i].busy_score >= 75) {
-                                    //红色
-                                    $(".singleBusiness:nth-child(" + j + ") .busyStyle label").addClass("mostBusy");
-                                } else if (_self.businessList[i].busy_score >= 26) {
-                                    //黄色
-                                    $(".singleBusiness:nth-child(" + j + ") .busyStyle label").addClass("normalBusy");
-                                } else {
-                                    //绿色
-                                    $(".singleBusiness:nth-child(" + j + ") .busyStyle label").addClass("notBusy");
-                                }
+                        loadMonitorTemplate:function () {
+                            window.open("/monitorConfig/showTemplateList",'_parent');
+                            monitorConfigList.showTempList();
+                        },
+                        loadNetTopo:function () {
+                            window.open("/topo/showNetTopo",'_parent');
+                            editTopo.netTopo();
 
-                                if (_self.businessList[i].available_score >= 75) {
-                                    //绿色
-                                    $(".singleBusiness:nth-child(" + j + ") .availableStyle label").addClass("notBusy");
-                                } else if (_self.businessList[i].available_score >= 26) {
-                                    //黄色
-                                    $(".singleBusiness:nth-child(" + j + ") .availableStyle label").addClass("normalBusy");
-                                } else {
-                                    //红色
-                                    $(".singleBusiness:nth-child(" + j + ") .availableStyle label").addClass("mostBusy");
-                                }
-                            }
+                        },
+                        loadBusinessList:function () {
+                            window.open("/business/showBusinessList",'_parent');
+                            showBusiness.showBusiness();
+                        },
+                        loadAlert:function () {
+                            window.open("/alert/showAlert",'_parent');
+                            showAlert.showAlert();
                         },
                         clickResource: function (event, lighttype) {
                             var e = event.target;

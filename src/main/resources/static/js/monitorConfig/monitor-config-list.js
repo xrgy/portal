@@ -2,7 +2,8 @@
  * Created by gy on 2018/3/24.
  */
 'use strict'
-define(['jquery', 'vue', 'commonModule', 'validate-extend', 'topoMain'], function ($, Vue, commonModule, validateExtend, topoMain) {
+define(['jquery', 'vue', 'commonModule', 'validate-extend', 'topoMain','editTopo','showBusiness','showAlert','monitorConfigList','monitorList'],
+    function ($, Vue, commonModule, validateExtend, topoMain,editTopo,showBusiness,showAlert,monitorConfigList,monitorList) {
     var showTempList = function () {
         if ($('#monitorConifgList')[0]) {
             var showBus = new Vue({
@@ -56,7 +57,8 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'topoMain'], functio
                                 value: "k8sContainer",
                                 type: 'container'
                             }],
-                        addcontainer: [{name: 'kubernetes', value: "k8s", type: 'container'}]
+                        addcontainer: [{name: 'kubernetes', value: "k8s", type: 'container'}],
+                        breadHoverAble:false,
                     },
                     filters: {
                         convertLightType: function (type) {
@@ -76,7 +78,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'topoMain'], functio
                         }
                     },
                     mounted: function () {
-
+                        this.breadHoverAble=false;
                         this.initTable(this.type);
                     },
                     methods: {
@@ -102,6 +104,34 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'topoMain'], functio
                                 });
                             }
 
+                        },
+                        hoverFuc:function () {
+                            this.breadHoverAble=true;
+                        },
+                        outFunc:function () {
+                            this.breadHoverAble=false;
+                        },
+                        loadMonitorList:function () {
+                            window.open("/monitor/showMonitorList",'_parent');
+                            monitorList.showMonitorList();
+                        },
+
+                        loadMonitorTemplate:function () {
+                            window.open("/monitorConfig/showTemplateList",'_parent');
+                            monitorConfigList.showTempList();
+                        },
+                        loadNetTopo:function () {
+                            window.open("/topo/showNetTopo",'_parent');
+                            editTopo.netTopo();
+
+                        },
+                        loadBusinessList:function () {
+                            window.open("/business/showBusinessList",'_parent');
+                            showBusiness.showBusiness();
+                        },
+                        loadAlert:function () {
+                            window.open("/alert/showAlert",'_parent');
+                            showAlert.showAlert();
                         },
                         delResource: function (event, temId) {
                             var e = event.currentTarget;
