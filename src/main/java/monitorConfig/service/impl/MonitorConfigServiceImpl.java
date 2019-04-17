@@ -197,6 +197,7 @@ public class MonitorConfigServiceImpl implements MonitorConfigService {
                 avl.setUuid(y.getAvlUuid());
                 avl.setMetricUuid(y.getUuid());
                 avl.setSeverity(y.getSeverity());
+                avl.setDescription(y.getDescription());
                 available.add(avl);
             });
         });

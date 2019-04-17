@@ -24,7 +24,9 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'bootstrap-table'], 
                         addContainerMonitorRecord: "/monitor/addContainerMonitorRecord",
                         getContainerList: "/monitor/getContainerList",
                         getEditData:"/monitor/getK8sMonitor",
-                        updateContainerMonitorRecord:"/monitor/updateContainerMonitorRecord"
+                        updateContainerMonitorRecord:"/monitor/updateContainerMonitorRecord",
+                        k8sCanAccess:"/monitor/k8sCanAccess",
+
                     },
                     k8sTemplateList: [{uuid: '', templateName: commonModule.i18n("form.select.default")}],
                     k8snTemplateList: [{uuid: '', templateName: commonModule.i18n("form.select.default")}],
@@ -318,10 +320,27 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'bootstrap-table'], 
                     },
                     clickResource: function (event, lighttype) {
                         var e = event.target;
-                        $('#leftMenu').find('li').removeClass('active');
+                        $('#addk8s #leftMenu').find('li').removeClass('active');
                         $(e).closest('li').addClass('active');
                         this.initForm();
                         this.initData(lighttype);
+                    },
+                    //测试是否连通
+                    canReach:function () {
+                        var _self = this;
+                        $.ajax({
+                            data: {"masterIp": _self.infoIp,"apiPort": _self.infoAPIPort},
+                            url: _self.path.k8sCanAccess,
+                            success: function (data) {
+                                if (data.accessible === true) {
+                                    commonModule.prompt("prompt.accessSuccess","SUCCESS");
+                                }else {
+                                    commonModule.prompt("prompt.accessError","alert");
+                                }
+                            },
+                            error: function () {
+                            }
+                        })
                     },
                     submitForm: function () {
                         var _self = this;
@@ -408,7 +427,10 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'bootstrap-table'], 
                                 },
                                 lightType: function () {
                                     return addK8s.lightType;
-                                }
+                                },
+                                uuid: function () {
+                                    return addK8s.monitorOpeUuid;
+                                },
                             }
                         },
                     },

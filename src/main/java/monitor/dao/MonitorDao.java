@@ -4,10 +4,7 @@ import business.entity.PageBean;
 import business.entity.PageData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import monitor.entity.*;
-import monitor.entity.view.Cluster;
-import monitor.entity.view.CvkAndVmView;
-import monitor.entity.view.Host;
-import monitor.entity.view.K8sNodeAndContainerView;
+import monitor.entity.view.*;
 import monitor.entity.view.k8sView.Container;
 import monitor.entity.view.k8sView.Node;
 
@@ -233,5 +230,13 @@ public interface MonitorDao {
     PageBean getBusMonitorListByPage(PageData page) throws JsonProcessingException;
 
     String getQuotaValue(String monitorUuid,String quotaName);
+
+    boolean isMonitorRecordIpDupNotP(String ip, String lightType, String uuid);
+
+    AccessBackView dbCanAccess(DbAccessView view) throws JsonProcessingException;
+
+    AccessBackView k8sCanAccess(K8sAccessView view) throws JsonProcessingException;
+
+    AccessBackView tomcatCanAccess(TomcatAccessView view) throws JsonProcessingException;
 
 }

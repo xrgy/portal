@@ -9,7 +9,8 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                 el: '#monitorConfig',
                 data: {
                     moreCondition: commonModule.i18n("monitorConfig.moreCondition"),
-                    templateName: "cc",
+                    templateName: "",
+                    monitorConfigTitle:"",
                     dataObj: [{
                         quotaName: 'm',
                         quotaDesc: ''
@@ -57,6 +58,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     myOpe: "",
                     editTemUuid: "",
                     oneshowMoreCondition: "0",
+                    usedCount:0,
                 },
                 filters: {
                     convertType: function (type) {
@@ -96,6 +98,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                                     var data = data.data;
                                     _self.templateName = data.template_name;
                                     _self.lightType = data.light_type;
+                                    _self.usedCount=data.usedCount;
                                     _self.getEditLightClass(_self.lightType, data.monitor_mode);
                                     var available = data.available;
                                     var performance = data.performance;
@@ -317,6 +320,10 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     },
                     toggleMoitorMode: function (str) {
                         var _self = this;
+                        if (_self.myOpe == "edit" && _self.usedCount!=0){
+                            //不允许修改
+                            return
+                        }
                         _self.monitorMode = str;
                         console.log("monitorMode:" + _self.monitorMode);
                         _self.initData();
@@ -437,11 +444,13 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
 
             if (monitorConfig.myOpe == "edit") {
                 monitorConfig.editTemUuid = sessionStorage.getItem('templateOpeObj');
+                monitorConfig.monitorConfigTitle=commonModule.i18n("monitorConfig.title.updateTemplateName");
                 monitorConfig.initEditData();
             } else {
                 var light = sessionStorage.getItem('addConfigLightType');
                 monitorConfig.lightType = light;
                 monitorConfig.getLightClass(light);
+                monitorConfig.monitorConfigTitle=commonModule.i18n("monitorConfig.title.addTemplateName");
                 monitorConfig.initData();
             }
 

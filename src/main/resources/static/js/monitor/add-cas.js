@@ -28,13 +28,17 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     path: {
                         getTemplateByLightType: "/monitorConfig/getTemplateByLightType",
                         addVirtualMonitorRecord: "/monitor/addVirtualMonitorRecord",
-                        getCvkAndVmList: "/monitor/getCvkAndVmList"
+                        getCvkAndVmList: "/monitor/getCvkAndVmList",
+                        getEditData: "/monitor/getCasMonitor",
+                        updateVirtualMonitorRecord: "/monitor/updateVirtualMonitorRecord"
                     },
                     casTemplateList: [{uuid: '', templateName: commonModule.i18n("form.select.default")}],
                     cvkTemplateList: [{uuid: '', templateName: commonModule.i18n("form.select.default")}],
                     vmTemplateList: [{uuid: '', templateName: commonModule.i18n("form.select.default")}],
                     lightType: "",
                     tabSelected: "",
+                    monitorOpe:"",
+                    monitorOpeUuid:""
                 },
                 mounted: function () {
                     var light = sessionStorage.getItem('addLightType');
@@ -127,6 +131,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                             _self.chosecvkList[hostid] = [];
                         }
                     },
+
                     initForm: function () {
                         $("#add-cas").validate().resetForm();
                         $('.form-group').removeClass("has-error");
@@ -149,6 +154,52 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                             this.casTemplateList = [{uuid: '', templateName: commonModule.i18n("form.select.default")}],
                             this.cvkTemplateList = [{uuid: '', templateName: commonModule.i18n("form.select.default")}],
                             this.vmTemplateList = [{uuid: '', templateName: commonModule.i18n("form.select.default")}];
+                    },
+                    initEditData: function (lightType) {
+                        var _self = this;
+                        _self.lightType = lightType;
+                        $.ajax({
+                            data: {uuid: _self.monitorOpeUuid},
+                            url: _self.path.getEditData,
+                            success: function (data) {
+                                if (data.msg == "SUCCESS") {
+                                    var data = data.data;
+                                    _self.infoIp = data.ip;
+                                    _self.infoName = data.name;
+                                    _self.infoUsername = data.username;
+                                    _self.infoPassword = data.password;
+                                    _self.infoPort = data.port;
+                                    _self.infoTimeinterval = data.scrapeInterval;
+                                    _self.infoTimeout = data.scrapeTimeout;
+                                    _self.infoCasMonitortemplate = data.templateId;
+                                    _self.infoCvkMonitortemplate = data.hostTemplateId;
+                                    if (data.vmTemplateId == null) {
+                                        _self.infoVmMonitortemplate = '';
+                                    } else {
+                                        _self.infoVmMonitortemplate = data.vmTemplateId;
+                                    }
+                                    if (data.monitorTemplate.cas !== null) {
+                                        data.monitorTemplate.cas.forEach(function (x) {
+                                            _self.casTemplateList.push(x);
+                                        });
+                                    }
+                                    if (data.monitorTemplate.cvk !== null) {
+                                        data.monitorTemplate.cvk.forEach(function (x) {
+                                            _self.cvkTemplateList.push(x);
+                                        });
+                                    }
+                                    if (data.monitorTemplate.virtualMachine !== null) {
+                                        data.monitorTemplate.virtualMachine.forEach(function (x) {
+                                            _self.vmTemplateList.push(x);
+                                        });
+                                    }
+                                }
+                            },
+                            error: function () {
+
+                            }
+
+                        })
                     },
                     initData: function (lightType) {
                         var _self = this;
@@ -189,30 +240,58 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     },
                     clickResource: function (event, lighttype) {
                         var e = event.target;
-                        $('#leftMenu').find('li').removeClass('active');
+                        $('#addcas #leftMenu').find('li').removeClass('active');
                         $(e).closest('li').addClass('active');
                         this.initForm();
                         this.initData(lighttype);
+                    },
+                    //测试是否连通
+                    canReach:function () {
+                        // var _self = this;
+                        // $.ajax({
+                        //     data: {"ip": _self.infoIp,"username":_self.infoUsername,"password":_self.infoPassword,"databasename": _self.infoBbname,"port":_self.infoPort},
+                        //     url: _self.path.dbCanAccess,
+                        //     success: function (data) {
+                        //         if (data.accessible === true) {
+                        //             commonModule.prompt("prompt.accessSuccess","SUCCESS");
+                        //         }else {
+                                    commonModule.prompt("prompt.accessError","alert");
+                                // }
+                            // },
+                            // error: function () {
+                            // }
+                        // })
                     },
                     submitForm: function () {
                         var _self = this;
                         var formdata = new FormData($('#add-cas')[0]);
                         formdata.append("lightType", _self.lightType);
                         formdata.append("cvkIds", JSON.stringify(_self.chosecvkList));
+                        if (_self.monitorOpe == "edit"){
+                            formdata.append("uuid", _self.monitorOpeUuid);
+                        }
                         $.ajax({
                             type: "post",
                             data: formdata,
                             contentType: false,
                             processData: false,
-                            url: _self.path.addVirtualMonitorRecord,
+                            url: _self.monitorOpe == "edit" ? _self.path.updateVirtualMonitorRecord : _self.path.addVirtualMonitorRecord,
                             dataType: 'json',//预期服务器返回数据类型
                             success: function (data) {
                                 if (data.msg === "SUCCESS") {
                                     //弹出框 新建成功
-                                    commonModule.prompt("prompt.insertSuccess", data.msg);
+                                    if (_self.monitorOpe == "edit"){
+                                        commonModule.prompt("prompt.updateSuccess",data.msg);
+                                    }else {
+                                        commonModule.prompt("prompt.insertSuccess", data.msg);
+                                    }
                                 } else {
                                     //弹出框 新建失败
-                                    commonModule.prompt("prompt.insertError", "alert");
+                                    if (_self.monitorOpe == "edit") {
+                                        commonModule.prompt("prompt.updateError","alert");
+                                    }else {
+                                        commonModule.prompt("prompt.insertError", "alert");
+                                    }
                                 }
                                 $("#addcas").modal('hide');
                             },
@@ -222,12 +301,9 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                                 commonModule.prompt("prompt.exceptionPleaseTryAgain", "alert");
                             }
                         })
-                    },
-
+                    }
                 }
-            })
-
-
+            });
             $('#add-cas').validate({
                 submitHandler: function () {
                     addCas.submitForm();
@@ -257,7 +333,10 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                                 },
                                 lightType: function () {
                                     return addCas.lightType;
-                                }
+                                },
+                                uuid: function () {
+                                    return addCas.monitorOpeUuid;
+                                },
                             }
                         },
                     },
@@ -348,10 +427,19 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
 
         $("#addcas").on('show.bs.modal', function (event) {
             addCas.initForm();
-            var light = sessionStorage.getItem('addLightType');
-            addCas.title = commonModule.i18n("modal.title.add" + light);
+            var light = "";
+            addCas.monitorOpe = sessionStorage.getItem('monitorOpe');
+            if (addCas.monitorOpe == "edit") {
+                addCas.monitorOpeUuid = sessionStorage.getItem('monitorOpeObj');
+                light = sessionStorage.getItem('editLightType');
+                addCas.title = commonModule.i18n("modal.title.update" + light);
+                addCas.initEditData(light);
+            } else {
+                var light = sessionStorage.getItem('addLightType');
+                addCas.title = commonModule.i18n("modal.title.add" + light);
+                addCas.initData(light);
+            }
             addCas.tabSelected = light;
-            addCas.initData(light);
         });
         $("#addcas").on("hide.bs.model", function (e) {
             $("#add-cas").resetForm();

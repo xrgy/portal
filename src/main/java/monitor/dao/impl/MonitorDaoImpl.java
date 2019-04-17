@@ -8,10 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import common.EtcdUtil;
 import monitor.dao.MonitorDao;
 import monitor.entity.*;
-import monitor.entity.view.Cluster;
-import monitor.entity.view.CvkAndVmView;
-import monitor.entity.view.Host;
-import monitor.entity.view.K8sNodeAndContainerView;
+import monitor.entity.view.*;
 import monitor.entity.view.k8sView.Container;
 import monitor.entity.view.k8sView.Node;
 import monitorConfig.entity.metric.Metrics;
@@ -68,8 +65,14 @@ public class MonitorDaoImpl implements MonitorDao {
     private static final String PATH_GET_ALL_CVK_AND_VM_BY_CAS="getAllCvkAndVmByCasuuid";
     private static final String PATH_GET_ALL_VM_BY_CVK="getAllVmByCvkuuid";
     private static final String PATH_IS_IP_DUPLICATE="isMonitorRecordIpDup";
+    private static final String PATH_IS_IP_DUPLICATE_NOTP="isMonitorRecordIpDupNotP";
     private static final String PATH_GET_BUSMONITOR_LIST="getBusMonitorListByPage";
     private static final String PATH_GET_QUOTA_VALUE="getQuotaValueByName";
+    private static final String PATH_DB_CAN_ACCESS="dbCanAccess";
+    private static final String PATH_K8S_CAN_ACCESS="k8sCanAccess";
+    private static final String PATH_TOMCAT_CAN_ACCESS="tomcatCanAccess";
+
+
 
 
 
@@ -370,6 +373,44 @@ public class MonitorDaoImpl implements MonitorDao {
     public String getQuotaValue(String monitorUuid,String quotaName) {
         String quotaValue = rest().getForObject(monitorPrefix()+PATH_GET_QUOTA_VALUE+"?monitorUUid={1}&quotaName={2}",String.class,monitorUuid,quotaName);
         return quotaValue;
+    }
+
+    @Override
+    public boolean isMonitorRecordIpDupNotP(String ip, String lightType, String uuid) {
+        return rest().getForObject(monitorPrefix() + PATH_IS_IP_DUPLICATE_NOTP+ "?ip={1}&lightType={2}&uuid={3}", boolean.class, ip,lightType,uuid);
+    }
+
+    @Override
+    public AccessBackView dbCanAccess(DbAccessView view) throws JsonProcessingException {
+        String response = rest().postForObject(monitorPrefix()+PATH_DB_CAN_ACCESS,objectMapper.writeValueAsString(view),String.class);
+        try {
+            return objectMapper.readValue(response,AccessBackView.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public AccessBackView k8sCanAccess(K8sAccessView view) throws JsonProcessingException {
+        String response = rest().postForObject(monitorPrefix()+PATH_K8S_CAN_ACCESS,objectMapper.writeValueAsString(view),String.class);
+        try {
+            return objectMapper.readValue(response,AccessBackView.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public AccessBackView tomcatCanAccess(TomcatAccessView view) throws JsonProcessingException {
+        String response = rest().postForObject(monitorPrefix()+PATH_TOMCAT_CAN_ACCESS,objectMapper.writeValueAsString(view),String.class);
+        try {
+            return objectMapper.readValue(response,AccessBackView.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

@@ -138,7 +138,7 @@ public class MonitorServiceImpl implements MonitorService {
         if (view.isAuthentication()) {
             tomcatMonitorEntity.setAuthentication(1);
             tomcatMonitorEntity.setUsername(view.getUserName());
-            tomcatMonitorEntity.setPort(view.getPassword());
+            tomcatMonitorEntity.setPassword(view.getPassword());
         } else {
             tomcatMonitorEntity.setAuthentication(0);
         }
@@ -508,25 +508,29 @@ public class MonitorServiceImpl implements MonitorService {
     @Override
     public ResultMsg delNetworkMonitorRecord(List<DelMonitorRecordView> view) {
         List<String> monitoUuidTemplateUUid = new ArrayList<>();
-        if (null!=view && view.size()>0){
-            view.forEach(x -> {
+        if (null != view && view.size() > 0) {
+            for (int i = 0; i < view.size(); i++) {
+                DelMonitorRecordView x = view.get(i);
+//            view.forEach(x -> {
                 try {
-                    List<String> list  = delCommonOper(x.getUuid(), x.getLightType());
-                    if (list==null){
+                    List<String> list = delCommonOper(x.getUuid(), x.getLightType());
+                    if (list == null) {
                         //已经加入业务监控 不能删除 结束
-                        return;
-                    }else {
+                        continue;
+                    } else {
                         monitoUuidTemplateUUid.addAll(list);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            });
+            }
+
+//            });
             //从monitorconfig下发，将该告警模板删除
             boolean flag = configService.delAlertRuleByUuids(monitoUuidTemplateUUid);
 
             return ResCommon.genSimpleResByBool(flag);
-        }else {
+        } else {
             return ResCommon.genSimpleResByBool(true);
         }
 
@@ -658,9 +662,9 @@ public class MonitorServiceImpl implements MonitorService {
             monitoUuidTemplateUUid.add(tempuuid);
             if (dekcvk) {
                 // : 2018/10/22 调用拓扑的deleteBymonitoruuid 删除cvk
-                topoService.deleteTopoResourceBymonitoruuid(uuid);
+//                topoService.deleteTopoResourceBymonitoruuid(uuid);
                 // : 2018/10/22 调用告警记录的deleteByMOnitorUuid 删除cvk
-                alertService.deleteAlertResourceBymonitoruuid(uuid);
+//                alertService.deleteAlertResourceBymonitoruuid(uuid);
             }
         } else {
             //其他设备
@@ -668,15 +672,15 @@ public class MonitorServiceImpl implements MonitorService {
             String tempTempId = "";
             if (lightype.equals(MonitorEnum.LightTypeEnum.SWITCH.value()) || lightype.equals(MonitorEnum.LightTypeEnum.ROUTER.value())
                     || lightype.equals(MonitorEnum.LightTypeEnum.LB.value()) || lightype.equals(MonitorEnum.LightTypeEnum.FIREWALL.value())) {
-                NetworkMonitorEntity net = getNetworkMonitorEntity(uuid);
+                NetworkMonitorEntity net = getNetworkMonitorEntity(uuid, lightype);
                 tempTempId = net.getTemplateId();
-            }else if (lightype.equals(MonitorEnum.LightTypeEnum.MYSQL.value())) {
+            } else if (lightype.equals(MonitorEnum.LightTypeEnum.MYSQL.value())) {
                 DBMonitorEntity db = getDbMonitorEntity(uuid);
                 tempTempId = db.getTemplateId();
-            }else if (lightype.equals(MonitorEnum.LightTypeEnum.TOMCAT.value())) {
+            } else if (lightype.equals(MonitorEnum.LightTypeEnum.TOMCAT.value())) {
                 TomcatMonitorEntity tomcat = getTomcatMonitorEntity(uuid);
                 tempTempId = tomcat.getTemplateId();
-            }else if (lightype.equals(MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value())) {
+            } else if (lightype.equals(MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value())) {
                 VmMonitorEntity vm = getVmMonitorEntity(uuid);
                 tempTempId = vm.getTemplateId();
             } else if (lightype.equals(MonitorEnum.LightTypeEnum.K8SCONTAINER.value())) {
@@ -688,9 +692,9 @@ public class MonitorServiceImpl implements MonitorService {
             monitoUuidTemplateUUid.add(tempuuid);
             if (delres) {
                 // : 2018/10/22 调用拓扑的deleteBymonitoruuid
-         //       topoService.deleteTopoResourceBymonitoruuid(uuid);
+                //       topoService.deleteTopoResourceBymonitoruuid(uuid);
                 // : 2018/10/22 调用告警记录的deleteByMOnitorUuid
-        //        alertService.deleteAlertResourceBymonitoruuid(uuid);
+                //        alertService.deleteAlertResourceBymonitoruuid(uuid);
 
 //                return true;
             }
@@ -809,6 +813,7 @@ public class MonitorServiceImpl implements MonitorService {
             if (null != updateAlertRule) {
                 configService.addAlertTemplateToEtcd(MonitorEnum.LightTypeEnum.CAS.value(), operationMonitorEntity.getTemplateId(), updateAlertRule);
             }
+        }
             //修改cas下的资源
             CasTransExporterModel casTransExporterModel = new CasTransExporterModel();
 
@@ -989,17 +994,19 @@ public class MonitorServiceImpl implements MonitorService {
                 });
 
             }
+            List<DelMonitorRecordView> delVmMonitorRecordViews = new ArrayList<>();
             if (vmMonitorList.size() > 0) {
                 vmMonitorList.forEach(x -> {
                     DelMonitorRecordView del = new DelMonitorRecordView();
                     del.setUuid(x);
                     del.setLightType(MonitorEnum.LightTypeEnum.VIRTUALMACHINE.value());
-                    delNodeMonitorRecordViews.add(del);
+                    delVmMonitorRecordViews.add(del);
                 });
 
             }
+            delNetworkMonitorRecord(delVmMonitorRecordViews);
             delNetworkMonitorRecord(delNodeMonitorRecordViews);
-        }
+
 
         msg.setCode(HttpStatus.OK.value());
         msg.setMsg(CommonEnum.MSG_SUCCESS.value());
@@ -1512,68 +1519,27 @@ public class MonitorServiceImpl implements MonitorService {
 
     @Override
     public ResultMsg getCvkAndVmListByExporter(CasTransExporterModel casTransExporterModel) throws JsonProcessingException {
-//        List<Host> hosts = dao.getCvkAndVmListByExporter(casTransExporterModel);
+        List<Host> hosts = dao.getCvkAndVmListByExporter(casTransExporterModel);
 
-        List<Host> hosts = new ArrayList<>();
-        Host host1 = new Host();
-        host1.setName("cvk1");
-        host1.setId("111111");
-        host1.setStatus("1");
-        host1.setIp("172.17.5.135");
-        host1.setBeenAdd(false);
-        host1.setClusterId("1");
-        host1.setHostpoolId("1");
-        List<VirtualMachine> vms1 = new ArrayList<>();
-        VirtualMachine vm1 = new VirtualMachine();
-        vm1.setName("vm1");
-        vm1.setId("1");
-        vm1.setStatus("1");
-        vm1.setOs("linux");
-        vm1.setIp("172.17.5.133");
-        vm1.setBeenAdd(false);
-        vm1.setCvkId("111111");
-        vms1.add(vm1);
-        VirtualMachine vm2 = new VirtualMachine();
-        vm2.setName("vm2");
-        vm2.setId("2");
-        vm2.setStatus("1");
-        vm2.setOs("linux");
-        vm2.setIp("172.17.5.134");
-        vm2.setBeenAdd(false);
-        vm2.setCvkId("111111");
-        vms1.add(vm2);
-        host1.setVirtualMachineList(vms1);
-        hosts.add(host1);
 
-        Host host2 = new Host();
-        host2.setName("cvk2");
-        host2.setId("111112");
-        host2.setStatus("1");
-        host2.setIp("172.17.5.133");
-        host2.setBeenAdd(false);
-        host2.setClusterId("1");
-        host2.setHostpoolId("1");
-        List<VirtualMachine> vms2 = new ArrayList<>();
-        VirtualMachine vm3 = new VirtualMachine();
-        vm3.setName("vm3");
-        vm3.setId("3");
-        vm3.setStatus("1");
-        vm3.setOs("linux");
-        vm3.setIp("172.17.5.139");
-        vm3.setCvkId("111112");
-        vm3.setBeenAdd(false);
-        vms2.add(vm3);
-        host2.setVirtualMachineList(vms2);
-        hosts.add(host2);
         return ResCommon.getCommonResultMsg(hosts);
     }
 
     @Override
-    public NetworkMonitorEntity getNetworkMonitorEntity(String uuid) {
+    public NetworkMonitorEntity getNetworkMonitorEntity(String uuid, String lightType) {
         //lightype 网络设备中随便一个lightype都可以
         String response = dao.getMonitorRecordByUuid(uuid, MonitorEnum.LightTypeEnum.FIREWALL.value());
         try {
-            return objectMapper.readValue(response, NetworkMonitorEntity.class);
+            NetworkMonitorEntity netMonitor = objectMapper.readValue(response, NetworkMonitorEntity.class);
+            String monitormode = "";
+            if (netMonitor.getSnmpVersion().equals(NUMBER_1)) {
+                monitormode = MonitorEnum.MonitorRecordEnum.SNMP_VERSION_V1.value();
+            } else if (netMonitor.getSnmpVersion().equals(NUMBER_2)) {
+                monitormode = MonitorEnum.MonitorRecordEnum.SNMP_VERSION_V2.value();
+            }
+            MonitorTemplate template = configService.getTemplateByLightType(lightType, monitormode);
+            netMonitor.setMonitorTemplate(template);
+            return netMonitor;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -1584,7 +1550,10 @@ public class MonitorServiceImpl implements MonitorService {
     public TomcatMonitorEntity getTomcatMonitorEntity(String uuid) {
         String response = dao.getMonitorRecordByUuid(uuid, MonitorEnum.LightTypeEnum.TOMCAT.value());
         try {
-            return objectMapper.readValue(response, TomcatMonitorEntity.class);
+            TomcatMonitorEntity tommonitor = objectMapper.readValue(response, TomcatMonitorEntity.class);
+            MonitorTemplate template = configService.getTemplateByLightType(MonitorEnum.LightTypeEnum.TOMCAT.value(), "");
+            tommonitor.setMonitorTemplate(template);
+            return tommonitor;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -1595,8 +1564,8 @@ public class MonitorServiceImpl implements MonitorService {
     public DBMonitorEntity getDbMonitorEntity(String uuid) {
         String response = dao.getMonitorRecordByUuid(uuid, MonitorEnum.LightTypeEnum.MYSQL.value());
         try {
-            DBMonitorEntity dbmonitor =  objectMapper.readValue(response, DBMonitorEntity.class);
-            MonitorTemplate template = configService.getTemplateByLightType(MonitorEnum.LightTypeEnum.MYSQL.value(),"");
+            DBMonitorEntity dbmonitor = objectMapper.readValue(response, DBMonitorEntity.class);
+            MonitorTemplate template = configService.getTemplateByLightType(MonitorEnum.LightTypeEnum.MYSQL.value(), "");
             dbmonitor.setMonitorTemplate(template);
             return dbmonitor;
         } catch (IOException e) {
@@ -1609,7 +1578,18 @@ public class MonitorServiceImpl implements MonitorService {
     public CasMonitorEntity getCasMonitorEntity(String uuid) {
         String response = dao.getMonitorRecordByUuid(uuid, MonitorEnum.LightTypeEnum.CAS.value());
         try {
-            return objectMapper.readValue(response, CasMonitorEntity.class);
+            CasMonitorEntity casMonitor = objectMapper.readValue(response, CasMonitorEntity.class);
+            List<CvkAndVmView> hostandvm = dao.getAllCvkAndVmByCasuuid(uuid);
+            if (hostandvm.get(0).getHostMonitor() != null) {
+                casMonitor.setHostTemplateId(hostandvm.get(0).getHostMonitor().getTemplateId());
+            }
+            Optional<CvkAndVmView> vmmonitor = hostandvm.stream().filter(x -> null != x.getVmMonitorList() &&
+                    x.getVmMonitorList().size() > 0).findFirst();
+            vmmonitor.ifPresent(vmview -> casMonitor.setVmTemplateId(vmview.getVmMonitorList().get(0).getTemplateId()));
+
+            MonitorTemplate template = configService.getTemplateByLightType(MonitorEnum.LightTypeEnum.CAS.value(), "");
+            casMonitor.setMonitorTemplate(template);
+            return casMonitor;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -1645,14 +1625,14 @@ public class MonitorServiceImpl implements MonitorService {
             K8sMonitorEntity k8sMonitor = objectMapper.readValue(response, K8sMonitorEntity.class);
             //  获取其下node和container的templateid
             List<K8sNodeAndContainerView> nodeandcontainer = dao.getAllNodeAndContainerByK8suuid(uuid);
-            if (nodeandcontainer.get(0).getK8snode()!=null) {
+            if (nodeandcontainer.get(0).getK8snode() != null) {
                 k8sMonitor.setK8sNTemplateId(nodeandcontainer.get(0).getK8snode().getTemplateId());
             }
-            Optional<K8sNodeAndContainerView> cmonitor = nodeandcontainer.stream().filter(x->null!=x.getK8sContainerList() &&
-                    x.getK8sContainerList().size()>0).findFirst();
+            Optional<K8sNodeAndContainerView> cmonitor = nodeandcontainer.stream().filter(x -> null != x.getK8sContainerList() &&
+                    x.getK8sContainerList().size() > 0).findFirst();
             cmonitor.ifPresent(k8sNodeAndContainerView -> k8sMonitor.setK8scTemplateId(k8sNodeAndContainerView.getK8sContainerList().get(0).getTemplateId()));
 
-            MonitorTemplate template = configService.getTemplateByLightType(MonitorEnum.LightTypeEnum.K8S.value(),"");
+            MonitorTemplate template = configService.getTemplateByLightType(MonitorEnum.LightTypeEnum.K8S.value(), "");
             k8sMonitor.setMonitorTemplate(template);
             return k8sMonitor;
         } catch (IOException e) {
@@ -1721,7 +1701,7 @@ public class MonitorServiceImpl implements MonitorService {
                 OperationMonitorEntity entity = new OperationMonitorEntity();
                 BeanUtils.copyProperties(x, entity);
                 entity.setLightTypeId(MonitorEnum.LightTypeEnum.TOMCAT.value());
-                entity.setMiddleType(MonitorEnum.MiddleTypeEnum.DATABASE.value());
+                entity.setMiddleType(MonitorEnum.MiddleTypeEnum.MIDDLEWARE.value());
                 Optional<AlertRuleTemplateEntity> temp = templateList.stream().filter(y -> y.getUuid().equals(x.getTemplateId())).findFirst();
                 temp.ifPresent(alertRuleTemplateEntity -> entity.setTemplateName(alertRuleTemplateEntity.getTemplateName()));
                 entity.setStatus(dao.getQuotaValue(x.getUuid(), MonitorEnum.QuotaMonitorStatusEnum.TOMCAT_MONITOR_STATUS.value()));
@@ -1910,6 +1890,29 @@ public class MonitorServiceImpl implements MonitorService {
             });
         }
         return ResCommon.getCommonResultMsg(allMonitor);
+    }
+
+    @Override
+    public boolean isMonitorRecordIpDupNotP(String ip, String lightType, String uuid) {
+        return dao.isMonitorRecordIpDupNotP(ip, lightType, uuid);
+    }
+
+    @Override
+    public AccessBackView dbCanAccess(DbAccessView view) throws JsonProcessingException {
+        AccessBackView backView = dao.dbCanAccess(view);
+        return backView;
+    }
+
+    @Override
+    public AccessBackView k8sCanAccess(K8sAccessView view) throws JsonProcessingException {
+        AccessBackView backView = dao.k8sCanAccess(view);
+        return backView;
+    }
+
+    @Override
+    public AccessBackView tomcatCanAccess(TomcatAccessView view) throws JsonProcessingException {
+        AccessBackView backView = dao.tomcatCanAccess(view);
+        return backView;
     }
 
 }

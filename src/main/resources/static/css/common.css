@@ -272,7 +272,8 @@ input[type="checkbox"]:checked {
 }
 input[type="checkbox"]:checked::after:not(#monitorResourcelist input[type="checkbox"]:checked::after)
 :not(#busResourcelist input[type="checkbox"]:checked::after):not(#monitorConifgList input[type="checkbox"]:checked::after)
-:not(#monitorList input[type="checkbox"]:checked::after):not(#addk8s input[type="checkbox"]:checked::after){
+:not(#monitorList input[type="checkbox"]:checked::after):not(#addk8s input[type="checkbox"]:checked::after)
+:not(#addtomcat input[type="checkbox"]:checked::after){
      content: '';
      top: 5px;
      left: 3px;
@@ -288,6 +289,7 @@ input[type="checkbox"]:checked::after:not(#monitorResourcelist input[type="check
      -webkit-transform: rotate(-45deg);
      transform: rotate(-45deg);
  }
+#addtomcat input[type="checkbox"]:checked::after,
 #addk8s input[type="checkbox"]:checked::after,
 #monitorList input[type="checkbox"]:checked::after,
 #monitorConifgList input[type="checkbox"]:checked::after,
@@ -333,8 +335,8 @@ input[type="checkbox"]:checked::after:not(#monitorResourcelist input[type="check
     border-radius: 3px;
 }
 .mycheck input[type="checkbox"]:checked::after{
-    top: 14px;
-    left: 13px;
+    top: 6px;
+    left: 3px;
 }
 .bootstrap-table .pagination-detail{
     display: none;

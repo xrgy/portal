@@ -19,12 +19,19 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     infoMonitortemplate: '',
                     path: {
                         getTemplateByLightType: "/monitorConfig/getTemplateByLightType",
-                        addMiddleWareMonitorRecord: "/monitor/addMiddleWareMonitorRecord"
+                        addMiddleWareMonitorRecord: "/monitor/addMiddleWareMonitorRecord",
+                        getEditData: "/monitor/getTomcatMonitor",
+                        updateMiddleWareMonitorRecord: "/monitor/updateMiddleMonitorRecord",
+                        tomcatCanAccess:"/monitor/tomcatCanAccess",
+
+
                     },
                     templateList: [{uuid: '', templateName: commonModule.i18n("form.select.default")}],
                     lightType: "",
                     tabSelected: "",
                     checkedSSL: false,
+                    monitorOpe: "",
+                    monitorOpeUuid: ""
                 },
                 mounted: function () {
                     var light = sessionStorage.getItem('addLightType');
@@ -48,6 +55,45 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                                 uuid: '',
                                 templateName: commonModule.i18n("form.select.default")
                             }];
+                    },
+                    initEditData: function (lightType) {
+                        var _self = this;
+                        _self.lightType = lightType;
+                        this.templateList = [{
+                            uuid: '',
+                            templateName: commonModule.i18n("form.select.default")
+                        }];
+                        $.ajax({
+                            data: {uuid: _self.monitorOpeUuid},
+                            url: _self.path.getEditData,
+                            success: function (data) {
+                                if (data.msg == "SUCCESS") {
+                                    var data = data.data;
+                                    _self.infoIp = data.ip;
+                                    _self.infoName = data.name;
+                                    if (data.authentication==1){
+                                        _self.checkedSSL=true;
+                                        _self.infoUsername = data.username;
+                                        _self.infoPassword = data.password;
+                                    }else {
+                                        _self.checkedSSL=false;
+                                        _self.infoUsername = "";
+                                        _self.infoPassword = "";
+                                    }
+                                    _self.infoPort = data.port;
+                                    _self.infoTimeinterval = data.scrapeInterval;
+                                    _self.infoTimeout = data.scrapeTimeout;
+                                    _self.infoMonitortemplate = data.templateId;
+                                    data.monitorTemplate.other.forEach(function (x) {
+                                        _self.templateList.push(x);
+                                    });
+                                }
+                            },
+                            error: function () {
+
+                            }
+
+                        })
                     },
                     initData: function (lightType) {
                         var _self = this;
@@ -75,36 +121,64 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     },
                     clickResource: function (event, lighttype) {
                         var e = event.target;
-                        $('#leftMenu').find('li').removeClass('active');
+                        $('#addtomcat #leftMenu').find('li').removeClass('active');
                         $(e).closest('li').addClass('active');
                         this.initForm();
                         this.initData(lighttype);
                     },
+                    //测试是否连通
+                    canReach:function () {
+                        var _self = this;
+                        $.ajax({
+                            data: {"ip": _self.infoIp,"username":_self.infoUsername,"password":_self.infoPassword,"authentication": _self.checkedSSL,"port":_self.infoPort},
+                            url: _self.path.tomcatCanAccess,
+                            success: function (data) {
+                                if (data.accessible === true) {
+                                    commonModule.prompt("prompt.accessSuccess","SUCCESS");
+                                }else {
+                                    commonModule.prompt("prompt.accessError","alert");
+                                }
+                            },
+                            error: function () {
+                            }
+                        })
+                    },
                     submitForm: function () {
                         var _self = this;
                         var formdata = new FormData($('#add-tomcat')[0]);
+                        if (_self.monitorOpe == "edit") {
+                            formdata.append("uuid", _self.monitorOpeUuid);
+                        }
                         formdata.append("lightType", _self.lightType);
                         $.ajax({
                             type: "post",
                             data: formdata,
                             contentType: false,
                             processData: false,
-                            url: _self.path.addMiddleWareMonitorRecord,
+                            url: _self.monitorOpe == "edit" ? _self.path.updateMiddleWareMonitorRecord : _self.path.addMiddleWareMonitorRecord,
                             dataType: 'json',//预期服务器返回数据类型
                             success: function (data) {
                                 if (data.msg === "SUCCESS") {
                                     //弹出框 新建成功
-                                    commonModule.prompt("prompt.insertSuccess",data.msg);
-                                }else {
+                                    if (_self.monitorOpe == "edit") {
+                                        commonModule.prompt("prompt.updateSuccess", data.msg);
+                                    } else {
+                                        commonModule.prompt("prompt.insertSuccess", data.msg);
+                                    }
+                                } else {
                                     //弹出框 新建失败
-                                    commonModule.prompt("prompt.insertError","alert");
+                                    if (_self.monitorOpe == "edit") {
+                                        commonModule.prompt("prompt.updateError", "alert");
+                                    } else {
+                                        commonModule.prompt("prompt.insertError", "alert");
+                                    }
                                 }
                                 $("#addtomcat").modal('hide');
                             },
                             error: function () {
                                 //处理异常，请重试
                                 $("#addtomcat").modal('hide');
-                                commonModule.prompt("prompt.exceptionPleaseTryAgain","alert");
+                                commonModule.prompt("prompt.exceptionPleaseTryAgain", "alert");
                             }
                         })
                     },
@@ -134,11 +208,11 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     name: {
                         required: true
                     },
-                    userName:{
-                        required:true
+                    userName: {
+                        required: true
                     },
-                    password:{
-                        required:true
+                    password: {
+                        required: true
                     },
                     port: {
                         required: true
@@ -164,10 +238,10 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     port: {
                         required: commonModule.i18n("validate.inputNotEmpty")
                     },
-                    userName:{
+                    userName: {
                         required: commonModule.i18n("validate.inputNotEmpty")
                     },
-                    password:{
+                    password: {
                         required: commonModule.i18n("validate.inputNotEmpty")
                     },
                     timeinterval: {
@@ -206,10 +280,19 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
 
         $("#addtomcat").on('show.bs.modal', function (event) {
             addTomcat.initForm();
-            var light = sessionStorage.getItem('addLightType');
-            addTomcat.title = commonModule.i18n("modal.title.add" + light);
+            var light = "";
+            addTomcat.monitorOpe = sessionStorage.getItem('monitorOpe');
+            if (addTomcat.monitorOpe == "edit") {
+                addTomcat.monitorOpeUuid = sessionStorage.getItem('monitorOpeObj');
+                light = sessionStorage.getItem('editLightType');
+                addTomcat.title = commonModule.i18n("modal.title.update" + light);
+                addTomcat.initEditData(light);
+            } else {
+                light = sessionStorage.getItem('addLightType');
+                addTomcat.title = commonModule.i18n("modal.title.add" + light);
+                addTomcat.initData(light);
+            }
             addTomcat.tabSelected = light;
-            addTomcat.initData(light);
         });
         $("#addtomcat").on("hide.bs.model", function (e) {
             $("#add-tomcat").resetForm();

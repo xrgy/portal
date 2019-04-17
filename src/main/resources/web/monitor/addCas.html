@@ -9,7 +9,7 @@
     <div class="modal-dialog def-dialog middle-dialog">
         <div class="modal-content def-modal-content">
             <div class="modal-header def-modal-header">
-                <i class="fa fa-plus skin-color"></i>
+                <i class="fa skin-color" :class="{'fa-plus':monitorOpe!='edit','fa-edit':monitorOpe=='edit'}"></i>
                 <span>{{title}}</span>
                 <button type="button" class="close skin-color close-style" data-dismiss="modal">&times;</button>
             </div>
@@ -134,7 +134,7 @@
                     <!--</div>-->
                 </div>
                 <div class="modal-footer def-modal-footer">
-                    <button type="button" class="btn def-btn def-btn-primary" data-i18n="modal.footer.test"></button>
+                    <button type="button" class="btn def-btn def-btn-primary" data-i18n="modal.footer.test" v-on:click="canReach"></button>
                     <input type="submit" class="btn def-btn def-btn-primary" data-i18n="modal.footer.submit"/>
                     <button type="button" class="btn def-btn def-btn-default" data-dismiss="modal"
                             data-i18n="modal.footer.cancel"></button>

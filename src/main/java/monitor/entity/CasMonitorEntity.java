@@ -3,6 +3,7 @@ package monitor.entity;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import monitorConfig.entity.template.MonitorTemplate;
 
 
 /**
@@ -33,4 +34,10 @@ public class CasMonitorEntity {
 
     private String templateId;
 
+    private String hostTemplateId;
+
+
+    private String vmTemplateId;
+
+    private MonitorTemplate monitorTemplate;
 }

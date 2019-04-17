@@ -22,7 +22,8 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                         getTemplateByLightType: "/monitorConfig/getTemplateByLightType",
                         addDBMonitorRecord: "/monitor/addDbMonitorRecord",
                         getEditData:"/monitor/getDbMonitor",
-                        updateDBMonitorRecord:"/monitor/updateDbMonitorRecord"
+                        updateDBMonitorRecord:"/monitor/updateDbMonitorRecord",
+                        dbCanAccess:"/monitor/dbCanAccess",
                     },
                     templateList: [{uuid: '', templateName: commonModule.i18n("form.select.default")}],
                     lightType: "",
@@ -112,9 +113,26 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
 
                         })
                     },
+                    //测试是否连通
+                    canReach:function () {
+                        var _self = this;
+                        $.ajax({
+                            data: {"ip": _self.infoIp,"username":_self.infoUsername,"password":_self.infoPassword,"databasename": _self.infoBbname,"port":_self.infoPort},
+                            url: _self.path.dbCanAccess,
+                            success: function (data) {
+                                if (data.accessible === true) {
+                                    commonModule.prompt("prompt.accessSuccess","SUCCESS");
+                                }else {
+                                    commonModule.prompt("prompt.accessError","alert");
+                                }
+                            },
+                            error: function () {
+                            }
+                        })
+                    },
                     clickResource: function (event, lighttype) {
                         var e = event.target;
-                        $('#leftMenu').find('li').removeClass('active');
+                        $('#adddb #leftMenu').find('li').removeClass('active');
                         $(e).closest('li').addClass('active');
                         this.initForm();
                         this.initData(lighttype);

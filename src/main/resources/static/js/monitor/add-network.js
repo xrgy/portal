@@ -20,15 +20,19 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                     infoMonitortemplate: '',
                     path: {
                         getTemplateByLightType: "/monitorConfig/getTemplateByLightType",
-                        addNetworkMonitorRecord: "/monitor/addNetworkMonitorRecord"
+                        addNetworkMonitorRecord: "/monitor/addNetworkMonitorRecord",
+                        getEditData: "/monitor/getNetworkMonitor",
+                        updateNetworkMonitorRecord: "/monitor/updateNetworkMonitorRecord",
                     },
                     templateList: [{uuid: '', templateName: commonModule.i18n("form.select.default")}],
                     lightType: "",
-                    tabSelected:"",
+                    netTabSelected: "",
+                    monitorOpe:"",
+                    monitorOpeUuid:""
                 },
                 mounted: function () {
                     var light = sessionStorage.getItem('addLightType');
-                    this.tabSelected = light;
+                    this.netTabSelected = light;
                 },
                 methods: {
 
@@ -36,19 +40,62 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                         $("#add-network").validate().resetForm();
                         $('.form-group').removeClass("has-error");
                         this.title = "",
-                        this.infoIp = '',
-                        this.infoName = '',
-                        this.monitorMode = 'snmp_v1',
-                        this.infoReadcommunity = '',
-                        this.infoWritecommunity = '',
-                        this.infoPort = '161',
-                        this.infoTimeinterval = '180',
-                        this.infoTimeout = '175',
-                        this.infoMonitortemplate = '',
+                            this.infoIp = '',
+                            this.infoName = '',
+                            this.monitorMode = 'snmp_v1',
+                            this.infoReadcommunity = '',
+                            this.infoWritecommunity = '',
+                            this.infoPort = '161',
+                            this.infoTimeinterval = '180',
+                            this.infoTimeout = '175',
+                            this.infoMonitortemplate = '',
+                            this.templateList = [{
+                                uuid: '',
+                                templateName: commonModule.i18n("form.select.default")
+                            }];
+                    },
+                    initEditData: function (lightType) {
+                        var _self = this;
+                        _self.lightType = lightType;
                         this.templateList = [{
                             uuid: '',
                             templateName: commonModule.i18n("form.select.default")
                         }];
+                        this.netTabSelected = lightType;
+                        $.ajax({
+                            data: {uuid: _self.monitorOpeUuid, lightType: _self.lightType},
+                            url: _self.path.getEditData,
+                            success: function (data) {
+                                if (data.msg == "SUCCESS") {
+                                    var data = data.data;
+                                    _self.infoIp = data.ip;
+                                    _self.infoName = data.name;
+                                    if (data.snmpVersion==1){
+                                        _self.monitorMode="snmp_v1";
+                                    }else if (data.snmpVersion==2){
+                                        _self.monitorMode="snmp_v2c";
+                                    }
+                                    _self.infoReadcommunity = data.readCommunity;
+                                    _self.infoPort = data.port;
+                                    _self.infoTimeinterval = data.scrapeInterval;
+                                    _self.infoTimeout = data.scrapeTimeout;
+                                    _self.infoMonitortemplate = data.templateId;
+                                    if (_self.monitorMode == "snmp_v1") {
+                                        data.monitorTemplate.snmp_v1.forEach(function (x) {
+                                            _self.templateList.push(x);
+                                        })
+                                    } else if (_self.monitorMode == "snmp_v2c") {
+                                        data.monitorTemplate.snmp_v2.forEach(function (x) {
+                                            _self.templateList.push(x);
+                                        })
+                                    }
+                                }
+                            },
+                            error: function () {
+
+                            }
+
+                        })
                     },
                     initData: function (lightType) {
                         var _self = this;
@@ -63,15 +110,15 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                             success: function (data) {
                                 if (data.msg == "SUCCESS") {
                                     var data = data.data;
-                                        if (_self.monitorMode == "snmp_v1"){
-                                            data.snmp_v1.forEach(function (x) {
-                                                _self.templateList.push(x);
-                                            })
-                                        }else if(_self.monitorMode == "snmp_v2c"){
-                                            data.snmp_v2.forEach(function (x) {
-                                                _self.templateList.push(x);
-                                            })
-                                        }
+                                    if (_self.monitorMode == "snmp_v1") {
+                                        data.snmp_v1.forEach(function (x) {
+                                            _self.templateList.push(x);
+                                        })
+                                    } else if (_self.monitorMode == "snmp_v2c") {
+                                        data.snmp_v2.forEach(function (x) {
+                                            _self.templateList.push(x);
+                                        })
+                                    }
                                 }
                             },
                             error: function () {
@@ -81,41 +128,73 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                         })
                     },
                     clickResource: function (event, lighttype) {
+                        if (this.monitorOpe == "edit") {
+                            return
+                        }
                         var e = event.target;
-                        $('#leftMenu').find('li').removeClass('active');
+                        $('#addnetwork #leftMenu').find('li').removeClass('active');
                         $(e).closest('li').addClass('active');
                         this.initForm();
+                        this.title = commonModule.i18n("modal.title.add" + lighttype);
                         this.initData(lighttype);
                     },
-                    getTemplateByMode:function (mode) {
+                    //测试是否连通
+                    canReach:function () {
+                        // var _self = this;
+                        // $.ajax({
+                        //     data: {"ip": _self.infoIp,"username":_self.infoUsername,"password":_self.infoPassword,"databasename": _self.infoBbname,"port":_self.infoPort},
+                        //     url: _self.path.dbCanAccess,
+                        //     success: function (data) {
+                        //         if (data.accessible === true) {
+                        //             commonModule.prompt("prompt.accessSuccess","SUCCESS");
+                        //         }else {
+                        commonModule.prompt("prompt.accessError","alert");
+                        // }
+                        // },
+                        // error: function () {
+                        // }
+                        // })
+                    },
+                    getTemplateByMode: function (mode) {
                         this.monitorMode = mode;
                         this.initData(this.lightType);
                     },
                     submitForm: function () {
                         var _self = this;
                         var formdata = new FormData($('#add-network')[0]);
+                        if (_self.monitorOpe == "edit") {
+                            formdata.append("uuid", _self.monitorOpeUuid);
+                        }
                         formdata.append("lightType", _self.lightType);
                         $.ajax({
                             type: "post",
                             data: formdata,
                             contentType: false,
                             processData: false,
-                            url: _self.path.addNetworkMonitorRecord,
+                            url: _self.monitorOpe == "edit" ? _self.path.updateNetworkMonitorRecord :_self.path.addNetworkMonitorRecord,
                             dataType: 'json',//预期服务器返回数据类型
                             success: function (data) {
                                 if (data.msg === "SUCCESS") {
                                     //弹出框 新建成功
-                                    commonModule.prompt("prompt.insertSuccess",data.msg);
-                                }else {
+                                    if (_self.monitorOpe == "edit") {
+                                        commonModule.prompt("prompt.updateSuccess", data.msg);
+                                    } else {
+                                        commonModule.prompt("prompt.insertSuccess", data.msg);
+                                    }
+                                } else {
                                     //弹出框 新建失败
-                                    commonModule.prompt("prompt.insertError","alert");
+                                    if (_self.monitorOpe == "edit") {
+                                        commonModule.prompt("prompt.updateError", "alert");
+                                    } else {
+                                        commonModule.prompt("prompt.insertError", "alert");
+                                    }
                                 }
                                 $("#addnetwork").modal('hide');
                             },
                             error: function () {
                                 //处理异常，请重试
                                 $("#addnetwork").modal('hide');
-                                commonModule.prompt("prompt.exceptionPleaseTryAgain","alert");
+                                commonModule.prompt("prompt.exceptionPleaseTryAgain", "alert");
                             }
                         })
                     },
@@ -153,7 +232,10 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
                                 },
                                 lightType: function () {
                                     return addNetwork.lightType;
-                                }
+                                },
+                                uuid: function () {
+                                    return addNetwork.monitorOpeUuid;
+                                },
                             }
                         },
                     },
@@ -227,10 +309,24 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend'], function ($, Vue, c
 
         $("#addnetwork").on('show.bs.modal', function (event) {
             addNetwork.initForm();
-            var light = sessionStorage.getItem('addLightType');
-            addNetwork.title = commonModule.i18n("modal.title.add" + light);
-            addNetwork.tabSelected = light;
-            addNetwork.initData(light);
+            var light = "";
+            addNetwork.monitorOpe = sessionStorage.getItem('monitorOpe');
+            if (addNetwork.monitorOpe == "edit") {
+                addNetwork.monitorOpeUuid = sessionStorage.getItem('monitorOpeObj');
+                light = sessionStorage.getItem('editLightType');
+                if (light!=addNetwork.netTabSelected){
+                    $('#addnetwork #leftMenu').find('li').removeClass('active');
+                }
+                addNetwork.title = commonModule.i18n("modal.title.update" + light);
+                addNetwork.netTabSelected = light;
+                addNetwork.initEditData(light);
+            } else {
+                $('#addnetwork #leftMenu').find('li').removeClass('active');
+                light = sessionStorage.getItem('addLightType');
+                addNetwork.title = commonModule.i18n("modal.title.add" + light);
+                addNetwork.netTabSelected = light;
+                addNetwork.initData(light);
+            }
         });
         $("#addnetwork").on("hide.bs.model", function (e) {
             $("#add-network").resetForm();

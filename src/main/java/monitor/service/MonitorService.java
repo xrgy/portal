@@ -4,7 +4,7 @@ import business.entity.PageData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import monitor.common.ResultMsg;
 import monitor.entity.*;
-import monitor.entity.view.OperationMonitorView;
+import monitor.entity.view.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -137,7 +137,7 @@ public interface MonitorService {
 
 
 
-    public NetworkMonitorEntity getNetworkMonitorEntity(String uuid);
+    public NetworkMonitorEntity getNetworkMonitorEntity(String uuid,String lightType);
 
 
     /**
@@ -217,4 +217,12 @@ public interface MonitorService {
      * @return
      */
     ResultMsg getMonitorRecordList(String middle);
+
+    boolean isMonitorRecordIpDupNotP(String ip, String lightType, String uuid);
+
+    AccessBackView dbCanAccess(DbAccessView view) throws JsonProcessingException;
+
+    AccessBackView k8sCanAccess(K8sAccessView view) throws JsonProcessingException;
+
+    AccessBackView tomcatCanAccess(TomcatAccessView view) throws JsonProcessingException;
 }

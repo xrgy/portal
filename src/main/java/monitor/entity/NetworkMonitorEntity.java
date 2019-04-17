@@ -3,6 +3,7 @@ package monitor.entity;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import monitorConfig.entity.template.MonitorTemplate;
 
 
 /**
@@ -35,5 +36,7 @@ public class NetworkMonitorEntity {
     private String scrapeTimeout;
 
     private String templateId;
+    private MonitorTemplate monitorTemplate;
+
 
 }

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import monitor.common.ResCommon;
 import monitor.common.ResultMsg;
 import monitor.entity.*;
-import monitor.entity.view.OperationMonitorView;
+import monitor.entity.view.*;
 import monitor.service.MonitorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,6 +45,11 @@ public class MonitorController {
         //返回true 未重复
         String ip = request.getParameter("ip");
         String lightType = request.getParameter("lightType");
+        String uuid = request.getParameter("uuid");
+        if (null!=uuid && !uuid.equals("")){
+            //判断出这个uuid的ip之外的有没有重复的
+            return service.isMonitorRecordIpDupNotP(ip,lightType,uuid);
+        }
         return service.isMonitorRecordIpDup(ip,lightType);
     }
 
@@ -146,8 +151,8 @@ public class MonitorController {
     //修改监控对象的时候需要
     @RequestMapping("/getNetworkMonitor")
     @ResponseBody
-    public ResultMsg getNetworkMonitorEntity(String uuid){
-        return ResCommon.getCommonResultMsg(service.getNetworkMonitorEntity(uuid));
+    public ResultMsg getNetworkMonitorEntity(String uuid,String lightType){
+        return ResCommon.getCommonResultMsg(service.getNetworkMonitorEntity(uuid,lightType));
     }
 
     @RequestMapping("/getTomcatMonitor")
@@ -177,6 +182,22 @@ public class MonitorController {
     @ResponseBody
     public ResultMsg getBusMonitorListByPage(PageData page) throws JsonProcessingException {
         return service.getBusMonitorListByPage(page);
+    }
+
+    @RequestMapping("/dbCanAccess")
+    @ResponseBody
+    public AccessBackView dbCanAccess(DbAccessView view) throws JsonProcessingException {
+        return service.dbCanAccess(view);
+    }
+    @RequestMapping("/k8sCanAccess")
+    @ResponseBody
+    public AccessBackView k8sCanAccess(K8sAccessView view) throws JsonProcessingException {
+        return service.k8sCanAccess(view);
+    }
+    @RequestMapping("/tomcatCanAccess")
+    @ResponseBody
+    public AccessBackView tomcatCanAccess(TomcatAccessView view) throws JsonProcessingException {
+        return service.tomcatCanAccess(view);
     }
 
 }
