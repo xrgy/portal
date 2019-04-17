@@ -113,6 +113,15 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                     research: function () {
                         var _self = this;
                         _self.pageNum =1;
+                        if (_self.totalRecord % _self.pageSize == 0) {
+                            _self.totalPage = Math.floor(_self.totalRecord / _self.pageSize);
+                        } else {
+                            _self.totalPage = Math.floor(_self.totalRecord / _self.pageSize) + 1;
+                        }
+                        _self.pageNumList=[];
+                        for(var i=1;i<=_self.totalPage;i++){
+                            _self.pageNumList.push(i);
+                        }
                         _self.reloadMonitorList();
                     },
                     previous: function () {

@@ -44,9 +44,10 @@
             <ul style="font-weight: 600;">
                 <li v-on:click="clickResource($event,'all')" :class="{active:tabSelected=='all'}"><i class="fa fa-th-large" aria-hidden="true"></i> 全部告警</li>
                 <li><i class="fa fa-gears" aria-hidden="true"></i> 按资源类别<i class="fa fa-angle-down" aria-hidden="true"
-                                                                           style="margin-left: 58px;"></i>
+                                                                           style="margin-left: 38px;"></i>
                     <ul style="margin-left: 20px;  color: #928886;font-weight: 500;">
-                        <li v-on:click="clickResource($event,'network_device')" :class="{active:tabSelected=='network_device'}">网络设备</li>
+                        <li v-on:click="clickResource($event,'network_device')" :class="{active:tabSelected=='network_device'}"
+                        style="margin-top: 16px;">网络设备</li>
                         <li v-on:click="clickResource($event,'database')" :class="{active:tabSelected=='database'}" style="margin-top: -10px;">数据库</li>
                         <li v-on:click="clickResource($event,'virtualization')" :class="{active:tabSelected=='virtualization'}" style="margin-top: -10px;">虚拟化</li>
                         <li v-on:click="clickResource($event,'container')" :class="{active:tabSelected=='container'}" style="margin-top: -10px;">容器</li>
@@ -70,7 +71,7 @@
                     <label  v-show="alertLevel!=-1 || alertStatus!=-1 || alertResource!=''"  style="margin-left: 10px;cursor: pointer;" v-on:click="closeFilterCond($event,'all')">清空筛选</label>
                 </div>
                 <div id="oper" style="margin-bottom: 6px;">
-                    <label id="refresh" v-on:click="initData"> <i class="fa fa-refresh" aria-hidden="true"></i> 刷新</label>
+                    <label id="refresh" v-on:click="initData" style="cursor: pointer"> <i class="fa fa-refresh" aria-hidden="true"></i> 刷新</label>
                     <!--<img class="" src="../image/alert5.png"/>-->
                     <div id="tworight" style="display: inline-block">
                         <div id="divselect" style="display: inline-block;">
@@ -108,8 +109,13 @@
                         <th style="width: 100px;">IP地址 <i class="fa sort"></i>
                             <div class="middleline" style="margin-left: 10px"></div>
                         </th>
-                        <th style="width: 100px;">恢复状态 <i class="fa fa-filter" aria-hidden="true" style="color: #a39a99"></i>
+                        <th style="width: 100px;">恢复状态 <i class="fa fa-filter" aria-hidden="true" style="color: #a39a99;cursor: pointer"
+                                                          v-on:click="showSolveSelect" ></i>
                             <div class="middleline" style="margin-left: 0px"></div>
+                            <select v-show="chResolved==true" style="position: absolute;top: 120px;left: 460px;"  name="selSolve" id="selSolve"
+                                    v-model="alertStatus" v-on:change="changeResolved()">
+                                <option v-for="st in solvedStatus" :value="st.value">{{st.name}}</option>
+                            </select>
                         </th>
                         <th style="width: 100px;">告警时间 <i class="fa sort"></i>
                             <div class="middleline" style="margin-left: 0px"></div>
@@ -121,7 +127,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <template v-for="(i,j) in alertList">
+                    <template v-for="(i,j) in showAlertList">
                         <tr :id="'alert'+j">
                             <td>{{j+1}}</td>
                             <td><div style="display: inline-block" class="alerttip"
@@ -136,7 +142,7 @@
                             <td><span :title="i.description">{{i.description}}</span></td>
                         </tr>
                     </template>
-                    </tbody>
+                    </tbody> 
                 </table>
             </div>
             <div style="display: inline-block"><span style="font-size: 12px">{{currenPageInfo}}</span></div>
@@ -145,7 +151,7 @@
                 <div id="chosePageSize" >
                     <label>
                         每页
-                        <select id="pageSize"
+                        <select id="pageSize"  v-on:change="research()"  v-model="pageSize"
                                 aria-controls="DataTables_Table_0" size="1" name="DataTables_Table_0_length">
                             <option selected="selected" value="10">10</option>
                             <option value="20">20</option>
@@ -156,15 +162,16 @@
                     </label>
                 </div>
                 <ul class="pagination pagination-sm">
-                    <li class="prev"><a href="#" style="color: #485664;">&laquo;</a>
+                    <li class="prev"  v-on:click="previous()"><a href="#" style="color: #485664;">&laquo;</a>
                     </li>
                     <div id="page">
-                        <select style="font-size: 12px;padding-right: 8px;" name="monitortemplate" id="pageNum">
-                            <option>1</option>
+                        <select style="font-size: 12px;padding-right: 8px;"  name="monitortemplate" id="pageNum"
+                                v-model="pageNum" v-on:change="search()">
+                            <option v-for="page in pageNumList" :value="page">{{page}}</option>
                         </select>
                     </div>
                     <!--<i class="fa fa-angle-down" aria-hidden="true"></i>-->
-                    <li class="next"><a href="#" style="color: #485664;">&raquo;</a>
+                    <li class="next"  v-on:click="next()"><a href="#" style="color: #485664;">&raquo;</a>
                     </li>
                 </ul>
             </div>

@@ -367,9 +367,9 @@ table{
 .btn-cancel{
     border: 1px solid #eee;
 }
-.btn:hover:not(.btn-cancel){
-    color: #fff;
-}
+/*.btn:hover:not(.btn-cancel){*/
+    /*color: #fff;*/
+/*}*/
 .breadDiv{
     position: absolute;
     top: 10px;
