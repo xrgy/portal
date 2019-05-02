@@ -116,6 +116,11 @@ public class TopoController {
     public ResultMsg deleteNetTopoNode(String uuid){
         return ResCommon.genSimpleResByBool(service.deleteTopoResourceBymonitoruuid(uuid));
     }
+    @RequestMapping("deleteNetTopoNodeOrLink")
+    @ResponseBody
+    public ResultMsg deleteNetTopoNodeOrLink(String canvasId,String uuid,String type){
+        return ResCommon.genSimpleResByBool(service.deleteNetTopoNodeOrLink(canvasId,uuid,type));
+    }
 
     @RequestMapping("deleteNetTopoLink")
     @ResponseBody

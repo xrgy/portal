@@ -56,7 +56,8 @@ public class TopoDaoImpl implements TopoDao {
 
     private String topoPrefix() {
 //        try {
-//            String ip = EtcdUtil.getClusterIpByServiceName("topo-core-service");
+//            return HTTP+"47.105.64.176:30085/"+MONITOR_PREFIX+"/";
+//            String ip = EtcdUtil.getClusterIpByServiceName("topology-core-service");
             return HTTP+ip + ":" + CONFIG_PORT + "/" + MONITOR_PREFIX + "/";
 //        } catch (IOException e) {
 //            e.printStackTrace();

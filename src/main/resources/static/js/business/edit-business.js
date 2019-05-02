@@ -405,6 +405,15 @@ define(['jquery', 'vue', 'commonModule','validate-extend'], function ($, Vue, co
                 editBusiness.initBaseInfo();
             }
         })
+        $("#editBusiness").on('hide.bs.modal', function () {
+            if ($("#addResource").prop("style").display=="none"){
+
+                editBusiness.tabSelected="baseInfo";
+            }else {
+                editBusiness.tabSelected="resource";
+            }
+
+        })
         Array.prototype.myindexOf = function(val) {
             for (var i = 0; i < this.length; i++) {
                 if (this[i].monitorId == val) return i;

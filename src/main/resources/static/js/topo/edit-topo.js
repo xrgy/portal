@@ -22,6 +22,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver','topoMain',
                         getNodeAlarmInfo: "/topo/getCanvasAlarmInfo",
                         getLinkRate: "/topo/getTopoLinkRate",
                         saveTopo: "/topo/saveTopo",
+                        deleteNetTopoNodeOrLink: "/topo/deleteNetTopoNodeOrLink",
                     },
                     deviceIcon: {
                         router: "../image/cupcake.svg",
@@ -50,7 +51,10 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver','topoMain',
                     selectLinkRightPort: "",
                     selectLinkLeftRate: "",
                     selectLinkRightRate: "",
-                    breadHoverAble:false,
+                    autoLayout: null,
+                    location: "self",
+                    popupMenu:null,
+                    breadHoverAble: false,
                 },
                 mounted: function () {
                     this.initBox();
@@ -58,6 +62,8 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver','topoMain',
                     this.initListener();
                     // this.registerImage('../image/cupcake.svg', 'node');
                     this.getData();
+                    this.initPopupMenu();
+
                 },
                 filters: {
                     convertType: function (type) {
@@ -129,6 +135,58 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver','topoMain',
 
 
                     },
+                    initPopupMenu: function () {
+                        var lastData, lastPoint, magnifyInteraction;
+                        this.popupMenu.onMenuShowing = function (e) {
+                            lastData = _self.network.getSelectionModel().getLastData();
+                            lastPoint = _self.network.getLogicalPoint(e);
+                            magnifyInteraction = null;
+                            _self.network.getInteractions().forEach(function (interaction) {
+                                if (interaction instanceof twaver.network.interaction.MagnifyInteraction
+                                    || interaction instanceof twaver.canvas.interaction.MagnifyInteraction) {
+                                    magnifyInteraction = interaction;
+                                }
+                            });
+                            return true;
+                        };
+                        var _self = this;
+                        _self.popupMenu.onAction = function (menuItem) {
+
+                            if (menuItem.label === '删除') {
+                                _self.box.remove(lastData);
+                                _self.deleteNodeOrLink(lastData.getId(),lastData.getClassName())
+                                // "twaver.Node" "twaver.Link"
+                            }
+                        };
+                        _self.popupMenu.isVisible = function (menuItem) {
+                            return true;
+                        };
+                        this.popupMenu.isEnabled = function (menuItem) {
+                            return true;
+                        };
+                        this.popupMenu.setMenuItems([
+                            {label: '删除', group: 'Element'}
+                        ]);
+                        this.popupMenu.setWidth(100);
+                        this.popupMenu.setFocusBackground('#afaaaa');
+                        this.popupMenu.onMenuItemRendered = function (div, menuItem) {
+                            div.style['color']="black";
+                        };
+                    },
+                    deleteNodeOrLink:function (id,type) {
+                        var _self = this;
+                        $.ajax({
+                            data: {"canvasId":_self.canvasId,"uuid":id,"type":type},
+                            url: _self.path.deleteNetTopoNodeOrLink,
+                            success: function (data) {
+                                if (data.msg === "SUCCESS") {
+                                }
+                            },
+                            error: function () {
+
+                            }
+                        })
+                    },
                     hoverFuc:function () {
                         this.breadHoverAble=true;
                     },
@@ -172,6 +230,13 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver','topoMain',
                         _self.box = box;
                         _self.network = network;
                         twaver.Styles.setStyle('link.color', '#1db163');
+                        _self.autoLayout = new twaver.layout.AutoLayouter(box);
+                        _self.springLayout = new twaver.layout.SpringLayouter(network);
+                        _self.springLayout.setNodeRepulsionFactor(0.6);
+                        _self.springLayout.setLinkRepulsionFactor(0.6);
+                        _self.springLayout.setInterval(50);
+                        _self.springLayout.setStepCount(10);
+                        _self.popupMenu = new twaver.controls.PopupMenu(_self.network);
                         // var autoLayout = new twaver.layout.AutoLayouter(box);
                         // _self.springLayout = new twaver.layout.SpringLayouter(network);
                         // _self.springLayout.setNodeRepulsionFactor(0.3);
@@ -186,6 +251,7 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver','topoMain',
 
                     getData: function () {
                         var _self = this;
+                        _self.location = "self";
                         $.ajax({
                             // data: {"lightType": _self.lightType, "monitorMode": _self.monitorMode},
                             url: _self.path.getTopoCanvasData,
@@ -199,6 +265,15 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver','topoMain',
                                             _self.box.setClient("uuid", _self.canvasId);
                                         }
                                         var nodelist = data.nodes;
+                                        for (var i = 0; i < nodelist.length; i++) {
+                                            if (nodelist[i].xpoint == 0 && nodelist[i].ypoint == 0) {
+                                                _self.autoLayout.doLayout('symmetry', function () {
+                                                    _self.springLayout.start();
+                                                });
+                                                _self.location = "auto";
+                                                break;
+                                            }
+                                        }
                                         if (nodelist) {
                                             for (var index=0;index<nodelist.length;index++) {
                                                 _self.createNode(nodelist[index]);
@@ -254,7 +329,10 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver','topoMain',
                         var _self = this;
                         var node = new twaver.Node(mynode.uuid);
                         node.setName(mynode.nodeName);
-                        node.setLocation(mynode.xpoint, mynode.ypoint);
+                        if (_self.location == "self") {
+                            node.setLocation(mynode.xpoint, mynode.ypoint)
+                        }
+                        // node.setLocation(mynode.xpoint, mynode.ypoint);
                         node.setClient("uuid", mynode.uuid);
                         node.setClient("monitorUuid", mynode.monitorUuid);
                         node.setClient("canvasId", _self.canvasId);

@@ -26,7 +26,7 @@ import java.util.List;
 public class AlertDaoImpl implements AlertDao {
 
     private static final String ip = "127.0.0.1";
-//    private static final String CONFIG_PORT = "8086";
+    //    private static final String CONFIG_PORT = "8086";
 //    private static final String IP = "http://172.31.105.232";
     private static final String CONFIG_PORT = "8095";
     private static final String ALERT_PREFIX = "alerts";
@@ -35,14 +35,13 @@ public class AlertDaoImpl implements AlertDao {
     private static final String PATH_GET_ALERT_DETAIL = "getAlertDetail";
 
 
-
-    private static final String HTTP="http://";
+    private static final String HTTP = "http://";
 
 
     private String alertPrefix() {
-//                try {
+//        try {
 //            String ip = EtcdUtil.getClusterIpByServiceName("alert-coll-service");
-        return HTTP+ip + ":" + CONFIG_PORT + "/" + ALERT_PREFIX + "/";
+            return HTTP + ip + ":" + CONFIG_PORT + "/" + ALERT_PREFIX + "/";
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
@@ -60,9 +59,10 @@ public class AlertDaoImpl implements AlertDao {
 
     @Override
     public List<AlertAlarmInfo> getAlertInfoByMonitorUuids(List<String> monitorUuids) throws JsonProcessingException {
-        String response = rest().postForObject(alertPrefix()+PATH_GET_ALARM_INFO_MONITOR_UUID,objectMapper.writeValueAsString(monitorUuids),String.class);
+        String response = rest().postForObject(alertPrefix() + PATH_GET_ALARM_INFO_MONITOR_UUID, objectMapper.writeValueAsString(monitorUuids), String.class);
         try {
-            return objectMapper.readValue(response,new TypeReference<List<AlertAlarmInfo>>(){});
+            return objectMapper.readValue(response, new TypeReference<List<AlertAlarmInfo>>() {
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -71,14 +71,15 @@ public class AlertDaoImpl implements AlertDao {
 
     @Override
     public boolean deleteAlertResourceBymonitoruuid(String monitorUuid) {
-        return rest().getForObject(alertPrefix()+PATH_DELTE_ALERT_BY_MONITOR+"?monitorUuid={1}",boolean.class,monitorUuid);
+        return rest().getForObject(alertPrefix() + PATH_DELTE_ALERT_BY_MONITOR + "?monitorUuid={1}", boolean.class, monitorUuid);
     }
 
     @Override
     public List<AlertEntity> getAlertInfo(AlertView view) throws JsonProcessingException {
-        String response = rest().postForObject(alertPrefix()+PATH_GET_ALERT_DETAIL,objectMapper.writeValueAsString(view),String.class);
+        String response = rest().postForObject(alertPrefix() + PATH_GET_ALERT_DETAIL, objectMapper.writeValueAsString(view), String.class);
         try {
-            return objectMapper.readValue(response,new TypeReference<List<AlertEntity>>(){});
+            return objectMapper.readValue(response, new TypeReference<List<AlertEntity>>() {
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }

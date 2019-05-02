@@ -241,6 +241,18 @@ public class TopoServiceImpl implements TopoService {
         return true;
     }
 
+    @Override
+    public boolean deleteNetTopoNodeOrLink(String canvasId, String uuid, String type) {
+        if (type.equals("twaver.Node")){
+            //删除节点 也是只从拓扑数据库中删除节点 端口 链路
+            return dao.deleteTopoResourceBymonitoruuid(uuid);
+        }else if (type.equals("twaver.Link")){
+            //删除链路 只从拓扑数据库中删除链路 删除端口
+            return dao.deleteTopoLinkByUuid(uuid);
+        }
+        return true;
+    }
+
     private ResultMsg getCommonResultMsg(Object o) {
         ResultMsg msg = new ResultMsg();
         if (null != o) {

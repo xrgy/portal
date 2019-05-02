@@ -270,9 +270,9 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
                                     var nodelist = data.nodes;
                                     for (var i = 0; i < nodelist.length; i++) {
                                         if (nodelist[i].xpoint == 0 && nodelist[i].ypoint == 0) {
-                                            // _self.autoLayout.doLayout('symmetry', function () {
-                                            //     _self.springLayout.start();
-                                            // });
+                                            _self.autoLayout.doLayout('symmetry', function () {
+                                                _self.springLayout.start();
+                                            });
                                             _self.location = "auto";
                                             break;
                                         }
@@ -461,12 +461,12 @@ define(['jquery', 'vue', 'commonModule', 'validate-extend', 'twaver'], function 
 
                     clickLayout: function (event) {
                         var _self = this;
-                        // var isRunning = _self.springLayout.isRunning();
-                        // if (isRunning) {
-                        //     _self.springLayout.stop();
-                        // } else {
-                        //     _self.springLayout.start();
-                        // }
+                        var isRunning = _self.springLayout.isRunning();
+                        if (isRunning) {
+                            _self.springLayout.stop();
+                        } else {
+                            _self.springLayout.start();
+                        }
                     }
                 }
 
